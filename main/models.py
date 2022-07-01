@@ -38,7 +38,7 @@ class Block(models.Model):
 class AboutPage(models.Model):
     header = models.CharField(max_length=64, verbose_name='Заголовок')
     text = models.TextField(verbose_name='Краткий текст')
-    photo = models.ImageField(upload_to='gallery/', verbose_name='Фото директора')
+    avatar = models.ImageField(upload_to='gallery/', verbose_name='Фото директора')
     additional_header = models.CharField(max_length=64, verbose_name='Дополнительный заголовок')
     additional_text = models.TextField(verbose_name='Дополнительный краткий текст')
     seo = models.OneToOneField(Seo, on_delete=models.PROTECT, verbose_name='SEO-блок')

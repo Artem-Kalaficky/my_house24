@@ -1,0 +1,25 @@
+{% extends 'users/admin_login.html' %}
+{% load static %}
+
+{% block tab %}
+<ul class="nav nav-tabs" id="myTab" role="tablist" style="">
+  <li class="nav-item" role="presentation" style="width: 50%; text-align: center">
+    <a style="color: #494949; font-size: 15px" class="nav-link active" id="home-tab" data-toggle="tab" href="{% url 'owner_login' %}" role="tab" aria-controls="home" aria-selected="true">Для жильцa</a>
+  </li>
+  <li class="nav-item" role="presentation" style="width: 50%; text-align: center">
+    <a style="color: #494949; font-size: 15px" class="nav-link" href="{% url 'admin_login' %}" role="tab" aria-controls="profile" aria-selected="false">Для администрации</a>
+  </li>
+</ul>
+<div class="tab-content" id="myTabContent">
+  <div class="tab-pane show active" id="home" role="tabpanel" aria-labelledby="home-tab"></div>
+  <div class="tab-pane" id="profile" role="tabpanel" aria-labelledby="profile-tab"></div>
+</div>
+{% endblock %}
+
+{% block login %}Вход в личный кабинет{% endblock %}
+
+{% block id %}или ID{% endblock %}
+
+{% block register %}
+    <p style="text-align: center; padding-top: 15px; margin-bottom: 0">У Вас ещё нет аккаунтa? <a href="#">Регистрация</a>.</p>
+{% endblock %}

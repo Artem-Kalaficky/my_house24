@@ -1,0 +1,80 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Вход</title>
+  <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="{% static 'crm/plugins/fontawesome-free/css/all.min.css' %}">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="{% static 'crm/dist/css/adminlte.min.css' %}">
+</head>
+<body class="login-page" style="min-height: 496.781px; margin-top: -70px">
+    <div class="login-box">
+        <div class="login-logo">
+            <a href="{% url 'main' %}">
+                <img src="{% static 'crm/dist/img/logo.svg' %}" width="360" alt="logo">
+            </a>
+        </div>
+
+        <div class="card">
+            {% block tab %}
+            <ul class="nav nav-tabs" id="myTab" role="tablist" style="">
+              <li class="nav-item" role="presentation" style="width: 50%; text-align: center">
+                <a style="color: #494949; font-size: 15px" class="nav-link" href="{% url 'owner_login' %}" role="tab" aria-controls="home" aria-selected="false">Для жильцa</a>
+              </li>
+              <li class="nav-item" role="presentation" style="width: 50%; text-align: center">
+                <a style="color: #494949; font-size: 15px" class="nav-link active" id="profile-tab" data-toggle="tab" href="{% url 'admin_login' %}" role="tab" aria-controls="profile" aria-selected="true">Для администрации</a>
+              </li>
+            </ul>
+            {% endblock %}
+            <div class="card-body login-card-body">
+                <p style="text-align: center; padding-top: 10px; padding-bottom: 10px; font-size: 14px">{% block login %}Вход в панель управления{% endblock %}</p>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="input-group mb-3">
+                        <input type="email" name="username" class="form-control" autocapitalize="none" autocomplete="username" maxlength="254" required="" id="id_username" placeholder="Email {% block id %}{% endblock %}">
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-envelope"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-group mb-3">
+                        <input type="password" name="password" class="form-control" required="" id="id_password" placeholder="Пароль">
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-lock"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="icheck-primary" style="padding-top: 15px">
+                        <input type="checkbox" name="remember_me" required="" id="id_remember_me">
+                        <label for="id_remember_me">Запомнить меня</label>
+                    </div>
+                    <div style="padding-top: 10px">
+                        <button type="submit" class="btn btn-primary btn-block">Вход</button>
+                        <input type="hidden" name="next" value="{{ next }}">
+                    </div>
+                </form>
+                {% block register %}{% endblock %}
+            </div>
+        </div>
+    </div>
+
+
+
+
+<!-- REQUIRED SCRIPTS -->
+
+<!-- jQuery -->
+<script src="{% static 'crm/plugins/jquery/jquery.min.js' %}"></script>
+<!-- Bootstrap 4 -->
+<script src="{% static 'crm/plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<!-- AdminLTE App -->
+<script src="{% static 'crm/dist/js/adminlte.min.js' %}"></script>
+</body>
+</html>
