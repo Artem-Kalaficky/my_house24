@@ -1,5 +1,6 @@
 from django.shortcuts import render
+from django.views.generic import TemplateView
 
 
-def test(request):
-    return render(request, 'crm/layout/base.html')
+class StatisticsTemplateView(TemplateView):
+    template_name = 'crm/pages/statistics.html'
