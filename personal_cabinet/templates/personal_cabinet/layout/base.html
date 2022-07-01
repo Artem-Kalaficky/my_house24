@@ -1,0 +1,236 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Статистика{% endblock %}</title>
+  <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="{% static 'crm/plugins/fontawesome-free/css/all.min.css' %}">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="{% static 'crm/dist/css/adminlte.min.css' %}">
+  {% block style %}{% endblock %}
+  <style>
+      .active-link {
+          background-color: #e1f1ea;
+      }
+  </style>
+</head>
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+
+  <!-- Navbar -->
+  <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+    <!-- Left navbar links -->
+    <ul class="navbar-nav">
+      <li class="nav-item" style="border-right: #e5e5e5 1px solid">
+        <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+      </li>
+      <li class="nav-item d-none d-sm-inline-block">
+        <span class="nav-link">Личный кабинет</span>
+      </li>
+    </ul>
+
+    <!-- Right navbar links -->
+    <ul class="navbar-nav ml-auto">
+
+      <!-- New users Dropdown Menu -->
+      <li class="nav-item dropdown" style="border-right: #e5e5e5 1px solid; border-left: #e5e5e5 1px solid">
+        <a class="nav-link" data-toggle="dropdown" href="#">
+          <i class="fa fa-bell"></i>
+          <span class="badge badge-warning navbar-badge">0</span>
+        </a>
+        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+          <span class="dropdown-header">Новых сообщений: 0</span>
+          <div class="dropdown-divider"></div>
+          <a href="#" class="dropdown-item">
+            <span style="font-size: 14px">Тема сообщения 1</span>
+          </a>
+          <div class="dropdown-divider"></div>
+          <a href="#" class="dropdown-item">
+            <span style="font-size: 14px">Тема сообщения 2</span>
+          </a>
+          <div class="dropdown-divider"></div>
+          <a href="#" class="dropdown-item dropdown-footer" style="font-size: 13px">Перейти в раздел сообщений</a>
+        </div>
+      </li>
+
+      <!-- User profile Dropdown Menu -->
+      <li class="dropdown user user-menu">
+            <a href="#" data-toggle="dropdown" aria-expanded="false">
+                <span class="nav-link" style="font-size: 15px"><i class="fa fa-user-circle text-purple" style="padding: 0 5px 0 0"></i>Тестовый пользователь</span>
+            </a>
+            <ul class="dropdown-menu">
+                <!-- User image -->
+                <li class="user-header" style="background-color: #f39c12">
+                    <img src="{% static 'crm/dist/img/user2-160x160.jpg' %}" class="img-circle">
+                    <p>Тестовый пользователь</p>
+                </li>
+                <!-- Menu Footer-->
+                <li class="user-footer">
+                    <div style="display: inline-block">
+                        <a class="btn btn-default" href="#">Профиль</a>
+                    </div>
+                    <div style="display: inline-block; float: right">
+                        <a class="btn btn-default" href="#" data-method="post">Выход</a>
+                    </div>
+                </li>
+            </ul>
+      </li>
+
+    </ul>
+  </nav>
+  <!-- /.navbar -->
+
+  <!-- Main Sidebar Container -->
+  <aside class="main-sidebar sidebar-light-primary elevation-4">
+    <!-- Brand Logo -->
+    <a href="#" class="brand-link" style="text-align: -webkit-center;  padding: 8px 0 8px 0">
+      <img src="{% static 'crm/dist/img/logo.svg' %}" width="100%" height="40">
+    </a>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+
+      <!-- Sidebar Menu -->
+      <nav class="mt-2">
+        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+
+          <li class="nav-item {% block summary %}<!--menu-is-opening menu-open-->{% endblock %}">
+            <a href="#" class="nav-link">
+              <i class="fa fa-chart-line" style="width: 23px"></i>
+              <p style="color: #494949; font-size: 14px; font-weight: 600">
+                Сводка
+                <i class="right fas fa-angle-left" style="padding-top: 3px"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="#" class="nav-link {% block apartment %}{% endblock %}">
+                  <i class="far fa-building nav-icon"></i>
+                  <p style="font-size: 14px">Дом1 - Квартира 1</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-item {% block invoices %}<!--menu-is-opening menu-open-->{% endblock %}">
+            <a href="#" class="nav-link">
+              <i class="fas fa-copy" style="width: 23px"></i>
+              <p style="color: #494949; font-size: 14px; font-weight: 600">
+                Квитанции
+                <i class="right fas fa-angle-left" style="padding-top: 3px"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="#" class="nav-link {% block all_invoices %}{% endblock %}">
+                  <i class="fas fa-copy nav-icon"></i>
+                  <p style="font-size: 14px">Все квитанции</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="#" class="nav-link {% block invoice %}{% endblock %}">
+                  <i class="far fa-file nav-icon"></i>
+                  <p style="font-size: 14px">Дом1 - Квартира 1</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-item {% block tariffs %}<!--menu-is-opening menu-open-->{% endblock %}">
+            <a href="#" class="nav-link">
+              <i class="fa fa-money-bill-wave" style="width: 23px"></i>
+              <p style="color: #494949; font-size: 14px; font-weight: 600">
+                Тарифы
+                <i class="right fas fa-angle-left" style="padding-top: 3px"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="#" class="nav-link {% block tariff %}{% endblock %}">
+                  <i class="far fa-file nav-icon"></i>
+                  <p style="font-size: 14px">Дом1 - Квартира 1</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link {% block messages %}{% endblock %}">
+              <i class="fas fa-envelope" style="width: 23px"></i>
+              <p style="color: #494949; font-size: 14px; font-weight: 600">
+                Сообщения
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link {% block applications %}{% endblock %}">
+              <i class="fas fa-wrench" style="width: 23px"></i>
+              <p style="color: #494949; font-size: 14px; font-weight: 600">
+                Вызов мастера
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link {% block profile %}{% endblock %}">
+              <i class="fa fa-user-circle" style="width: 23px"></i>
+              <p style="color: #494949; font-size: 14px; font-weight: 600">
+                Профиль
+              </p>
+            </a>
+          </li>
+        </ul>
+      </nav>
+      <!-- /.sidebar-menu -->
+    </div>
+    <!-- /.sidebar -->
+  </aside>
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper" style="background-color: #ecf0f5">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h4 class="m-0">{% block name_page %}Сводка - Дом 1 - Квартира 1{% endblock %}</h4>
+          </div><!-- /.col -->
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item" style="font-size: 14px"><a href="#" style="color: #494949"><i class="fa fa-home" style="padding-right: 3px"></i>Главная</a></li>
+              <li class="breadcrumb-item active" style="font-size: 14px">{% block nav %}Сводка{% endblock %}</li>
+            </ol>
+          </div><!-- /.col -->
+        </div><!-- /.row -->
+        <div class="dropdown-divider" style="border-color:lightgrey"></div>
+      </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+
+    <!-- Main content -->
+    <div class="content">
+      {% block content %}{% endblock %}
+    </div>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+  <!-- Main Footer -->
+  <footer class="main-footer">
+    <!-- Default to the left -->
+      <span style="font-size: 15px">Разработано <a href="https://avada-media.ua/myhouse24/">AVADA-MEDIA</a>. На базе системы управления <a href="https://avada-media.ua/myhouse24/">"МойДом24"</a>. Документация API доступна <a href="https://avada-media.ua/myhouse24/">по ссылке</a>.</span>
+  </footer>
+</div>
+<!-- ./wrapper -->
+
+<!-- REQUIRED SCRIPTS -->
+
+<!-- jQuery -->
+<script src="{% static 'crm/plugins/jquery/jquery.min.js' %}"></script>
+<!-- Bootstrap 4 -->
+<script src="{% static 'crm/plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<!-- AdminLTE App -->
+<script src="{% static 'crm/dist/js/adminlte.min.js' %}"></script>
+{% block script %}{% endblock %}
+</body>
+</html>
