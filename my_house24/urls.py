@@ -8,6 +8,7 @@ urlpatterns = [
     path('crm/', include('crm.urls')),
     path('cabinet/', include('personal_cabinet.urls')),
     path('', include('users.urls')),
+    path('__debug__/', include('debug_toolbar.urls')),
     path('old-admin/', admin.site.urls),
 ]
 

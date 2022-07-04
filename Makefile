@@ -13,4 +13,4 @@ superuser:
 	$(MANAGE) createsuperuser
 
 worker:
-	celery -A cinema worker --loglevel=info
+	celery -A my_house24 worker --loglevel=info

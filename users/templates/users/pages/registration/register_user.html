@@ -1,0 +1,98 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Регистрация</title>
+  <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="{% static 'crm/plugins/fontawesome-free/css/all.min.css' %}">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="{% static 'crm/dist/css/adminlte.min.css' %}">
+  <style>
+      input.error {
+          border: red 1px solid;
+          position: relative;
+          box-shadow: 0 0 4px 0 firebrick;
+      }
+  </style>
+</head>
+<body class="login-page" style="min-height: 496.781px; margin-top: 0px">
+    <div class="login-logo">
+        <a href="{% url 'main' %}">
+            <img src="{% static 'crm/dist/img/logo.svg' %}" width="360" alt="logo">
+        </a>
+    </div>
+    <div style="margin-right: 30px; margin-left: 30px">
+        <div class="login-box" style="min-width: 350px">
+            <div class="card">
+                <div class="card-body login-card-body">
+                    <div>
+                        <h3 class="login-box-msg" style="text-align: center; padding: 0; margin: 0"><b>Регистрация</b></h3>
+                    </div>
+                    <div class="dropdown-divider"></div>
+                    <form method="post" id="form">
+                        {% csrf_token %}
+                        {% for f in form %}
+                        <div style="padding-top: 20px">
+                            {{ f.errors }}
+                            <di>
+                                {{ f.label_tag }}
+                            </di>
+                            <div>
+                                {{ f }}
+                            </div>
+                        </div>
+                        {% endfor %}
+                        <div style="text-align: center; padding-top: 40px">
+                            <input type="submit" value="Зарегистрироваться" class="btn btn-block btn-primary" style="max-width: 170px; display: inline-block">
+                        </div>
+                    </form>
+                    <p style="text-align: center; padding-top: 15px; margin-bottom: 0">У вас уже есть аккаунт? <a href="{% url 'owner_login' %}">Войти в систему</a>.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<!-- REQUIRED SCRIPTS -->
+
+<!-- jQuery -->
+<script src="{% static 'crm/plugins/jquery/jquery.min.js' %}"></script>
+<!-- Bootstrap 4 -->
+<script src="{% static 'crm/plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<!-- AdminLTE App -->
+<script src="{% static 'crm/dist/js/adminlte.min.js' %}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+<script>
+    $("#form").validate({
+      rules: {
+        email: {
+          required: true,
+          email: true
+        },
+        last_name: "required",
+        first_name: "required",
+        password1: "required",
+        password2: "required"
+      },
+      messages: {
+        email: {
+          required: "* Обязательное поле",
+          email: "* Адрес электронной почты некорректен"
+        },
+        last_name: "* Обязательное поле",
+        first_name: "* Обязательное поле",
+        password1: "* Обязательное поле",
+        password2: "* Обязательное поле",
+      },
+      wrapper: 'span',
+      errorPlacement: function (error, element) {
+          error.css({'text-align': 'left', 'font-size': '14px', 'color': 'red', 'width': '100%'});
+          error.insertBefore(element);
+      }
+    });
+</script>
+</body>
+</html>

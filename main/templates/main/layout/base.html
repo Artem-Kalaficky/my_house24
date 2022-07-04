@@ -2,10 +2,67 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Сайт Управляющей Компании ЖКХ - "МОЙ ДОМ 24"{% endblock %}</title>
+  <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="{% static 'crm/plugins/fontawesome-free/css/all.min.css' %}">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="{% static 'crm/dist/css/adminlte.min.css' %}">
+  <link rel="stylesheet" href="{% static 'crm/bootstrap5dist/css/bootstrap.min.css' %}">
+  <style>
+      .active-link {
+          background-color: #e7e7e7;
+          padding-top: 12px;
+          padding-bottom: 12px;
+          margin: -5px 0 -2px 0;
+      }
+  </style>
+  {% block style %}{% endblock %}
 </head>
 <body>
-    Главная страница мой дом 24
+    <nav class="navbar navbar-expand-lg navbar-light bg-light" style="height: 50px">
+        <div class="container" style="max-width: 1140px">
+            <a href="{% url 'main' %}"><img src="{% static 'crm/dist/img/logo.svg' %}" width="145" height="40"></a>
+            <div>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarScroll">
+                    <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px; padding-top: 2px">
+                        <li class="nav-item">
+                            <a class="nav-link {% block main %}{% endblock %}" href="#" style="padding-right: 15px; padding-left: 15px; font-size: 15px">Главная</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% block about %}{% endblock %}" href="#" style="padding-right: 15px; padding-left: 15px; font-size: 15px;">О нас</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% block services %}{% endblock %}" href="#" style="padding-right: 15px; padding-left: 15px; font-size: 15px">Услуги</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% block contacts %}{% endblock %}" href="#" style="padding-right: 15px; padding-left: 15px; font-size: 15px">Контакты</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'owner_login' %}" style="padding-right: 15px; padding-left: 15px; font-size: 15px"><i class="fas fa-sign-in-alt"></i> Вход</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+<!-- ./wrapper -->
+
+<!-- REQUIRED SCRIPTS -->
+
+<!-- jQuery -->
+<script src="{% static 'crm/plugins/jquery/jquery.min.js' %}"></script>
+<!-- Bootstrap 4 -->
+<script src="{% static 'crm/plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'crm/bootstrap5dist/js/bootstrap.bundle.min.js' %}"></script>
+<!-- AdminLTE App -->
+<script src="{% static 'crm/dist/js/adminlte.min.js' %}"></script>
+{% block script %}{% endblock %}
 </body>
 </html>
