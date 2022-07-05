@@ -40,18 +40,16 @@
       <li class="nav-item dropdown" style="border-right: #e5e5e5 1px solid; border-left: #e5e5e5 1px solid">
         <a class="nav-link" data-toggle="dropdown" href="#">
           <i class="fa fa-child"></i>
-          <span class="badge badge-warning navbar-badge">0</span>
+          <span class="badge badge-warning navbar-badge">{{ count }}</span>
         </a>
         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-          <span class="dropdown-header">Новых пользователей: 0</span>
-          <div class="dropdown-divider"></div>
-          <a href="#" class="dropdown-item">
-            <span style="font-size: 14px">Тестовый пользователь1</span>
-          </a>
-          <div class="dropdown-divider"></div>
-          <a href="#" class="dropdown-item">
-            <span style="font-size: 14px">Тестовый пользователь2</span>
-          </a>
+          <span class="dropdown-header">Новых пользователей: {{ count }}</span>
+          {% for user in new_users %}
+              <div class="dropdown-divider"></div>
+              <a href="#" class="dropdown-item">
+                <span style="font-size: 14px">{{ user.last_name }} {{ user.first_name }} {{ user.patronymic }}</span>
+              </a>
+          {% endfor %}
           <div class="dropdown-divider"></div>
           <a href="#" class="dropdown-item dropdown-footer" style="font-size: 13px">Перейти в раздел пользователей</a>
         </div>
@@ -60,13 +58,13 @@
       <!-- User profile Dropdown Menu -->
       <li class="dropdown user user-menu">
             <a href="#" data-toggle="dropdown" aria-expanded="false">
-                <span class="nav-link" style="font-size: 15px"><i class="fa fa-user-circle text-purple" style="padding: 0 5px 0 0"></i>Тестовый админ</span>
+                <span class="nav-link" style="font-size: 15px"><img src="{{ user.avatar.url }}" class="img-circle" height="25" style="padding-right: 9px; margin-bottom: 4px">{{ user.first_name }} {{ user.last_name }}</span>
             </a>
             <ul class="dropdown-menu">
                 <!-- User image -->
                 <li class="user-header" style="background-color: #f39c12">
-                    <img src="{% static 'crm/dist/img/user2-160x160.jpg' %}" class="img-circle">
-                    <p>Тестовый админ (Роль)</p>
+                    <img src="{{ user.avatar.url }}" class="img-circle">
+                    <p>{{ user.first_name }} {{ user.last_name }} (Роль)</p>
                 </li>
                 <!-- Menu Footer-->
                 <li class="user-footer">
@@ -74,7 +72,7 @@
                         <a class="btn btn-default" href="#">Профиль</a>
                     </div>
                     <div style="display: inline-block; float: right">
-                        <a class="btn btn-default" href="#" data-method="post">Выход</a>
+                        <a class="btn btn-default" href="{% url 'logout' %}" data-method="post">Выход</a>
                     </div>
                 </li>
             </ul>

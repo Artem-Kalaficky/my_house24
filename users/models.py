@@ -1,6 +1,7 @@
 from random import randint
 
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
+from django.core.mail import send_mail
 from django.db import models
 from django.utils import timezone
 
@@ -17,7 +18,7 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=False)
     date_joined = models.DateField(default=timezone.now)
-    user_id = models.IntegerField(default=unique_id, unique=True, null=True, blank=True, verbose_name='ID')
+    user_id = models.CharField(max_length=5, default=unique_id, unique=True, null=True, blank=True, verbose_name='ID')
     first_name = models.CharField(max_length=32, blank=True, verbose_name='Имя')
     last_name = models.CharField(max_length=32, blank=True, verbose_name='Фамилия')
     patronymic = models.CharField(max_length=32, blank=True, verbose_name='Отчество')
