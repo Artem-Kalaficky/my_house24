@@ -16,6 +16,10 @@
       .active-link {
           background-color: #e1f1ea;
       }
+      .black {
+          color: black;
+          font-weight: 600;
+      }
   </style>
 </head>
 <body class="hold-transition sidebar-mini">
@@ -40,10 +44,10 @@
       <li class="nav-item dropdown" style="border-right: #e5e5e5 1px solid; border-left: #e5e5e5 1px solid">
         <a class="nav-link" data-toggle="dropdown" href="#">
           <i class="fa fa-child"></i>
-          <span class="badge badge-warning navbar-badge">{{ count }}</span>
+          <span class="badge badge-warning navbar-badge">{{ new_users|length }}</span>
         </a>
         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-          <span class="dropdown-header">Новых пользователей: {{ count }}</span>
+          <span class="dropdown-header">Новых пользователей: {{ new_users|length }}</span>
           {% for user in new_users %}
               <div class="dropdown-divider"></div>
               <a href="#" class="dropdown-item">
@@ -233,9 +237,9 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a href="#" class="nav-link {% block role %}{% endblock %}">
+                <a href="{% url 'roles' %}" class="nav-link {% block role %}{% endblock %}">
                   <i class="fa fa-user nav-icon"></i>
-                  <p style="font-size: 14px">Роли</p>
+                  <p style="font-size: 14px" {% block role-active %}{% endblock %}>Роли</p>
                 </a>
               </li>
               <li class="nav-item">
@@ -276,7 +280,7 @@
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item" style="font-size: 14px"><a href="#" style="color: #494949"><i class="fa fa-home" style="padding-right: 3px"></i>Главная</a></li>
+              <li class="breadcrumb-item" style="font-size: 14px"><a href="{% url 'home' %}" style="color: #494949"><i class="fa fa-home" style="padding-right: 3px"></i>Главная</a></li>
               <li class="breadcrumb-item active" style="font-size: 14px">{% block nav %}Статистика{% endblock %}</li>
             </ol>
           </div><!-- /.col -->
@@ -310,6 +314,8 @@
 <script src="{% static 'crm/plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
 <!-- AdminLTE App -->
 <script src="{% static 'crm/dist/js/adminlte.min.js' %}"></script>
+
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 {% block script %}{% endblock %}
 </body>
 </html>

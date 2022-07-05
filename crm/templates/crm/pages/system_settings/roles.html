@@ -1,0 +1,91 @@
+{% extends 'crm/layout/base.html' %}
+{% load static %}
+
+{% block settings %}menu-is-opening menu-open{% endblock %}
+{% block role %}active-link{% endblock %}
+{% block role-active %}class="black"{% endblock %}
+
+{% block title %}Роли{% endblock %}
+{% block name_page %}Роли{% endblock %}
+{% block nav %}Роли{% endblock %}
+
+{% block content %}
+    <div class="box" style="background-color: #ffffff; margin: 0 15px 0 10px; border-top: 3px #d2d6de solid; min-height: 365px; border-radius: 5px">
+        <form method="post">
+            {% csrf_token %}
+            {{ form.management_form }}
+            <table class="table table-hover table-striped table-responsive no-padding" style="color: #333333; font-size: 14px">
+                <thead>
+                    <tr>
+                        <th>Роль</th>
+                        <th class="text-center">Статистика</th>
+                        <th class="text-center">Касса</th>
+                        <th class="text-center">Квитанции на оплату</th>
+                        <th class="text-center">Лицевые счета</th>
+                        <th class="text-center">Квартиры</th>
+                        <th class="text-center">Владельцы квартир</th>
+                        <th class="text-center">Дома</th>
+                        <th class="text-center">Сообщения</th>
+                        <th class="text-center">Заявки мастера</th>
+                        <th class="text-center">Счетчики</th>
+                        <th class="text-center">Управление сайтом</th>
+                        <th class="text-center">Услуги</th>
+                        <th class="text-center">Тарифы</th>
+                        <th class="text-center">Роли</th>
+                        <th class="text-center">Пользователи</th>
+                        <th class="text-center">Платежные реквизиты</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for f in  form %}
+                    <tr>
+                        <td class="text-center">{{ f.id }}
+                        {% if forloop.counter0 == 0 %}Директор{% endif %}
+                        {% if forloop.counter0 == 1 %}Менеджер{% endif %}
+                        {% if forloop.counter0 == 2 %}Бухгалтер{% endif %}
+                        {% if forloop.counter0 == 3 %}Сантехник{% endif %}
+                        {% if forloop.counter0 == 4 %}Электрик{% endif %}
+                        </td>
+                        <td class="text-center">{{ f.has_statistics }}</td>
+                        <td class="text-center">{{ f.has_cashbox }}</td>
+                        <td class="text-center">{{ f.has_invoice }}</td>
+                        <td class="text-center">{{ f.has_personal_account }}</td>
+                        <td class="text-center">{{ f.has_apartment }}</td>
+                        <td class="text-center">{{ f.has_owner }}</td>
+                        <td class="text-center">{{ f.has_house }}</td>
+                        <td class="text-center">{{ f.has_message }}</td>
+                        <td class="text-center">{{ f.has_application }}</td>
+                        <td class="text-center">{{ f.has_meter }}</td>
+                        <td class="text-center">{{ f.has_site_management }}</td>
+                        <td class="text-center">{{ f.has_service }}</td>
+                        <td class="text-center">{{ f.has_tariff }}</td>
+                        <td class="text-center">{{ f.has_role }}</td>
+                        <td class="text-center">{{ f.has_users }}</td>
+                        <td class="text-center">{{ f.has_requisites }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <div style="float: right; padding-right: 15px">
+                <a href="{% url 'roles' %}" class="btn btn-default">Отменить</a>
+                <button type="submit" class="btn btn-success">Сохранить</button>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+
+{% block script %}
+<script>
+    {% if messages %}
+    Swal.fire({
+      position: 'top-end',
+      padding: 0,
+      icon: 'success',
+      width: 300,
+      html: '{% for message in messages %}{{ message }}{% endfor %}',
+      showConfirmButton: false,
+      timer: 1500,
+    })
+    {% endif %}
+</script>
+{% endblock %}
