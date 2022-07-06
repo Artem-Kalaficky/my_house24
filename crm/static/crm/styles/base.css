@@ -1,0 +1,38 @@
+.table-striped > tbody > tr:nth-child(2n+1) > td, .table-striped > tbody > tr:nth-child(2n+1) > th {
+    background-color: white;
+}
+
+.black {
+    color: black;
+    font-weight: 600;
+}
+
+.btn-success {
+    background-color: #00a65a;
+}
+
+.btn-primary {
+    background-color: #3c8ddc;
+}
+
+.my-box {
+    background-color: #ffffff;
+    margin: 0 10px 0 10px;
+    border-top: 3px #d2d6de solid;
+    min-height: 365px;
+    border-radius: 4px
+}
+
+.status {
+    font-weight: bold;
+    color: white;
+    margin: 0;
+    padding: 0 2px;
+    font-size: 12px;
+}
+
+.tr-link {
+    cursor: pointer;
+}
+
+

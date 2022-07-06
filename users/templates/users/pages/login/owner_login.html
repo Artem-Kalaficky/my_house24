@@ -33,7 +33,7 @@
                 <a style="color: #494949; font-size: 15px" class="nav-link active" id="home-tab" data-toggle="tab" href="{% url 'owner_login' %}" role="tab" aria-controls="home" aria-selected="true">Для жильцa</a>
               </li>
               <li class="nav-item" role="presentation" style="width: 50%; text-align: center">
-                <a style="color: #494949; font-size: 15px" class="nav-link" href="{% url 'admin_login' %}" role="tab" aria-controls="profile" aria-selected="false">Для администрации</a>
+                <a style="color: #494949; font-size: 15px" class="nav-link" href="{% if user.is_authenticated and user.is_staff %}{% url 'home' %}{% else %}{% url 'admin_login' %}{% endif %}" role="tab" aria-controls="profile" aria-selected="false">Для администрации</a>
               </li>
             </ul>
             <div class="tab-content" id="myTabContent">
@@ -67,6 +67,7 @@
                         <input type="checkbox" name="remember_me" id="id_remember_me" checked>
                         <label for="id_remember_me">Запомнить меня</label>
                     </div>
+                    <input type="hidden" name="g-recaptcha-response" id='recaptcha'>
                     <div style="padding-top: 10px">
                         <button type="submit" class="btn btn-primary btn-block">Вход</button>
                         <input type="hidden" name="next" value="{{ next }}">
@@ -89,7 +90,19 @@
 <!-- AdminLTE App -->
 <script src="{% static 'crm/dist/js/adminlte.min.js' %}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+<script src="https://www.google.com/recaptcha/api.js?render={{ site_key }}"></script>
 <script>
+    grecaptcha.ready(function() {
+      $('#form').submit(function(e){
+          var form = this;
+          grecaptcha.execute('reCAPTCHA_site_key', {action: 'form'}).then(function(token) {
+              $('#recaptcha').val(token)
+              form.submit()
+          });
+      })
+    });
+
+
     $("#form").validate({
       rules: {
         username: {

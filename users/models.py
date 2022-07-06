@@ -55,7 +55,7 @@ class Role(models.Model):
                ('accountant', 'Бухгалтер'),
                ('electric', 'Электрик'),
                ('plumber', 'Сантехник'))
-    role = models.CharField(max_length=16, choices=CHOICES, default='director', verbose_name='Роль')
+    role = models.CharField(max_length=16, choices=CHOICES, default='director', blank=True, verbose_name='Роль')
     has_statistics = models.BooleanField(default=False, verbose_name='Доступ к статистике')
     has_cashbox = models.BooleanField(default=False, verbose_name='Доступ к кассе')
     has_invoice = models.BooleanField(default=False, verbose_name='Доступ к квитанциям')

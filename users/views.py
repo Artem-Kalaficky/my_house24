@@ -1,6 +1,8 @@
+from django.conf import settings
 from django.contrib.auth import login as auth_login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.sites.shortcuts import get_current_site
 from django.core.signing import BadSignature
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
@@ -24,6 +26,16 @@ class AdminLoginView(LoginView):
             self.request.session.modified = True
         return HttpResponseRedirect(reverse_lazy('home'))
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        current_site = get_current_site(self.request)
+        context.update({self.redirect_field_name: self.get_redirect_url(),
+                        'site': current_site,
+                        'site_key': settings.RECAPTCHA_SITE_KEY,
+                        'site_name': current_site.name,
+                        **(self.extra_context or {})})
+        return context
+
 
 class OwnerLoginView(LoginView):
     template_name = 'users/pages/login/owner_login.html'
@@ -36,6 +48,16 @@ class OwnerLoginView(LoginView):
             self.request.session.set_expiry(0)
             self.request.session.modified = True
         return HttpResponseRedirect(reverse_lazy('cabinet'))
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        current_site = get_current_site(self.request)
+        context.update({self.redirect_field_name: self.get_redirect_url(),
+                        'site': current_site,
+                        'site_key': settings.RECAPTCHA_SITE_KEY,
+                        'site_name': current_site.name,
+                        **(self.extra_context or {})})
+        return context
 
 
 class UserLogoutView(LoginRequiredMixin, LogoutView):
@@ -65,6 +87,7 @@ def user_activate(request, sign):
     else:
         template = 'users/pages/activate/activation_done.html'
         user.is_active = True
+        user.status = 'new'
         user.save()
     return render(request, template)
 

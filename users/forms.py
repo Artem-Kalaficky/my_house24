@@ -1,7 +1,6 @@
+from django import forms
 from django.contrib.auth import password_validation
 from django.contrib.auth.forms import AuthenticationForm, UsernameField, UserCreationForm
-
-from django import forms
 from django.core.exceptions import ValidationError
 from django.forms import PasswordInput, TextInput, EmailInput
 
@@ -52,6 +51,7 @@ class RegisterUserForm(UserCreationForm):
         user = super().save(commit=False)
         user.set_password(self.cleaned_data['password1'])
         user.is_active = False
+        user.status = 'disable'
         if commit:
             user.save()
         user_registered.send(RegisterUserForm, instance=user)
