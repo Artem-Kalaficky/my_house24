@@ -1,0 +1,71 @@
+{% extends 'crm/layout/base.html' %}
+{% load static %}
+
+
+{% block settings %}menu-is-opening menu-open{% endblock %}
+{% block users %}class="nav-link active-link" style="color: black; background-color: #e1f1ea"{% endblock %}
+{% block users-active %}class="black"{% endblock %}
+
+
+{% block title %}Новый пользователь{% endblock %}
+{% block name_page %}Новый пользователь{% endblock %}
+{% block previos_link %}<a href="{% url 'users_list' %}" style="color: #494949">/ Пользователи</a>{% endblock %}
+{% block nav %}Новый пользователь{% endblock %}
+
+{% block content %}
+    <div class="my-box">
+        <form method="post">
+            {% csrf_token %}
+            <div class="row" style="margin: 8px">
+                <div class="col-xl-6 col-md-6" style="padding: 0 10px">
+                    <p style="margin: 0; font-weight: 600; font-size: 15px">{{ form.first_name.label }}</p>
+                    {{ form.first_name }}
+                </div>
+                <div class="col-xl-6 col-md-6" style="padding: 0 10px">
+                    <p style="margin: 0; font-weight: 600; font-size: 15px">{{ form.email.label }}</p>
+                    {{ form.email }}
+                </div>
+            </div>
+            <div class="row" style="margin: 8px">
+                <div class="col-xl-6 col-md-6" style="padding: 0 10px">
+                    <p style="margin: 0; font-weight: 600; font-size: 15px">{{ form.last_name.label }}</p>
+                    {{ form.last_name }}
+                </div>
+                <div class="col-xl-6 col-md-6" style="padding: 0 10px">
+                    <p style="margin: 0; font-weight: 600; font-size: 15px">{{ form.password1.label }}</p>
+                    {{ form.password1 }}
+                </div>
+            </div>
+            <div class="row" style="margin: 8px">
+                <div class="col-xl-6 col-md-6" style="padding: 0 10px">
+                    <p style="margin: 0; font-weight: 600; font-size: 15px">{{ form.telephone.label }}</p>
+                    {{ form.telephone }}
+                </div>
+                <div class="col-xl-6 col-md-6" style="padding: 0 10px">
+                    <p style="margin: 0; font-weight: 600; font-size: 15px">{{ form.password2.label }}</p>
+                    {{ form.password2 }}
+                </div>
+            </div>
+            <div class="row" style="margin: 8px">
+                <div class="col-xl-6 col-md-6" style="padding: 0 10px">
+                    <p style="margin: 0; font-weight: 600; font-size: 15px">{{ form.role.label }}</p>
+                    <select name="role" class="form-select" id="id_role">
+                      <option value="1" selected>Директор</option>
+                      <option value="2">Менеджер</option>
+                      <option value="3">Бухгалтер</option>
+                      <option value="4">Сантехник</option>
+                      <option value="5">Электрик</option>
+                    </select>
+                </div>
+                <div class="col-xl-6 col-md-6" style="padding: 0 10px">
+                    <p style="margin: 0; font-weight: 600; font-size: 15px">{{ form.status.label }}</p>
+                    <select name="status" class="form-select" id="id_status">
+                      <option value="is_active" selected>Активен</option>
+                      <option value="new" selected="">Новый</option>
+                      <option value="disable">Отключен</option>
+                    </select>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}

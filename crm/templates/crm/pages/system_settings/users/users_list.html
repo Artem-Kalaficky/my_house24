@@ -1,0 +1,86 @@
+{% extends 'crm/layout/base.html' %}
+{% load static %}
+
+
+{% block settings %}menu-is-opening menu-open{% endblock %}
+{% block users %}class="nav-link active-link" style="color: black; background-color: #e1f1ea"{% endblock %}
+{% block users-active %}class="black"{% endblock %}
+
+
+{% block title %}Пользователи{% endblock %}
+{% block name_page %}Пользователи{% endblock %}
+{% block nav %}Пользователи{% endblock %}
+
+{% block content %}
+    <div style="float: right; padding-right: 10px; margin-top: -50px">
+        <a href="{% url 'user_create' %}" class="btn btn-success">Создать пользователя</a>
+    </div>
+    <div class="my-box" style="margin-top: 50px">
+        <div style="float: right; padding-right: 10px; padding-top: 5px; margin-bottom: 5px">
+            <a href="{% url 'users_list' %}" class="btn btn-default" style="font-size: 14px; max-height: 34px">Очистить</a>
+        </div>
+        <table class="table table-hover table-striped table-responsive no-padding" style="color: #333333; font-size: 14px">
+            <thead>
+                <tr>
+                    <th style="width: 3%">#</th>
+                    <th style="width: 17%">Пользователь</th>
+                    <th style="width: 8%">Роль</th>
+                    <th style="width: 17%">Телефон</th>
+                    <th style="width: 17%">E-mail(логин)</th>
+                    <th style="width: 7%">Статус</th>
+                    <th style="width: 0%"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td></td>
+                    <td style="padding: 5px"><input type="text" class="form-control"></td>
+                    <td style="padding: 5px">
+                        <select class="form-select">
+                          <option hidden disabled selected value></option>
+                          <option value="id">Менеджер</option>
+                        </select>
+                    </td>
+                    <td style="padding: 5px"><input type="text" class="form-control"></td>
+                    <td style="padding: 5px"><input type="text" class="form-control"></td>
+                    <td style="padding: 5px">
+                        <select class="form-select">
+                          <option hidden disabled selected value></option>
+                          <option value="id">Новый</option>
+                        </select>
+                    </td>
+                    <td></td>
+                </tr>
+                {% for user in users %}
+                    <tr data-href="{% url 'user_detail' pk=user.id %}" class="tr-link">
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ user.first_name }} {{ user.last_name }}</td>
+                        <td>{{ user.role.get_role_display }}</td>
+                        <td>{% if user.telephone %}{{ user.telephone }}{% else %}Не указан{% endif %}</td>
+                        <td>{{ user.email }}</td>
+                        <td style="padding: 12px 5px 5px 5px">
+                            {% if user.status == 'is_active' %}
+                            <small class="btn btn-sm btn-success status">Активен</small>
+                            {% elif user.status == 'new' %}
+                            <small class="btn btn-sm btn-warning status">Новый</small>
+                            {% elif user.status == 'disable' %}
+                            <small class="btn btn-sm btn-danger status">Отключен</small>
+                            {% endif %}
+                        </td>
+                        <td style="padding: 6px 5px 7px 4px; float: right">
+                            <div class="btn-group pull-right">
+                                <a class="btn btn-default btn-sm" href="#" title="Отправить приглашение" data-toggle="tooltip"><i class="fa fa-reply"></i></a>
+                                <a class="btn btn-default btn-sm" href="#" title="Редактировать" data-toggle="tooltip"><i class="fa fa-pencil-alt"></i></a>
+                                <a class="btn btn-default btn-sm" href="#" title="Удалить" data-toggle="tooltip" data-pjax="0" data-method="post" data-confirm="Вы уверены, что хотите удалить этот элемент?"><i class="fa fa-trash"></i></a>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'crm/scripts/data-href.js' %}"></script>
+{% endblock %}

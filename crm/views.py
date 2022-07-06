@@ -3,10 +3,10 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
-from django.views.generic import TemplateView, ListView, FormView
+from django.views.generic import TemplateView, ListView, FormView, DetailView
 from django.views.generic.edit import FormMixin, CreateView, UpdateView
 
-from crm.forms import RoleForm, RoleFormSet
+from crm.forms import RoleFormSet, UserCreateForm
 from users.models import UserProfile, Role
 
 
@@ -24,8 +24,8 @@ class StatisticsTemplateView(StaffRequiredMixin, TemplateView):
         return self.render_to_response(context)
 
 
-# region System settings
-class RoleFormView(StaffRequiredMixin, SuccessMessageMixin, CreateView):
+# region SYSTEM-SETTINGS
+class RoleCreateView(StaffRequiredMixin, SuccessMessageMixin, CreateView):
     template_name = 'crm/pages/system_settings/roles.html'
     success_message = 'Роли успешно изменены!'
 
@@ -35,7 +35,7 @@ class RoleFormView(StaffRequiredMixin, SuccessMessageMixin, CreateView):
         return form_class
 
     def get_context_data(self, **kwargs):
-        context = super(RoleFormView, self).get_context_data(**kwargs)
+        context = super(RoleCreateView, self).get_context_data(**kwargs)
         context['new_users'] = UserProfile.objects.filter(status='new')
         return context
 
@@ -43,7 +43,40 @@ class RoleFormView(StaffRequiredMixin, SuccessMessageMixin, CreateView):
         return reverse_lazy('roles')
 
 
+# region users page
+class UsersListView(StaffRequiredMixin, SuccessMessageMixin, ListView):
+    model = UserProfile
+    template_name = 'crm/pages/system_settings/users/users_list.html'
+    context_object_name = 'users'
+
+    def get_queryset(self):
+        return UserProfile.objects.filter(is_staff=True)
+
+    def get_context_data(self, **kwargs):
+        context = super(UsersListView, self).get_context_data(**kwargs)
+        context['new_users'] = UserProfile.objects.filter(status='new')
+        return context
 
 
+class UserCreateView(StaffRequiredMixin, CreateView):
+    template_name = 'crm/pages/system_settings/users/user_create.html'
+    form_class = UserCreateForm
+    success_url = reverse_lazy('users_list')
 
-# endregion System settings
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['new_users'] = UserProfile.objects.filter(status='new')
+        return context
+
+
+class UserDetailView(StaffRequiredMixin, DetailView):
+    model = UserProfile
+    template_name = 'crm/pages/system_settings/users/user_detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['new_users'] = UserProfile.objects.filter(status='new')
+        return context
+# endregion users page
+
+# endregion SYSTEM-SETTINGS

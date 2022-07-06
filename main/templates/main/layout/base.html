@@ -45,7 +45,7 @@
                             <a class="nav-link {% block contacts %}{% endblock %}" href="#" style="padding-right: 15px; padding-left: 15px; font-size: 15px">Контакты</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'owner_login' %}" style="padding-right: 15px; padding-left: 15px; font-size: 15px"><i class="fas fa-sign-in-alt"></i> Вход</a>
+                            <a class="nav-link" href="{% if user.is_authenticated and not user.is_staff %}{% url 'cabinet' %}{% else %}{% url 'owner_login' %}{% endif %}" style="padding-right: 15px; padding-left: 15px; font-size: 15px"><i class="fas fa-sign-in-alt"></i> Вход</a>
                         </li>
                     </ul>
                 </div>

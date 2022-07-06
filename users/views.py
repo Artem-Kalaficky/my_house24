@@ -87,6 +87,7 @@ def user_activate(request, sign):
     else:
         template = 'users/pages/activate/activation_done.html'
         user.is_active = True
+        user.status = 'new'
         user.save()
     return render(request, template)
 

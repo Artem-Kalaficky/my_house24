@@ -1,8 +1,9 @@
 {% extends 'crm/layout/base.html' %}
 {% load static %}
 
+
 {% block settings %}menu-is-opening menu-open{% endblock %}
-{% block role %}active-link{% endblock %}
+{% block role %}class="nav-link active-link" style="color: black; background-color: #e1f1ea"{% endblock %}
 {% block role-active %}class="black"{% endblock %}
 
 {% block title %}Роли{% endblock %}
@@ -10,7 +11,7 @@
 {% block nav %}Роли{% endblock %}
 
 {% block content %}
-    <div class="box" style="background-color: #ffffff; margin: 0 15px 0 10px; border-top: 3px #d2d6de solid; min-height: 365px; border-radius: 5px">
+    <div class="box" style="background-color: #ffffff; margin: 0 10px 0 10px; border-top: 3px #d2d6de solid; min-height: 365px; border-radius: 4px">
         <form method="post">
             {% csrf_token %}
             {{ form.management_form }}
