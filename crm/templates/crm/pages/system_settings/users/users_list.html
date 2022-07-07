@@ -1,6 +1,13 @@
 {% extends 'crm/layout/base.html' %}
 {% load static %}
 
+{% block style %}
+    <style>
+        .not-allowed:hover {
+            cursor: grab;
+        }
+    </style>
+{% endblock %}
 
 {% block settings %}menu-is-opening menu-open{% endblock %}
 {% block users %}class="nav-link active-link" style="color: black; background-color: #e1f1ea"{% endblock %}
@@ -17,70 +24,116 @@
     </div>
     <div class="my-box" style="margin-top: 50px">
         <div style="float: right; padding-right: 10px; padding-top: 5px; margin-bottom: 5px">
-            <a href="{% url 'users_list' %}" class="btn btn-default" style="font-size: 14px; max-height: 34px">Очистить</a>
+            <a id="clear" href="{% url 'users_list' %}" class="btn btn-default" style="font-size: 14px; max-height: 34px">Очистить</a>
         </div>
-        <table class="table table-hover table-striped table-responsive no-padding" style="color: #333333; font-size: 14px; padding-bottom: 10px">
-            <thead>
-                <tr>
-                    <th style="width: 3%">#</th>
-                    <th style="width: 17%; min-width: 200px">Пользователь</th>
-                    <th style="width: 8%; min-width: 120px">Роль</th>
-                    <th style="width: 17%; min-width: 150px">Телефон</th>
-                    <th style="width: 17%; min-width: 200px">E-mail(логин)</th>
-                    <th style="width: 7%; min-width: 120px">Статус</th>
-                    <th style="width: 0%"></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td></td>
-                    <td style="padding: 5px"><input type="text" class="form-control"></td>
-                    <td style="padding: 5px">
-                        <select class="form-select">
-                          <option hidden disabled selected value></option>
-                          <option value="id">Менеджер</option>
-                        </select>
-                    </td>
-                    <td style="padding: 5px"><input type="text" class="form-control"></td>
-                    <td style="padding: 5px"><input type="text" class="form-control"></td>
-                    <td style="padding: 5px">
-                        <select class="form-select">
-                          <option hidden disabled selected value></option>
-                          <option value="id">Новый</option>
-                        </select>
-                    </td>
-                    <td></td>
-                </tr>
-                {% for user in users %}
-                    <tr data-href="{% url 'user_detail' pk=user.id %}" class="tr-link">
-                        <td>{{ forloop.counter }}</td>
-                        <td>{{ user.first_name }} {{ user.last_name }}</td>
-                        <td>{{ user.role.get_role_display }}</td>
-                        <td>{% if user.telephone %}{{ user.telephone }}{% else %}Не указан{% endif %}</td>
-                        <td>{{ user.email }}</td>
-                        <td style="padding: 12px 5px 5px 5px">
-                            {% if user.status == 'is_active' %}
-                            <small class="btn btn-sm btn-success status">Активен</small>
-                            {% elif user.status == 'new' %}
-                            <small class="btn btn-sm btn-warning status">Новый</small>
-                            {% elif user.status == 'disable' %}
-                            <small class="btn btn-sm btn-danger status">Отключен</small>
-                            {% endif %}
-                        </td>
-                        <td style="padding: 6px 5px 7px 4px; float: right">
-                            <div class="btn-group pull-right">
-                                <a class="btn btn-default btn-sm" href="#" title="Отправить приглашение" data-toggle="tooltip"><i class="fa fa-reply"></i></a>
-                                <a class="btn btn-default btn-sm" href="#" title="Редактировать" data-toggle="tooltip"><i class="fa fa-pencil-alt"></i></a>
-                                <a class="btn btn-default btn-sm" href="#" title="Удалить" data-toggle="tooltip" data-pjax="0" data-method="post" data-confirm="Вы уверены, что хотите удалить этот элемент?"><i class="fa fa-trash"></i></a>
-                            </div>
-                        </td>
+        <form method="get" id="form">
+            <table class="table table-hover table-striped table-responsive no-padding" style="color: #333333; font-size: 14px; padding-bottom: 10px">
+                <thead>
+                    <tr>
+                        <th style="width: 3%">#</th>
+                        <th style="width: 17%; min-width: 200px">Пользователь</th>
+                        <th style="width: 8%; min-width: 120px">Роль</th>
+                        <th style="width: 17%; min-width: 150px">Телефон</th>
+                        <th style="width: 17%; min-width: 200px">E-mail(логин)</th>
+                        <th style="width: 7%; min-width: 120px">Статус</th>
+                        <th style="width: 0%"></th>
                     </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td></td>
+                        <td style="padding: 5px"><input type="text" class="form-control" name="user" id="user"></td>
+                        <td style="padding: 5px">
+                            <select class="form-select" name="role" id="role">
+                              <option hidden disabled selected value></option>
+                              <option value="director">Директор</option>
+                              <option value="manager">Менеджер</option>
+                              <option value="accountant">Бухгалтер</option>
+                              <option value="electric">Электрик</option>
+                              <option value="plumber">Сантехник</option>
+                            </select>
+                        </td>
+                        <td style="padding: 5px"><input type="text" class="form-control" name="telephone" id="telephone"></td>
+                        <td style="padding: 5px"><input type="text" class="form-control" name="email" id="email"></td>
+                        <td style="padding: 5px">
+                            <select class="form-select" name="status" id="status">
+                              <option hidden disabled selected value></option>
+                              <option value="is_active">Активный</option>
+                              <option value="new">Новый</option>
+                              <option value="disable">Отключен</option>
+                            </select>
+                        </td>
+                        <td></td>
+                    </tr>
+                    {% for user in users %}
+                        <tr>
+                            <td data-href="{% url 'user_detail' pk=user.id %}" class="tr-link">{{ forloop.counter }}</td>
+                            <td data-href="{% url 'user_detail' pk=user.id %}" class="tr-link">{{ user.first_name }} {{ user.last_name }}</td>
+                            <td data-href="{% url 'user_detail' pk=user.id %}" class="tr-link">{{ user.role.get_role_display }}</td>
+                            <td data-href="{% url 'user_detail' pk=user.id %}" class="tr-link">{% if user.telephone %}{{ user.telephone }}{% else %}Не указан{% endif %}</td>
+                            <td data-href="{% url 'user_detail' pk=user.id %}" class="tr-link">{{ user.email }}</td>
+                            <td style="padding: 12px 5px 5px 5px" data-href="{% url 'user_detail' pk=user.id %}" class="tr-link">
+                                {% if user.status == 'is_active' %}
+                                <small class="btn btn-sm btn-success status">Активен</small>
+                                {% elif user.status == 'new' %}
+                                <small class="btn btn-sm btn-warning status">Новый</small>
+                                {% elif user.status == 'disable' %}
+                                <small class="btn btn-sm btn-danger status">Отключен</small>
+                                {% endif %}
+                            </td>
+                            <td style="padding: 6px 5px 7px 4px; float: right">
+                                <div class="btn-group pull-right">
+                                    <a class="btn btn-default btn-sm" href="#" title="Отправить приглашение" data-toggle="tooltip"><i class="fa fa-reply"></i></a>
+                                    <a class="btn btn-default btn-sm" href="{% url 'user_update' pk=user.id %}" title="Редактировать" data-toggle="tooltip"><i class="fa fa-pencil-alt"></i></a>
+                                    <button type="button" class="btn btn-default btn-sm not-allowed" {% if not user.is_superuser %}data-bs-toggle="modal" data-bs-target="#deleteModal-{{ forloop.counter }}" {% else %}style="cursor: not-allowed; opacity: 0.4"{% endif %}><i class="fa fa-trash"></i></button>
+                                </div>
+                            </td>
+                        </tr>
+                        <!-- Modal -->
+                        <div class="modal fade" id="deleteModal-{{ forloop.counter }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="deleteModalLabel-{{ forloop.counter }}" aria-hidden="true">
+                          <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                              <div class="modal-header bg-danger">
+                                <h5 class="modal-title" id="deleteModal1Label-{{ forloop.counter }}">Подтверждение удаления</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                              </div>
+                              <form method="post" action="{% url 'user_delete' user.id %}">
+                                  {% csrf_token %}
+                                  <div class="modal-body">
+                                      Вы действительно хотите удалить пользователя <b>{{ user.first_name }} {{ user.last_name }}</b>?
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                                    <button type="submit" class="btn btn-danger">Удалить</button>
+                                  </div>
+                              </form>
+                            </div>
+                          </div>
+                        </div>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </form>
     </div>
 {% endblock %}
 
 {% block script %}
-    <script src="{% static 'crm/scripts/data-href.js' %}"></script>
+    <script src="{% static 'crm/scripts/users/users_list.js' %}"></script>
+    <script>
+        {% if messages %}
+        Swal.fire({
+          backdrop: false,
+          position: 'top-end',
+          padding: 0,
+          icon: 'success',
+          width: 300,
+          html: '{% for message in messages %}{{ message }}{% endfor %}',
+          showConfirmButton: false,
+          timer: 1500,
+        })
+        {% endif %}
+
+
+        $('#clear').click(clear)
+    </script>
 {% endblock %}

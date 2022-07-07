@@ -1,0 +1,131 @@
+{% extends 'crm/layout/base.html' %}
+{% load static %}
+
+{% block style %}
+    <style>
+        input.error {
+            border: red 1px solid;
+            position: relative;
+            box-shadow: 0 0 4px 0 firebrick;
+        }
+    </style>
+{% endblock %}
+
+{% block settings %}menu-is-opening menu-open{% endblock %}
+{% block users %}class="nav-link active-link" style="color: black; background-color: #e1f1ea"{% endblock %}
+{% block users-active %}class="black"{% endblock %}
+
+
+{% block title %}Пользователь{% endblock %}
+{% block name_page %}Пользователь{% endblock %}
+{% block previos_link %}<a href="{% url 'users_list' %}" style="color: #494949">/ Пользователи </a><a href="{% url 'user_detail' userprofile.id %}" style="color: #494949"> / Пользователь </a>{% endblock %}
+{% block nav %}Редактирование{% endblock %}
+
+{% block content %}
+    <div class="my-box" style="padding-bottom: 60px">
+        <form method="post" id="form">
+            {% csrf_token %}
+            <div class="row" style="margin: 8px">
+                <div class="col-xl-6 col-md-6" style="padding: 0 10px">
+                    <p style="margin: 0; font-weight: 600; font-size: 15px">{{ form.first_name.label }}</p>
+                    {{ form.first_name }}
+                </div>
+                <div class="col-xl-6 col-md-6" style="padding: 0 10px">
+                    <p style="margin: 0; font-weight: 600; font-size: 15px">{{ form.email.label }}</p>
+                    {{ form.email }}
+                </div>
+            </div>
+            <div class="row" style="margin: 8px">
+                <div class="col-xl-6 col-md-6" style="padding: 0 10px">
+                    <p style="margin: 0; font-weight: 600; font-size: 15px">{{ form.last_name.label }}</p>
+                    {{ form.last_name }}
+                </div>
+                <div class="col-xl-6 col-md-6" style="padding: 0 10px">
+                    <p style="margin: 0; font-weight: 600; font-size: 15px">{{ form.password1.label }}</p>
+                    <div>
+                        <input type="password" name="password1" class="form-control" id="id_password1" style="max-width: 600px; display: inline-block; margin-right: -6px">
+                        <div style="display: inline-block">
+                            <button style="margin-right: -6px; height: 38px; margin-top: -3px" class="btn btn-default generatePassword" type="button">
+                                Сгенерировать
+                            </button>
+                            <button style="height: 38px; margin-top: -3px" type="button" class="btn btn-primary showPassword">
+                                <i class="fa fa-eye" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                        {% if form.errors %}
+                            <p style="font-size: 14px; padding: 0; margin: 0">* Пароль должен содержать как минимум 8 символов.</p>
+                            <p style="font-size: 14px; padding: 0; margin: 0">* Пароли должны совпадать.</p>
+                            <p style="font-size: 14px; padding: 0; margin: 0">* Пароль должен сожержать цифры, буквы, верхний регистр.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="margin: 8px">
+                <div class="col-xl-6 col-md-6" style="padding: 0 10px">
+                    <p style="margin: 0; font-weight: 600; font-size: 15px">{{ form.telephone.label }}</p>
+                    {{ form.telephone }}
+                </div>
+                <div class="col-xl-6 col-md-6" style="padding: 0 10px">
+                    <p style="margin: 0; font-weight: 600; font-size: 15px">{{ form.password2.label }}</p>
+                    {{ form.password2 }}
+                </div>
+            </div>
+
+            <div class="row" style="margin: 8px; {% if userprofile.is_superuser or userprofile.id == user.id %}display: none{% endif %}">
+                <div class="col-xl-6 col-md-6" style="padding: 0 10px">
+                    <p style="margin: 0; font-weight: 600; font-size: 15px">{{ form.role.label }}</p>
+                    <select name="role" class="form-select" id="id_role">
+                      <option value="1" {% if userprofile.role.role == 'director' %}selected{% endif %}>Директор</option>
+                      <option value="2" {% if userprofile.role.role == 'manager' %}selected{% endif %}>Менеджер</option>
+                      <option value="3" {% if userprofile.role.role == 'accountant' %}selected{% endif %}>Бухгалтер</option>
+                      <option value="4" {% if userprofile.role.role == 'electric' %}selected{% endif %}>Электрик</option>
+                      <option value="5" {% if userprofile.role.role == 'plumber' %}selected{% endif %}>Сантехник</option>
+                    </select>
+                </div>
+                <div class="col-xl-6 col-md-6" style="padding: 0 10px">
+                    <p style="margin: 0; font-weight: 600; font-size: 15px">{{ form.status.label }}</p>
+                    <select name="status" class="form-select" id="id_status">
+                      <option value="is_active" {% if userprofile.status == 'is_active' %}selected{% endif %}>Активен</option>
+                      <option value="new" {% if userprofile.status == 'new' %}selected{% endif %}>Новый</option>
+                      <option value="disable" {% if userprofile.status == 'disable' %}selected{% endif %}>Отключен</option>
+                    </select>
+                </div>
+            </div>
+
+            <div style="float: right; padding-right: 16px; padding-top: 15px">
+                <a href="{% url 'users_list' %}" class="btn btn-default">Отменить</a>
+                <button type="submit" class="btn btn-success">Сохранить</button>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script src="https://cdn.jsdelivr.net/npm/jquery.maskedinput@1.4.1/src/jquery.maskedinput.min.js" type="text/javascript"></script>
+    <script src="{% static 'crm/scripts/users/create_user.js' %}"></script>
+    <script>
+        $("#form").validate({
+          rules: {
+            first_name: "required",
+            last_name: "required",
+            email: {
+              required: true,
+              email: true
+            },
+          },
+          messages: {
+            first_name: "* Обязательное поле",
+            last_name: "* Обязательное поле",
+            email: {
+              required: "* Обязательное поле",
+              email: "* Адрес электронной почты некорректен"
+            }
+          },
+          wrapper: 'span',
+          errorPlacement: function (error, element) {
+              error.css({'text-align': 'left', 'font-size': '14px', 'color': 'red', 'width': '100%'});
+              error.insertAfter(element);
+          }
+        });
+    </script>
+{% endblock %}

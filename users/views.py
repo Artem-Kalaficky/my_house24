@@ -24,7 +24,10 @@ class AdminLoginView(LoginView):
         if not remember_me:
             self.request.session.set_expiry(0)
             self.request.session.modified = True
-        return HttpResponseRedirect(reverse_lazy('home'))
+        url = reverse_lazy('home')
+        if not self.request.user.role.has_statistics:
+            url = f"/crm/system-settings/users/update/{self.request.user.id}/"
+        return HttpResponseRedirect(url)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

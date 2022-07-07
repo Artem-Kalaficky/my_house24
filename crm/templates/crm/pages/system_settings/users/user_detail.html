@@ -15,7 +15,7 @@
 {% block content %}
     <div class="my-box" style="min-height: 310px">
         <div style="float: right; padding-right: 10px; padding-top: 5px; margin-bottom: 5px">
-            <a href="#" class="btn btn-primary" style="font-size: 14px; max-height: 34px">Редактировать пользователя</a>
+            <a href="{% url 'user_update' pk=userprofile.id %}" class="btn btn-primary" style="font-size: 14px; max-height: 34px">Редактировать пользователя</a>
         </div>
         <div class="dropdown-divider" style="border-color:lightgrey; margin-top: 45px"></div>
         <div style="max-width: 550px; padding-left: 10px; padding-right: 10px">

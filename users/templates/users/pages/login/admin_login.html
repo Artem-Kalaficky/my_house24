@@ -27,6 +27,14 @@
             </a>
         </div>
 
+        {% if next %}
+            {% if user.is_authenticated %}
+            <p style="text-align: center">Ваш аккаунт не имеет доступа к этой странице. Войдите с аккаунта у которого есть доступ.</p>
+            {% else %}
+            <p style="text-align: center">Пожалуйста, сначала авторизуйтесь!</p>
+            {% endif %}
+        {% endif %}
+
         <div class="card">
             <ul class="nav nav-tabs" id="myTab" role="tablist" style="">
               <li class="nav-item" role="presentation" style="width: 50%; text-align: center">

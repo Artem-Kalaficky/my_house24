@@ -64,12 +64,12 @@
                 <!-- User image -->
                 <li class="user-header" style="background-color: #f39c12">
                     <img src="{% if user.avatar %}{{ user.avatar.url }}{% else %}{% static 'crm/dist/img/user2-160x160.jpg' %}{% endif %}" class="img-circle">
-                    <p>{{ user.first_name }} {{ user.last_name }} (Роль)</p>
+                    <p style="color: white">{{ user.first_name }} {{ user.last_name }} ({{ user.role.get_role_display }})</p>
                 </li>
                 <!-- Menu Footer-->
                 <li class="user-footer">
                     <div style="display: inline-block">
-                        <a class="btn btn-default" href="#">Профиль</a>
+                        <a class="btn btn-default" href="{% url 'user_update' pk=user.id %}">Профиль</a>
                     </div>
                     <div style="display: inline-block; float: right">
                         <a class="btn btn-default" href="{% url 'logout' %}" data-method="post">Выход</a>
@@ -85,7 +85,7 @@
   <!-- Main Sidebar Container -->
   <aside class="main-sidebar sidebar-light-primary elevation-4">
     <!-- Brand Logo -->
-    <a href="{% url 'home' %}" class="brand-link" style="text-align: -webkit-center;  padding: 8px 0 8px 0">
+    <a href="{% if user.role.has_statistics %}{% url 'home' %}{% else %}{% url 'user_update' pk=user.id %}{% endif %}" class="brand-link" style="text-align: -webkit-center;  padding: 8px 0 8px 0">
       <img src="{% static 'crm/dist/img/logo.svg' %}" width="100%" height="40">
     </a>
 
@@ -95,7 +95,7 @@
       <!-- Sidebar Menu -->
       <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-
+          {% if user.role.has_statistics %}
           <li class="nav-item">
             <a href="{% url 'home' %}" class="nav-link" {% block statistics %}{% endblock %}>
               <i class="fa fa-chart-line" style="width: 23px"></i>
@@ -104,6 +104,8 @@
               </p>
             </a>
           </li>
+          {% endif %}
+          {% if user.role.has_cashbox %}
           <li class="nav-item">
             <a href="#" class="nav-link {% block cashbox %}{% endblock %}">
               <i class="fas fa-dollar-sign" style="width: 23px"></i>
@@ -112,6 +114,8 @@
               </p>
             </a>
           </li>
+          {% endif %}
+          {% if user.role.has_invoice %}
           <li class="nav-item">
             <a href="#" class="nav-link {% block invoices %}{% endblock %}">
               <i class="fas fa-copy" style="width: 23px"></i>
@@ -120,6 +124,8 @@
               </p>
             </a>
           </li>
+          {% endif %}
+          {% if user.role.has_personal_account %}
           <li class="nav-item">
             <a href="#" class="nav-link {% block personal_accounts %}{% endblock %}">
               <i class="fas fa-credit-card" style="width: 23px"></i>
@@ -128,6 +134,8 @@
               </p>
             </a>
           </li>
+          {% endif %}
+          {% if user.role.has_apartment %}
           <li class="nav-item">
             <a href="#" class="nav-link {% block apartments %}{% endblock %}">
               <i class="fas fa-key" style="width: 23px"></i>
@@ -136,6 +144,8 @@
               </p>
             </a>
           </li>
+          {% endif %}
+          {% if user.role.has_owner %}
           <li class="nav-item">
             <a href="#" class="nav-link {% block owners %}{% endblock %}">
               <i class="fas fa-users" style="width: 23px"></i>
@@ -144,6 +154,8 @@
               </p>
             </a>
           </li>
+          {% endif %}
+          {% if user.role.has_house %}
           <li class="nav-item">
             <a href="#" class="nav-link {% block houses %}{% endblock %}">
               <i class="fas fa-building" style="width: 23px"></i>
@@ -152,6 +164,8 @@
               </p>
             </a>
           </li>
+          {% endif %}
+          {% if user.role.has_message %}
           <li class="nav-item">
             <a href="#" class="nav-link {% block messages %}{% endblock %}">
               <i class="fas fa-envelope" style="width: 23px"></i>
@@ -160,6 +174,8 @@
               </p>
             </a>
           </li>
+          {% endif %}
+          {% if user.role.has_application %}
           <li class="nav-item">
             <a href="#" class="nav-link {% block applications %}{% endblock %}">
               <i class="fas fa-wrench" style="width: 23px"></i>
@@ -168,6 +184,8 @@
               </p>
             </a>
           </li>
+          {% endif %}
+          {% if user.role.has_meter %}
           <li class="nav-item">
             <a href="#" class="nav-link {% block meters %}{% endblock %}">
               <i class="fa fa-tachometer-alt" style="width: 23px"></i>
@@ -176,6 +194,8 @@
               </p>
             </a>
           </li>
+          {% endif %}
+          {% if user.role.has_site_management %}
           <li class="nav-item {% block site_manage %}<!--menu-is-opening menu-open-->{% endblock %}">
             <a href="#" class="nav-link">
               <i class="fa fa-desktop" style="width: 23px"></i>
@@ -211,6 +231,7 @@
               </li>
             </ul>
           </li>
+          {% endif %}
           <li class="nav-item {% block settings %}<!--menu-is-opening menu-open-->{% endblock %}">
             <a href="#" class="nav-link">
               <i class="fa fa-cogs" style="width: 23px"></i>
@@ -220,40 +241,50 @@
               </p>
             </a>
             <ul class="nav nav-treeview">
+              {% if user.role.has_service %}
               <li class="nav-item">
                 <a href="#" class="nav-link {% block services %}{% endblock %}">
                   <i class="fa fa-briefcase nav-icon"></i>
                   <p style="font-size: 14px">Услуги</p>
                 </a>
               </li>
+              {% endif %}
+              {% if user.role.has_tariff %}
               <li class="nav-item">
                 <a href="#" class="nav-link {% block tariff %}{% endblock %}">
                   <i class="fa fa-money-bill-wave nav-icon"></i>
                   <p style="font-size: 14px">Тарифы</p>
                 </a>
               </li>
+              {% endif %}
+              {% if user.role.has_role %}
               <li class="nav-item">
                 <a href="{% url 'roles' %}" {% block role %}class="nav-link"{% endblock %}>
                   <i class="fa fa-user nav-icon"></i>
                   <p style="font-size: 14px" {% block role-active %}{% endblock %}>Роли</p>
                 </a>
               </li>
+              {% endif %}
+              {% if user.role.has_users %}
               <li class="nav-item">
-                <a href="{% url 'users_list' %}" {% block users %}class="nav-link"{% endblock %}>
+                <a id="users" href="{% url 'users_list' %}" {% block users %}class="nav-link"{% endblock %}>
                   <i class="fa fa-user-plus nav-icon"></i>
                   <p style="font-size: 14px" {% block users-active %}{% endblock %}>Пользователи</p>
                 </a>
               </li>
+              {% endif %}
+              {% if user.role.has_requisites %}
               <li class="nav-item">
                 <a href="#" class="nav-link {% block requisites %}{% endblock %}">
                   <i class="fa fa-credit-card nav-icon"></i>
                   <p style="font-size: 14px">Платёжные реквизиты</p>
                 </a>
               </li>
+              {% endif %}
               <li class="nav-item">
-                <a href="#" class="nav-link {% block item %}{% endblock %}">
+                <a href="{% url 'items_list' %}" {% block items %}class="nav-link"{% endblock %}>
                   <i class="fa fa-list-ol nav-icon"></i>
-                  <p style="font-size: 14px">Статьи платежей</p>
+                  <p style="font-size: 14px" {% block items-active %}{% endblock %}>Статьи платежей</p>
                 </a>
               </li>
             </ul>
@@ -309,10 +340,15 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
 <!-- Bootstrap 4 -->
 <script src="{% static 'crm/plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'crm/bootstrap5dist/js/bootstrap.bundle.min.js' %}"></script>
 <!-- AdminLTE App -->
 <script src="{% static 'crm/dist/js/adminlte.min.js' %}"></script>
-
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<!-- My -->
+<script src="{% static 'crm/scripts/tables.js' %}"></script>
+<script>
+    $('#users').click(clear)
+</script>
 {% block script %}{% endblock %}
 </body>
 </html>
