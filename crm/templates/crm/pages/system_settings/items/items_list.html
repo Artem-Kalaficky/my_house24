@@ -1,0 +1,79 @@
+{% extends 'crm/layout/base.html' %}
+{% load static %}
+
+{% block settings %}menu-is-opening menu-open{% endblock %}
+{% block items %}class="nav-link active-link" style="color: black; background-color: #e1f1ea"{% endblock %}
+{% block items-active %}class="black"{% endblock %}
+
+{% block title %}Статьи приходов/расходов{% endblock %}
+{% block name_page %}Статьи приходов/расходов{% endblock %}
+{% block nav %}Статьи приходов/расходов{% endblock %}
+
+{% block content %}
+    <div style="float: right; padding-right: 10px; margin-top: -50px">
+        <a href="{% url 'item_create' %}" class="btn btn-success">Добавить статью</a>
+    </div>
+    <div class="my-box" style="margin-top: 50px">
+        <table class="table table-hover table-striped no-padding" style="color: #333333; font-size: 14px; padding-bottom: 10px">
+            <thead>
+                <tr>
+                    <th style="width: 45%">Название</th>
+                    <th style="width: 45%"><span style="color: #72afd2">Приход/Расход</span></th>
+                    <th style="width: 0%"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                <tr>
+                    <td data-href="{% url 'item_update' pk=item.id %}" class="tr-link">{{ item.name }}</td>
+                    <td data-href="{% url 'item_update' pk=item.id %}" class="tr-link"><span style="color: {% if item.income_expense == 'income' %}#00a65a{% else %}#d73925{% endif %}">{{ item.get_income_expense_display }}</span></td>
+                    <td style="padding: 6px 5px 7px 4px; float: right">
+                        <div class="btn-group pull-right">
+                            <a class="btn btn-default btn-sm" href="{% url 'item_update' pk=item.id %}" title="Редактировать" data-toggle="tooltip"><i class="fa fa-pencil-alt"></i></a>
+                            <button type="button" class="btn btn-default btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ forloop.counter }}"><i class="fa fa-trash"></i></button>
+                        </div>
+                    </td>
+                </tr>
+                <!-- Modal -->
+                <div class="modal fade" id="deleteModal-{{ forloop.counter }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="deleteModalLabel-{{ forloop.counter }}" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                      <div class="modal-header bg-danger">
+                        <h5 class="modal-title" id="deleteModal1Label-{{ forloop.counter }}">Подтверждение удаления</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <form method="post" action="{% url 'item_delete' item.id %}">
+                          {% csrf_token %}
+                          <div class="modal-body">
+                              Вы действительно хотите удалить статью платежей <b>{{ item.name }}</b>?
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                            <button type="submit" class="btn btn-danger">Удалить</button>
+                          </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script>
+        {% if messages %}
+        Swal.fire({
+          backdrop: false,
+          position: 'top-end',
+          padding: 0,
+          icon: 'success',
+          width: 300,
+          html: '{% for message in messages %}{{ message }}{% endfor %}',
+          showConfirmButton: false,
+          timer: 1500,
+        })
+        {% endif %}
+    </script>
+{% endblock %}

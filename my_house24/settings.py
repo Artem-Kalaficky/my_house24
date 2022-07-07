@@ -78,6 +78,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'crm.context_processors.new_users',
             ],
         },
     },
@@ -154,7 +155,6 @@ USE_L10N = False
 USE_TZ = True
 
 DATE_FORMAT = 'y-m-d'
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/

@@ -1,7 +1,6 @@
 {% extends 'crm/layout/base.html' %}
 {% load static %}
 
-
 {% block settings %}menu-is-opening menu-open{% endblock %}
 {% block role %}class="nav-link active-link" style="color: black; background-color: #e1f1ea"{% endblock %}
 {% block role-active %}class="black"{% endblock %}
@@ -79,6 +78,7 @@
 <script>
     {% if messages %}
     Swal.fire({
+      backdrop: false,
       position: 'top-end',
       padding: 0,
       icon: 'success',
