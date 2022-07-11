@@ -243,9 +243,9 @@
             <ul class="nav nav-treeview">
               {% if user.role.has_service %}
               <li class="nav-item">
-                <a href="#" class="nav-link {% block services %}{% endblock %}">
+                <a href="{% url 'services' %}" {% block services %}class="nav-link"{% endblock %}>
                   <i class="fa fa-briefcase nav-icon"></i>
-                  <p style="font-size: 14px">Услуги</p>
+                  <p style="font-size: 14px" {% block services-active %}{% endblock %}>Услуги</p>
                 </a>
               </li>
               {% endif %}
@@ -275,14 +275,14 @@
               {% endif %}
               {% if user.role.has_requisites %}
               <li class="nav-item">
-                <a href="#" class="nav-link {% block requisites %}{% endblock %}">
+                <a href="{% url 'requisites' pk=1 %}" {% block requisites %}class="nav-link"{% endblock %}>
                   <i class="fa fa-credit-card nav-icon"></i>
-                  <p style="font-size: 14px">Платёжные реквизиты</p>
+                  <p style="font-size: 14px" {% block requisites-active %}{% endblock %}>Платёжные реквизиты</p>
                 </a>
               </li>
               {% endif %}
               <li class="nav-item">
-                <a href="{% url 'items_list' %}" {% block items %}class="nav-link"{% endblock %}>
+                <a id="items" href="{% url 'items_list' %}" {% block items %}class="nav-link"{% endblock %}>
                   <i class="fa fa-list-ol nav-icon"></i>
                   <p style="font-size: 14px" {% block items-active %}{% endblock %}>Статьи платежей</p>
                 </a>
@@ -347,7 +347,7 @@
 <!-- My -->
 <script src="{% static 'crm/scripts/tables.js' %}"></script>
 <script>
-    $('#users').click(clear)
+    $('#users, #items').click(clear)
 </script>
 {% block script %}{% endblock %}
 </body>

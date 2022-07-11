@@ -105,22 +105,28 @@ class Item(models.Model):
 
 
 class Unit(models.Model):
-    name = models.CharField(max_length=16, verbose_name='Единица измерения')
+    name = models.CharField(max_length=16, unique=True, verbose_name='Единица измерения')
 
     class Meta:
         verbose_name = 'Единица измерения'
         verbose_name_plural = 'Единицы измерения'
+
+    def __str__(self):
+        return self.name
 
 
 class Service(models.Model):
     name = models.CharField(max_length=32, unique=True, verbose_name='Услуга')
     show = models.BooleanField(default=True, verbose_name='Показывать в счетчиках')
     unit = models.ForeignKey(Unit, on_delete=models.PROTECT, verbose_name='Ед. изм.')
-    currency = models.CharField(max_length=4, default='грн', verbose_name='Валюта')
+    currency = models.CharField(max_length=4, default='грн', blank=True, verbose_name='Валюта')
 
     class Meta:
         verbose_name = 'Услуга'
         verbose_name_plural = 'Услуги'
+
+    def __str__(self):
+        return self.name
 
 
 class MeterReading(models.Model):

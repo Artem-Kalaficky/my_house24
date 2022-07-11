@@ -11,5 +11,6 @@ function clear() {
     delete localStorage.telephone
     delete localStorage.email
     delete localStorage.status
+    delete localStorage.income_expense
 }
 
