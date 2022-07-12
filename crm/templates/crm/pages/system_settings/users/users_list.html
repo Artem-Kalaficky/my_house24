@@ -1,18 +1,9 @@
 {% extends 'crm/layout/base.html' %}
 {% load static %}
 
-{% block style %}
-    <style>
-        .not-allowed:hover {
-            cursor: grab;
-        }
-    </style>
-{% endblock %}
-
 {% block settings %}menu-is-opening menu-open{% endblock %}
 {% block users %}class="nav-link active-link" style="color: black; background-color: #e1f1ea"{% endblock %}
 {% block users-active %}class="black"{% endblock %}
-
 
 {% block title %}Пользователи{% endblock %}
 {% block name_page %}Пользователи{% endblock %}
@@ -118,7 +109,7 @@
 {% endblock %}
 
 {% block script %}
-    <script src="{% static 'crm/scripts/users/users_list.js' %}"></script>
+    <script src="{% static 'crm/scripts/system-settings/users/users_list.js' %}"></script>
     <script>
         {% if messages %}
         Swal.fire({
@@ -132,7 +123,6 @@
           timer: 1500,
         })
         {% endif %}
-
 
         $('#clear').click(clear)
     </script>

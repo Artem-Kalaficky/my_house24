@@ -1,0 +1,67 @@
+{% extends 'crm/layout/base.html' %}
+{% load static %}
+
+
+{% block settings %}menu-is-opening menu-open{% endblock %}
+{% block tariffs %}class="nav-link active-link" style="color: black; background-color: #e1f1ea"{% endblock %}
+{% block tariffs-active %}class="black"{% endblock %}
+
+
+{% block title %}Тариф: {{ tariff.name }}{% endblock %}
+{% block name_page %}Тариф: {{ tariff.name }}{% endblock %}
+{% block previos_link %}<a href="{% url 'tariffs_list' %}" style="color: #494949">/ Тарифы</a>{% endblock %}
+{% block nav %}Тариф: {{ tariff.name }}{% endblock %}
+
+{% block content %}
+    <div class="my-box" style="min-height: 0">
+        <div class="container-fluid">
+            <div style="text-align: right; padding-right: 10px; margin-bottom: 5px; padding-top: 5px">
+                <a href="#" class="btn btn-primary" style="font-size: 14px; max-height: 34px">Редактировать тариф</a>
+            </div>
+            <div class="dropdown-divider" style="border-color:lightgrey"></div>
+            <table class="table table-hover table-striped table-responsive no-padding" style="color: #333333; font-size: 14px; padding-bottom: 20px;">
+                <tbody>
+                    <tr>
+                        <td style="width: 30%"><span style="font-weight: bold">Название тарифа</span></td>
+                        <td style="width: 70%">{{ tariff.name }}</td>
+                        <td style="width: 0%"></td>
+                    </tr>
+                    <tr>
+                        <td style="width: 30%"><span style="font-weight: bold">Описание тарифа</span></td>
+                        <td style="width: 70%">{{ tariff.description }}</td>
+                        <td style="width: 0%"></td>
+                    </tr>
+                    <tr>
+                        <td style="width: 30%"><span style="font-weight: bold">Дата редактирования</span></td>
+                        <td style="width: 70%">{{ tariff.date_edit|date:"d.m.Y - H:i" }}</td>
+                        <td style="width: 0%"></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <table class="table table-hover table-striped table-responsive no-padding" style="color: #333333; font-size: 14px; padding-bottom: 20px;">
+                <thead>
+                    <tr>
+                        <th style="width: 0%">#</th>
+                        <th style="width: 40%">Услуга</th>
+                        <th style="width: 20%">Ед. изм.</th>
+                        <th style="width: 20%">Цена за ед., грн</th>
+                        <th style="width: 20%">Валюта</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for service in tariff.servicefortariff_set.all %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ service.service.name }}</td>
+                            <td>{{ service.service.unit.name }}</td>
+                            <td>{{ service.cost_for_unit }}</td>
+                            <td>{{ service.service.currency }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
+

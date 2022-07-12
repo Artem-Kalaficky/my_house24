@@ -35,4 +35,8 @@
     cursor: pointer;
 }
 
+.errorlist {
+    color: red;
+}
+
 

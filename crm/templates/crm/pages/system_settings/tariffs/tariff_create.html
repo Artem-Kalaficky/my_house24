@@ -1,0 +1,110 @@
+{% extends 'crm/layout/base.html' %}
+{% load static %}
+
+{% block style %}
+    <style>
+        input.error {
+            border: red 1px solid;
+            position: relative;
+            box-shadow: 0 0 4px 0 firebrick;
+        }
+        input[disabled]:hover {
+            cursor: not-allowed;
+        }
+        select[disabled]:hover {
+            cursor: not-allowed;
+        }
+    </style>
+{% endblock %}
+
+{% block settings %}menu-is-opening menu-open{% endblock %}
+{% block tariffs %}class="nav-link active-link" style="color: black; background-color: #e1f1ea"{% endblock %}
+{% block tariffs-active %}class="black"{% endblock %}
+
+
+{% block title %}Новый тариф{% endblock %}
+{% block name_page %}Новый тариф{% endblock %}
+{% block previos_link %}<a href="{% url 'tariffs_list' %}" style="color: #494949">/ Тарифы</a>{% endblock %}
+{% block nav %}Новый тариф{% endblock %}
+
+{% block content %}
+    <div class="my-box" style="min-height: 0">
+        <div class="container-fluid">
+            <form method="post" id="form">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-xl-7" style="margin: 7px">
+                        <span style="font-weight: bold">{{ form.name.label }}</span>
+                        {{ form.name }}
+                    </div>
+                    <div class="col-xl-7" style="margin: 7px">
+                        <span style="font-weight: bold">{{ form.description.label }}</span>
+                        {{ form.description }}
+                    </div>
+                </div>
+
+                <!-- Formset -->
+                {{ formset.management_form }}
+                <div id="formset"></div>
+
+                <div>
+                    <button id="add-service" type="button" class="btn btn-default" style="margin: 7px">Добавить</button>
+                </div>
+
+                <div class="delete-list"></div>
+
+                <div id="empty_form" style="display: none">
+                    <div id="{{ formset.empty_form.prefix }}-form" style="padding: 7px">
+                        {{ formset.empty_form.id }}
+                        <div class="row">
+                            <div class="col-xl-3">
+                                <span style="font-weight: bold">{{ formset.empty_form.service.label }}</span>
+                                <select onchange="select_unit(this.id)" name="{{ formset.empty_form.prefix }}-service" class="form-select" id="id_{{ formset.empty_form.prefix }}-service">
+                                  <option value="" selected="">Выберите...</option>
+                                  {% for service in services %}
+                                    <option data-unit="{{ service.unit.id }}" value="{{ service.id }}">{{ service.name }}</option>
+                                  {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-xl-2">
+                                <span style="font-weight: bold">{{ formset.empty_form.cost_for_unit.label }}</span>
+                                {{ formset.empty_form.cost_for_unit }}
+                            </div>
+                            <div class="col-xl-2">
+                                <span style="font-weight: bold">Валюта</span>
+                                <div>
+                                    <input id="{{ formset.empty_form.prefix }}-currency" type="text" value="грн" class="form-control" disabled>
+                                </div>
+                            </div>
+                            <div class="col-xl-2">
+                                <span style="font-weight: bold">Ед. изм.</span>
+                                <div class="input-group">
+                                    <select id="id_{{ formset.empty_form.prefix }}-service-u" class="form-select" disabled>
+                                        <option value="">Выберите...</option>
+                                        {% for unit in units %}
+                                            <option value="{{ unit.id }}">{{ unit.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <div class="input-group-append">
+                                        <button onclick="delete_service(this.id)" id="{{ formset.empty_form.prefix }}" type="button" class="btn btn-default"><i class="fa fa-trash"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- End Formset -->
+
+                <div style="text-align: right; padding: 15px 16px 15px 0">
+                    <a href="{% url 'tariffs_list' %}" class="btn btn-default">Отменить</a>
+                    <button type="submit" class="btn btn-success">Сохранить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'crm/scripts/system-settings/tariffs/tariff_create.js' %}"></script>
+{% endblock %}

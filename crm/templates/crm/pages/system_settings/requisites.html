@@ -1,0 +1,51 @@
+{% extends 'crm/layout/base.html' %}
+{% load static %}
+
+{% block settings %}menu-is-opening menu-open{% endblock %}
+{% block requisites %}class="nav-link active-link" style="color: black; background-color: #e1f1ea"{% endblock %}
+{% block requisites-active %}class="black"{% endblock %}
+
+{% block title %}Платежные реквизиты{% endblock %}
+{% block name_page %}Платежные реквизиты{% endblock %}
+{% block nav %}Платежные реквизиты{% endblock %}
+
+{% block content %}
+    <div class="my-box" style="min-height: 300px">
+        <form method="post" id="form">
+            {% csrf_token %}
+            <div class="row" style="margin: 8px">
+                <div class="col-xl-7" style="padding: 0 10px">
+                    <p style="margin: 0; font-weight: 600; font-size: 15px">{{ form.name.label }}</p>
+                    {{ form.name }}
+                </div>
+            </div>
+            <div class="row" style="margin: 8px; padding-top: 15px">
+                <div class="col-xl-7" style="padding: 0 10px">
+                    <p style="margin: 0; font-weight: 600; font-size: 15px">{{ form.information.label }}</p>
+                    {{ form.information }}
+                </div>
+            </div>
+            <div style="float: right; padding-right: 16px; padding-top: 35px">
+                <a href="{% url 'items_list' %}" class="btn btn-default">Отменить</a>
+                <button type="submit" class="btn btn-success">Сохранить</button>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script>
+        {% if messages %}
+        Swal.fire({
+          backdrop: false,
+          position: 'top-end',
+          padding: 0,
+          icon: 'success',
+          width: 300,
+          html: '{% for message in messages %}{{ message }}{% endfor %}',
+          showConfirmButton: false,
+          timer: 1500,
+        })
+        {% endif %}
+    </script>
+{% endblock %}

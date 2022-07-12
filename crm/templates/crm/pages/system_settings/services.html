@@ -1,0 +1,164 @@
+{% extends 'crm/layout/base.html' %}
+{% load static %}
+
+{% block style %}
+    <style>
+        .disabled:hover {
+            cursor: not-allowed;
+        }
+    </style>
+{% endblock %}
+
+{% block settings %}menu-is-opening menu-open{% endblock %}
+{% block services %}class="nav-link active-link" style="color: black; background-color: #e1f1ea"{% endblock %}
+{% block services-active %}class="black"{% endblock %}
+
+{% block title %}Редактирование услуг{% endblock %}
+{% block name_page %}Редактирование услуг{% endblock %}
+{% block nav %}Услуги{% endblock %}
+
+{% block content %}
+    <nav style="max-width: 400px; margin-left: 9px; margin-bottom: -1px">
+      <div class="nav nav-tabs" id="nav-tab" role="tablist">
+        <a class="nav-link active" id="nav-service-tab" data-toggle="tab" href="#nav-service" role="tab" aria-controls="nav-service" aria-selected="true">Услуги</a>
+        <a class="nav-link" id="nav-unit-tab" data-toggle="tab" href="#nav-unit" role="tab" aria-controls="nav-unit" aria-selected="false">Единицы измерения</a>
+      </div>
+    </nav>
+    <div class="my-box" style="min-height: 0">
+        <div class="container-fluid">
+            <form method="post">
+                {% csrf_token %}
+                <div class="tab-content" id="nav-tabContent">
+                    <!-- SERVICE TAB -->
+                    <div class="tab-pane fade show active" id="nav-service" role="tabpanel" aria-labelledby="nav-service-tab">
+                        {{ form.management_form }}
+                        <div id="service_form">
+                            {% for form in form %}
+                                <div id="{{ form.prefix }}-form" style="padding: 7px">
+                                    {{ form.id }}
+                                    <div class="row">
+                                        <div class="col-xl-4">
+                                            <span style="font-weight: bold">{{ form.name.label }}</span>
+                                            {{ form.name }}
+                                            {{ form.name.errors }}
+                                            <p style="padding-top: 7px">{{ form.show }} <span style="font-weight: bold">{{ form.show.label }}</span></p>
+                                        </div>
+                                        <div class="col-xl-3">
+                                            <p style="font-weight: bold; padding: 0; margin-bottom: 0">{{ form.unit.label }}</p>
+                                            <div class="input-group">
+                                                {{ form.unit }}
+                                                <div class="input-group-append">
+                                                    <button onclick="delete_service(this.id)" id="{{ form.prefix }}" type="button" class="btn btn-default"><i class="fa fa-trash"></i></button>
+                                                </div>
+                                            </div>
+                                            {{ form.unit.errors }}
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                        <div>
+                            <button id="add-service" type="button" class="btn btn-default" style="margin: 7px">Добавить</button>
+                        </div>
+
+                        <div class="delete-list-service" style="display: none"></div>
+
+                        <div id="empty_form-service" style="display: none">
+                            <div id="{{ form.empty_form.prefix }}-form" style="padding: 7px">
+                                {{ form.empty_form.id }}
+                                <div class="row">
+                                    <div class="col-xl-4">
+                                        <span style="font-weight: bold">{{ form.empty_form.name.label }}</span>
+                                        {{ form.empty_form.name }}
+                                        <p style="padding-top: 7px">{{ form.empty_form.show }} <span style="font-weight: bold">{{ form.empty_form.show.label }}</span></p>
+                                    </div>
+                                    <div class="col-xl-3">
+                                        <p style="font-weight: bold; padding: 0; margin-bottom: 0">{{ form.empty_form.unit.label }}</p>
+                                        <div class="input-group">
+                                            {{ form.empty_form.unit }}
+                                            <div class="input-group-append">
+                                                <button onclick="delete_service(this.id)" id="{{ form.empty_form.prefix }}" type="button" class="btn btn-default"><i class="fa fa-trash"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end SERVICE TAB -->
+
+                    <!-- UNIT TAB -->
+                    <div class="tab-pane fade" id="nav-unit" role="tabpanel" aria-labelledby="nav-unit-tab">
+                        {{ unit_formset.management_form }}
+                        <div id="unit_form">
+                            {% for form in unit_formset %}
+                                <div id="{{ form.prefix }}-form" style="padding: 7px">
+                                    {{ form.id }}
+                                    <div class="row">
+                                        <div class="col-xl-6">
+                                            <span style="font-weight: bold">{{ form.name.label }}</span>
+                                            <div class="input-group">
+                                                {{ form.name }}
+                                                <div class="input-group-append {% if form.id.value in idx %}disabled{% endif %}">
+                                                    <button onclick="delete_unit(this.id)" id="{{ form.prefix }}" type="button" class="btn btn-default" {% if form.id.value in idx %}disabled{% endif %}><i class="fa fa-trash"></i></button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                        <div>
+                            <button id="add-unit" type="button" class="btn btn-default" style="margin: 7px">Добавить</button>
+                        </div>
+
+                        <div class="delete-list-unit" style="display: none"></div>
+
+                        <div id="empty_form-unit" style="display: none">
+                            <div id="{{ unit_formset.empty_form.prefix }}-form" style="padding: 7px">
+                                {{ unit_formset.empty_form.id }}
+                                <div class="row">
+                                    <div class="col-xl-6">
+                                        <span style="font-weight: bold">{{ unit_formset.empty_form.name.label }}</span>
+                                        <div class="input-group">
+                                            {{ unit_formset.empty_form.name }}
+                                            <div class="input-group-append">
+                                                <button onclick="delete_unit(this.id)" id="{{ unit_formset.empty_form.prefix }}" type="button" class="btn btn-default"><i class="fa fa-trash"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end UNIT TAB -->
+                </div>
+                <div class="dropdown-divider"></div>
+                <div style="text-align: right; padding: 15px 16px 15px 0">
+                    <a href="{% url 'services' %}" class="btn btn-default">Отменить</a>
+                    <button type="submit" class="btn btn-success">Сохранить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'crm/scripts/system-settings/services/services.js' %}"></script>
+    <script>
+        {% if messages %}
+        Swal.fire({
+          backdrop: false,
+          position: 'top-end',
+          padding: 0,
+          icon: 'success',
+          width: 300,
+          html: '{% for message in messages %}{{ message }}{% endfor %}',
+          showConfirmButton: false,
+          timer: 1500,
+        })
+        {% endif %}
+    </script>
+{% endblock %}
