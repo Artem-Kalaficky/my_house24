@@ -2,10 +2,11 @@ from django import forms
 from django.contrib.auth import password_validation
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.core.exceptions import ValidationError
-from django.forms import ModelForm, modelformset_factory, PasswordInput, TextInput, EmailInput, Select, Textarea
+from django.forms import ModelForm, modelformset_factory, PasswordInput, TextInput, EmailInput, Select, Textarea, \
+    NumberInput
 
 from users.models import Role
-from .models import Item, Requisites, Service, Unit
+from .models import Item, Requisites, Service, Unit, Tariff, ServiceForTariff
 
 
 # region SYSTEM-SETTINGS form
@@ -30,6 +31,28 @@ class UnitForm(ModelForm):
 
 UnitFormSet = modelformset_factory(Unit, form=UnitForm, extra=0, can_delete=True)
 # endregion services
+
+
+# region tariffs
+class TariffForm(ModelForm):
+    class Meta:
+        model = Tariff
+        fields = ('name', 'description')
+        widgets = {'name': TextInput(attrs={'class': 'form-control'}),
+                   'description': Textarea(attrs={'rows': 3,
+                                                  'class': 'form-control'})}
+
+
+class ServiceForTariffForm(ModelForm):
+    class Meta:
+        model = ServiceForTariff
+        fields = ('service', 'tariff', 'cost_for_unit')
+        widgets = {'service': Select(attrs={'class': 'form-select'}),
+                   'cost_for_unit': NumberInput(attrs={'class': 'form-control'})}
+
+
+ServiceForTariffFormSet = modelformset_factory(ServiceForTariff, form=ServiceForTariffForm, extra=0, can_delete=True)
+# endregion tariffs
 
 
 class RoleForm(ModelForm):

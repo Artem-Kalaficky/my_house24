@@ -1,6 +1,14 @@
 {% extends 'crm/layout/base.html' %}
 {% load static %}
 
+{% block style %}
+    <style>
+        .disabled:hover {
+            cursor: not-allowed;
+        }
+    </style>
+{% endblock %}
+
 {% block settings %}menu-is-opening menu-open{% endblock %}
 {% block services %}class="nav-link active-link" style="color: black; background-color: #e1f1ea"{% endblock %}
 {% block services-active %}class="black"{% endblock %}
@@ -36,12 +44,14 @@
                                             <p style="padding-top: 7px">{{ form.show }} <span style="font-weight: bold">{{ form.show.label }}</span></p>
                                         </div>
                                         <div class="col-xl-3">
-                                            <span style="font-weight: bold">{{ form.unit.label }}</span>
-                                            <p>{{ form.unit }}</p>
+                                            <p style="font-weight: bold; padding: 0; margin-bottom: 0">{{ form.unit.label }}</p>
+                                            <div class="input-group">
+                                                {{ form.unit }}
+                                                <div class="input-group-append">
+                                                    <button onclick="delete_service(this.id)" id="{{ form.prefix }}" type="button" class="btn btn-default"><i class="fa fa-trash"></i></button>
+                                                </div>
+                                            </div>
                                             {{ form.unit.errors }}
-                                        </div>
-                                        <div class="col-xl-1" style="margin: 24px 0 0 -17px">
-                                            <button onclick="delete_service(this.id)" id="{{ form.prefix }}" type="button" class="btn btn-default"><i class="fa fa-trash"></i></button>
                                         </div>
                                     </div>
                                 </div>
@@ -64,11 +74,13 @@
                                         <p style="padding-top: 7px">{{ form.empty_form.show }} <span style="font-weight: bold">{{ form.empty_form.show.label }}</span></p>
                                     </div>
                                     <div class="col-xl-3">
-                                        <span style="font-weight: bold">{{ form.empty_form.unit.label }}</span>
-                                        <p>{{ form.empty_form.unit }}</p>
-                                    </div>
-                                    <div class="col-xl-1" style="margin: 24px 0 0 -17px">
-                                        <button onclick="delete_service(this.id)" id="{{ form.empty_form.prefix }}" type="button" class="btn btn-default"><i class="fa fa-trash"></i></button>
+                                        <p style="font-weight: bold; padding: 0; margin-bottom: 0">{{ form.empty_form.unit.label }}</p>
+                                        <div class="input-group">
+                                            {{ form.empty_form.unit }}
+                                            <div class="input-group-append">
+                                                <button onclick="delete_service(this.id)" id="{{ form.empty_form.prefix }}" type="button" class="btn btn-default"><i class="fa fa-trash"></i></button>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -86,10 +98,12 @@
                                     <div class="row">
                                         <div class="col-xl-6">
                                             <span style="font-weight: bold">{{ form.name.label }}</span>
-                                            {{ form.name }}
-                                        </div>
-                                        <div class="col-xl-1" style="margin: 24px 0 0 -17px">
-                                            <button onclick="delete_unit(this.id)" id="{{ form.prefix }}" type="button" class="btn btn-default" {% if form.id.value in idx %}style="cursor: not-allowed; opacity: 0.4" class="not-allowed"{% endif %}><i class="fa fa-trash"></i></button>
+                                            <div class="input-group">
+                                                {{ form.name }}
+                                                <div class="input-group-append {% if form.id.value in idx %}disabled{% endif %}">
+                                                    <button onclick="delete_unit(this.id)" id="{{ form.prefix }}" type="button" class="btn btn-default" {% if form.id.value in idx %}disabled{% endif %}><i class="fa fa-trash"></i></button>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -108,10 +122,12 @@
                                 <div class="row">
                                     <div class="col-xl-6">
                                         <span style="font-weight: bold">{{ unit_formset.empty_form.name.label }}</span>
-                                        {{ unit_formset.empty_form.name }}
-                                    </div>
-                                    <div class="col-xl-1" style="margin: 24px 0 0 -17px">
-                                        <button onclick="delete_unit(this.id)" id="{{ unit_formset.empty_form.prefix }}" type="button" class="btn btn-default"><i class="fa fa-trash"></i></button>
+                                        <div class="input-group">
+                                            {{ unit_formset.empty_form.name }}
+                                            <div class="input-group-append">
+                                                <button onclick="delete_unit(this.id)" id="{{ unit_formset.empty_form.prefix }}" type="button" class="btn btn-default"><i class="fa fa-trash"></i></button>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

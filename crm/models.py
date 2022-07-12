@@ -157,11 +157,14 @@ class Tariff(models.Model):
         verbose_name = 'Тариф'
         verbose_name_plural = 'Тарифы'
 
+    def __str__(self):
+        return self.name
+
 
 class ServiceForTariff(models.Model):
-    tariff = models.ForeignKey(Tariff, on_delete=models.CASCADE, verbose_name='Тариф')
+    tariff = models.ForeignKey(Tariff, on_delete=models.CASCADE, blank=True, verbose_name='Тариф')
     service = models.ForeignKey(Service, on_delete=models.CASCADE, verbose_name='Услуга')
-    cost_for_unit = models.DecimalField(max_digits=4, decimal_places=2, verbose_name='Цена')
+    cost_for_unit = models.DecimalField(max_digits=8, decimal_places=2, verbose_name='Цена')
 
     class Meta:
         verbose_name = 'Услуга для тарифа'

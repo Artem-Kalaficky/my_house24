@@ -251,9 +251,9 @@
               {% endif %}
               {% if user.role.has_tariff %}
               <li class="nav-item">
-                <a href="#" class="nav-link {% block tariff %}{% endblock %}">
+                <a id="tariffs" href="{% url 'tariffs_list' %}" {% block tariffs %}class="nav-link"{% endblock %}>
                   <i class="fa fa-money-bill-wave nav-icon"></i>
-                  <p style="font-size: 14px">Тарифы</p>
+                  <p style="font-size: 14px" {% block tariffs-active %}{% endblock %}>Тарифы</p>
                 </a>
               </li>
               {% endif %}
@@ -347,7 +347,7 @@
 <!-- My -->
 <script src="{% static 'crm/scripts/tables.js' %}"></script>
 <script>
-    $('#users, #items').click(clear)
+    $('#users, #items, #tariffs').click(clear)
 </script>
 {% block script %}{% endblock %}
 </body>

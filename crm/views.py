@@ -1,17 +1,15 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db.models import Q
-from django.db.models.functions import Lower
-from django.http import HttpResponseRedirect
-from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy, reverse
-from django.views.generic import TemplateView, ListView, FormView, DetailView
-from django.views.generic.edit import FormMixin, CreateView, UpdateView, DeleteView
+from django.views.generic import TemplateView, ListView, DetailView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
-from .forms import RoleFormSet, ItemForm, RequisiteForm, ServiceFormSet, UnitFormSet
+from .forms import RoleFormSet, ItemForm, RequisiteForm, ServiceFormSet, UnitFormSet, ServiceForTariffFormSet, \
+    TariffForm
 from users.forms import UserCreateForm, ChangeUserInfoForm
 from users.models import UserProfile, Role
-from .models import Item, Requisites, Service, Unit
+from .models import Item, Requisites, Service, Unit, Tariff, ServiceForTariff
 
 
 class StaffRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
@@ -61,6 +59,70 @@ class ServiceCreateView(StaffRequiredMixin, SuccessMessageMixin, CreateView):
     def get_success_url(self):
         return reverse('services')
 # endregion services page
+
+
+# region tariffs page
+class TariffsListView(StaffRequiredMixin, SuccessMessageMixin, ListView):
+    template_name = 'crm/pages/system_settings/tariffs/tariffs_list.html'
+    context_object_name = 'tariffs'
+
+    def get_queryset(self):
+        queryset = Tariff.objects.all()
+        if self.request.GET.get('filter') == '1':
+            queryset = queryset.order_by('name')
+        if self.request.GET.get('filter') == '0':
+            queryset = queryset.order_by('-name')
+        return queryset
+
+
+class TariffDetailView(StaffRequiredMixin, DetailView):
+    queryset = Tariff.objects.prefetch_related('servicefortariff_set__service__unit')
+    template_name = 'crm/pages/system_settings/tariffs/tariff_detail.html'
+
+
+class TariffCreateView(StaffRequiredMixin, SuccessMessageMixin, CreateView):
+    template_name = 'crm/pages/system_settings/tariffs/tariff_create.html'
+    success_message = 'Тариф успешно создан!'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['formset'] = ServiceForTariffFormSet(self.request.POST or None,
+                                                     queryset=ServiceForTariff.objects.none(), prefix='formset')
+        context['units'] = Unit.objects.all()
+        context['services'] = Service.objects.select_related('unit')
+        return context
+
+    def get_form(self, form_class=None):
+        if form_class is None:
+            form_class = TariffForm(self.request.POST or None)
+        return form_class
+
+    def form_valid(self, form):
+        form.save()
+        formset = self.get_context_data()['formset']
+        for f in formset:
+            if f.is_valid:
+                serv = f.save(commit=False)
+                if f.cleaned_data:
+                    serv.tariff = form.instance
+                    serv.save()
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse('tariffs_list')
+
+
+
+
+
+
+
+
+class TariffDeleteView(SuccessMessageMixin, DeleteView):
+    model = Tariff
+    success_url = reverse_lazy('tariffs_list')
+    success_message = 'Тариф успешно удалён!'
+# endregion tariffs page
 
 
 # region roles page
