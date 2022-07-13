@@ -1,6 +1,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db.models import Q
+from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.views.generic import TemplateView, ListView, DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
@@ -48,11 +49,11 @@ class ServiceCreateView(StaffRequiredMixin, SuccessMessageMixin, CreateView):
     def form_valid(self, form):
         unit_formset = self.get_context_data()['unit_formset']
         unit_formset.save(commit=False)
-        for unit in unit_formset:
-            if unit.is_valid and unit.cleaned_data:
-                unit.save()
         for unit in unit_formset.deleted_objects:
             unit.delete()
+        for unit in unit_formset:
+            if unit.is_valid() and unit.cleaned_data:
+                unit.save()
         form.save()
         return super().form_valid(form)
 
@@ -100,22 +101,49 @@ class TariffCreateView(StaffRequiredMixin, SuccessMessageMixin, CreateView):
     def form_valid(self, form):
         form.save()
         formset = self.get_context_data()['formset']
-        for f in formset:
-            if f.is_valid:
-                serv = f.save(commit=False)
-                if f.cleaned_data:
-                    serv.tariff = form.instance
-                    serv.save()
+        for obj in formset:
+            if obj.is_valid():
+                serv_for_tar = obj.save(commit=False)
+                if obj.cleaned_data:
+                    serv_for_tar.tariff = form.instance
+                    serv_for_tar.save()
         return super().form_valid(form)
 
     def get_success_url(self):
         return reverse('tariffs_list')
 
 
+class TariffUpdateView(StaffRequiredMixin, SuccessMessageMixin, UpdateView):
+    model = Tariff
+    template_name = 'crm/pages/system_settings/tariffs/tariff_update.html'
+    success_url = reverse_lazy('tariffs_list')
+    success_message = 'Данные о тарифе обновлены!'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['formset'] = ServiceForTariffFormSet(self.request.POST or None,
+                                                     queryset=ServiceForTariff.objects.filter(tariff_id=self.object.id),
+                                                     prefix='formset')
+        context['services'] = Service.objects.select_related('unit')
+        context['units'] = Unit.objects.all()
+        return context
 
+    def get_form(self, form_class=None):
+        if form_class is None:
+            form_class = TariffForm(self.request.POST or None, instance=self.object)
+        return form_class
 
-
+    def form_valid(self, form):
+        formset = self.get_context_data()['formset']
+        form.save()
+        formset.save(commit=False)
+        for obj in formset.deleted_objects:
+            obj.delete()
+        for obj in formset:
+            if obj.is_valid() and obj.cleaned_data:
+                obj.instance.tariff = form.instance
+                obj.save()
+        return super().form_valid(form)
 
 
 class TariffDeleteView(SuccessMessageMixin, DeleteView):

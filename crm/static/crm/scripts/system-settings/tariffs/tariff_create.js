@@ -6,6 +6,7 @@ $('#add-service').click(function() {
 
 
 function delete_service(index) {
+	$('#id_' + index + '-cost_for_unit').val("")
 	$('.delete-list').append('<input type="hidden" value="on" name="' + index  + '-DELETE" id="id_' + index + '-DELETE">');
 	$('#' + index + '-form').css('display', 'none');
 }

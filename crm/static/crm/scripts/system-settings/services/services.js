@@ -23,7 +23,7 @@ $('#add-unit').click(function() {
 
 //delete UNIT form
 function delete_unit(index) {
-
+	$('#id_' + index + '-name').val("")
 	$('.delete-list-unit').append('<input type="hidden" value="on" name="' + index  + '-DELETE" id="id_' + index + '-DELETE">');
 	$('#' + index + '-form').css('display', 'none');
 }

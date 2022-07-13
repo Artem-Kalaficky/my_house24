@@ -44,6 +44,15 @@ class TariffForm(ModelForm):
 
 
 class ServiceForTariffForm(ModelForm):
+    units = forms.ModelChoiceField(required=False, label='Ед. изм.', queryset=Unit.objects.select_related(),
+                                   widget=Select(attrs={'class': 'form-select',
+                                                        'disabled': 'true'}))
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if kwargs.get('instance'):
+            self.fields['units'].initial = kwargs.get('instance').service.unit.id
+
     class Meta:
         model = ServiceForTariff
         fields = ('service', 'tariff', 'cost_for_unit')
