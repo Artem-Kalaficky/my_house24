@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 
 
 class Seo(models.Model):
@@ -19,9 +20,13 @@ class MainPage(models.Model):
     text = models.TextField(verbose_name='Краткий текст')
     show_urls = models.BooleanField(default=True, verbose_name='Показывать ссылки на приложения')
     seo = models.OneToOneField(Seo, on_delete=models.PROTECT, verbose_name='SEO-блок')
+    slug = models.SlugField(null=True)
 
     class Meta:
         verbose_name = 'Главная страница'
+
+    def get_absolute_url(self):
+        return reverse('main', kwargs={'slug': self.slug})
 
 
 class Block(models.Model):

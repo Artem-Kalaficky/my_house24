@@ -41,6 +41,9 @@
                     <div class="col-xl-7" style="margin: 7px">
                         <span style="font-weight: bold">{{ form.name.label }}</span>
                         {{ form.name }}
+                        {% if form.name.errors %}
+                            <p style="font-size: 14px; color: red">* Тариф с таким названием уже существует</p>
+                        {% endif %}
                     </div>
                     <div class="col-xl-7" style="margin: 7px">
                         <span style="font-weight: bold">{{ form.description.label }}</span>
@@ -121,7 +124,7 @@
                                 <span style="font-weight: bold">Ед. изм.</span>
                                 <div class="input-group">
                                     <select id="id_{{ formset.empty_form.prefix }}-service-u" class="form-select" disabled>
-                                        <option value="">Выберите...</option>
+                                        <option value="none">Выберите...</option>
                                         {% for unit in units %}
                                             <option value="{{ unit.id }}">{{ unit.name }}</option>
                                         {% endfor %}

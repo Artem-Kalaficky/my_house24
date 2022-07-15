@@ -4,5 +4,5 @@ from .views import MainTemplateView
 
 
 urlpatterns = [
-    path('', MainTemplateView.as_view(), name='main'),
+    path('', MainTemplateView.as_view(), name='main_page'),
 ]

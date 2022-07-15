@@ -1,13 +1,16 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.messages.views import SuccessMessageMixin
+from django.db import IntegrityError
 from django.db.models import Q
+from django.forms import modelformset_factory
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.views.generic import TemplateView, ListView, DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
+from main.models import MainPage
 from .forms import RoleFormSet, ItemForm, RequisiteForm, ServiceFormSet, UnitFormSet, ServiceForTariffFormSet, \
-    TariffForm
+    TariffForm, ServiceForTariffForm
 from users.forms import UserCreateForm, ChangeUserInfoForm
 from users.models import UserProfile, Role
 from .models import Item, Requisites, Service, Unit, Tariff, ServiceForTariff
@@ -22,6 +25,16 @@ class StaffRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
 
 class StatisticsTemplateView(StaffRequiredMixin, TemplateView):
     template_name = 'crm/pages/statistics.html'
+
+
+# region SITE-MANAGEMENT
+class MainUpdateView(StaffRequiredMixin, SuccessMessageMixin, UpdateView):
+    model = MainPage
+    template_name = 'crm/pages/site-management/main.html'
+    success_url = reverse_lazy('main')
+    success_message = 'Данные о странице обновлены!'
+
+# endregion SITE-MANAGEMENT
 
 
 # region SYSTEM-SETTINGS
@@ -87,15 +100,30 @@ class TariffCreateView(StaffRequiredMixin, SuccessMessageMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['formset'] = ServiceForTariffFormSet(self.request.POST or None,
-                                                     queryset=ServiceForTariff.objects.none(), prefix='formset')
+        if self.request.GET.get('id'):
+            serv_for_tar = ServiceForTariff.objects.filter(tariff_id=self.request.GET.get('id'))
+            formset = modelformset_factory(ServiceForTariff, form=ServiceForTariffForm, extra=len(serv_for_tar),
+                                           can_delete=True)
+            context['formset'] = formset(self.request.POST or None, queryset=ServiceForTariff.objects.none(),
+                                         prefix='formset', initial=[{'service': x.service,
+                                                                     'cost_for_unit': x.cost_for_unit,
+                                                                     'units': x.service.unit.id} for x in serv_for_tar])
+        else:
+            formset = modelformset_factory(ServiceForTariff, form=ServiceForTariffForm, extra=0, can_delete=True)
+            context['formset'] = formset(self.request.POST or None,
+                                         queryset=ServiceForTariff.objects.none(), prefix='formset')
         context['units'] = Unit.objects.all()
         context['services'] = Service.objects.select_related('unit')
         return context
 
     def get_form(self, form_class=None):
         if form_class is None:
-            form_class = TariffForm(self.request.POST or None)
+            if self.request.GET.get('id'):
+                tariff = get_object_or_404(Tariff, pk=self.request.GET.get('id'))
+                form_class = TariffForm(self.request.POST or None,
+                                        initial={'name': tariff.name, 'description': tariff.description})
+            else:
+                form_class = TariffForm(self.request.POST or None)
         return form_class
 
     def form_valid(self, form):
@@ -106,7 +134,10 @@ class TariffCreateView(StaffRequiredMixin, SuccessMessageMixin, CreateView):
                 serv_for_tar = obj.save(commit=False)
                 if obj.cleaned_data:
                     serv_for_tar.tariff = form.instance
-                    serv_for_tar.save()
+                    try:
+                        serv_for_tar.save()
+                    except IntegrityError:
+                        pass
         return super().form_valid(form)
 
     def get_success_url(self):
@@ -142,7 +173,10 @@ class TariffUpdateView(StaffRequiredMixin, SuccessMessageMixin, UpdateView):
         for obj in formset:
             if obj.is_valid() and obj.cleaned_data:
                 obj.instance.tariff = form.instance
-                obj.save()
+                try:
+                    obj.save()
+                except IntegrityError:
+                    pass
         return super().form_valid(form)
 
 

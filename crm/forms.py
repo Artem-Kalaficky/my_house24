@@ -1,9 +1,5 @@
 from django import forms
-from django.contrib.auth import password_validation
-from django.contrib.auth.forms import UserCreationForm, UserChangeForm
-from django.core.exceptions import ValidationError
-from django.forms import ModelForm, modelformset_factory, PasswordInput, TextInput, EmailInput, Select, Textarea, \
-    NumberInput
+from django.forms import ModelForm, modelformset_factory, TextInput, Select, Textarea, NumberInput
 
 from users.models import Role
 from .models import Item, Requisites, Service, Unit, Tariff, ServiceForTariff

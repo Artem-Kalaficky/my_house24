@@ -42,7 +42,7 @@
                                 <td data-href="{% url 'tariff_detail' pk=tariff.id %}" class="tr-link">{{ tariff.date_edit|date:"d.m.Y - H:i" }}</td>
                                 <td style="padding: 6px 5px 7px 4px; float: right">
                                     <div class="btn-group pull-right">
-                                        <a class="btn btn-default btn-sm" href="#" title="Копировать" data-toggle="tooltip"><i class="fas fa-copy"></i></a>
+                                        <a class="btn btn-default btn-sm" href="{% url 'tariff_create' %}?id={{ tariff.id }}" title="Копировать" data-toggle="tooltip"><i class="fas fa-copy"></i></a>
                                         <a class="btn btn-default btn-sm" href="{% url 'tariff_update' pk=tariff.id %}" title="Редактировать" data-toggle="tooltip"><i class="fa fa-pencil-alt"></i></a>
                                         <button type="button" class="btn btn-default btn-sm not-allowed" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ forloop.counter }}"><i class="fa fa-trash"></i></button>
                                     </div>

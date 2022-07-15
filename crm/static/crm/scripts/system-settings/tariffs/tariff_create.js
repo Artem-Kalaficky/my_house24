@@ -16,4 +16,9 @@ function delete_service(index) {
 function select_unit(index) {
 	let unit = $('#' + index).parent().find('option:selected').data('unit')
 	$('#' + index + '-u').parent().find('option[value=' + unit + ']').prop('selected', 'true')
+	if (unit) {
+		$('#' + index + '-u').parent().find('option[value=' + unit + ']').prop('selected', 'true')
+	} else {
+		$('#' + index + '-u').parent().find('option[value=none]').prop('selected', 'true')
+	}
 }

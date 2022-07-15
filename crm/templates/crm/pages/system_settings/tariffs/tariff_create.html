@@ -41,6 +41,9 @@
                     <div class="col-xl-7" style="margin: 7px">
                         <span style="font-weight: bold">{{ form.name.label }}</span>
                         {{ form.name }}
+                        {% if form.name.errors %}
+                            <p style="font-size: 14px; color: red">* Тариф с таким названием уже существует</p>
+                        {% endif %}
                     </div>
                     <div class="col-xl-7" style="margin: 7px">
                         <span style="font-weight: bold">{{ form.description.label }}</span>
@@ -50,7 +53,43 @@
 
                 <!-- Formset -->
                 {{ formset.management_form }}
-                <div id="formset"></div>
+                <div id="formset">
+                    {% for form in formset %}
+                        <div id="{{ form.prefix }}-form" style="padding: 7px">
+                            {{ form.id }}
+                            <div class="row">
+                                <div class="col-xl-3">
+                                    <span style="font-weight: bold">{{ form.service.label }}</span>
+                                    {{ form.service }}
+                                </div>
+                                <div class="col-xl-2">
+                                    <span style="font-weight: bold">{{ form.cost_for_unit.label }}</span>
+                                    {{ form.cost_for_unit }}
+                                </div>
+                                <div class="col-xl-2">
+                                    <span style="font-weight: bold">Валюта</span>
+                                    <div>
+                                        <input id="{{ form.prefix }}-currency" type="text" value="грн" class="form-control" disabled>
+                                    </div>
+                                </div>
+                                <div class="col-xl-2">
+                                    <span style="font-weight: bold">Ед. изм.</span>
+                                    <div class="input-group">
+                                        {{ form.units }}
+                                        <div class="input-group-append">
+                                            <button onclick="delete_service(this.id)" id="{{ form.prefix }}" type="button" class="btn btn-default"><i class="fa fa-trash"></i></button>
+                                        </div>
+                                        {% if formset.errors %}
+                                            {% for error in formset.errors %}
+                                                <p style="font-size: 14px; color: red; margin: 0">* {{ error }}</p>
+                                            {% endfor %}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
 
                 <div>
                     <button id="add-service" type="button" class="btn btn-default" style="margin: 7px">Добавить</button>
@@ -85,7 +124,7 @@
                                 <span style="font-weight: bold">Ед. изм.</span>
                                 <div class="input-group">
                                     <select id="id_{{ formset.empty_form.prefix }}-service-u" class="form-select" disabled>
-                                        <option value="">Выберите...</option>
+                                        <option value="none">Выберите...</option>
                                         {% for unit in units %}
                                             <option value="{{ unit.id }}">{{ unit.name }}</option>
                                         {% endfor %}

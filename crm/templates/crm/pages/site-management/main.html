@@ -1,0 +1,35 @@
+{% extends 'crm/layout/base.html' %}
+{% load static %}
+
+{% block site-management %}menu-is-opening menu-open{% endblock %}
+{% block main %}class="nav-link active-link" style="color: black; background-color: #e1f1ea"{% endblock %}
+{% block main-active %}class="black"{% endblock %}
+
+{% block title %}Роли{% endblock %}
+{% block name_page %}Роли{% endblock %}
+{% block nav %}Роли{% endblock %}
+
+{% block content %}
+    <div class="box" style="background-color: #ffffff; margin: 0 10px 0 10px; border-top: 3px #d2d6de solid; min-height: 365px; border-radius: 4px">
+        <div class="container-fluid">
+            Ukfdyfz
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+<script>
+    {% if messages %}
+    Swal.fire({
+      backdrop: false,
+      position: 'top-end',
+      padding: 0,
+      icon: 'success',
+      width: 300,
+      html: '{% for message in messages %}{{ message }}{% endfor %}',
+      showConfirmButton: false,
+      timer: 1500,
+    })
+    {% endif %}
+</script>
+{% endblock %}
