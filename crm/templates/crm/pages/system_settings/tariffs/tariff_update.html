@@ -27,10 +27,10 @@
 {% block tariffs-active %}class="black"{% endblock %}
 
 
-{% block title %}Новый тариф{% endblock %}
-{% block name_page %}Новый тариф{% endblock %}
-{% block previos_link %}<a href="{% url 'tariffs_list' %}" style="color: #494949">/ Тарифы</a>{% endblock %}
-{% block nav %}Новый тариф{% endblock %}
+{% block title %}Тариф: {{ tariff.name }}{% endblock %}
+{% block name_page %}Тариф: {{ tariff.name }}{% endblock %}
+{% block previos_link %}<a href="{% url 'tariffs_list' %}" style="color: #494949">/ Тарифы </a><a href="{% url 'tariff_detail' pk=tariff.id %}" style="color: #494949"> / Тариф: {{ tariff.name }} </a>{% endblock %}
+{% block nav %}Редактирование{% endblock %}
 
 {% block content %}
     <div class="my-box" style="min-height: 0">

@@ -16,7 +16,7 @@
     <div class="my-box" style="min-height: 0">
         <div class="container-fluid">
             <div style="text-align: right; padding-right: 10px; margin-bottom: 5px; padding-top: 5px">
-                <a href="#" class="btn btn-primary" style="font-size: 14px; max-height: 34px">Редактировать тариф</a>
+                <a href="{% url 'tariff_update' pk=tariff.id %}" class="btn btn-primary" style="font-size: 14px; max-height: 34px">Редактировать тариф</a>
             </div>
             <div class="dropdown-divider" style="border-color:lightgrey"></div>
             <table class="table table-hover table-striped table-responsive no-padding" style="color: #333333; font-size: 14px; padding-bottom: 20px;">

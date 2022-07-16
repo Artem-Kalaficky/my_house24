@@ -1,12 +1,98 @@
 from django import forms
-from django.contrib.auth import password_validation
-from django.contrib.auth.forms import UserCreationForm, UserChangeForm
-from django.core.exceptions import ValidationError
-from django.forms import ModelForm, modelformset_factory, PasswordInput, TextInput, EmailInput, Select, Textarea, \
-    NumberInput
+from django.core.files.images import get_image_dimensions
+from django.forms import ModelForm, modelformset_factory, TextInput, Select, Textarea, NumberInput
 
+from main.models import MainPage, Seo, Block, AboutPage, Photo, Document
 from users.models import Role
 from .models import Item, Requisites, Service, Unit, Tariff, ServiceForTariff
+
+
+class SeoForm(ModelForm):
+    class Meta:
+        model = Seo
+        fields = ('title', 'description', 'keywords')
+        widgets = {'title': TextInput(attrs={'class': 'form-control'}),
+                   'description': Textarea(attrs={'rows': 5,
+                                                  'class': 'form-control'}),
+                   'keywords': Textarea(attrs={'rows': 5,
+                                               'class': 'form-control'})}
+
+
+class MainPageForm(ModelForm):
+    def clean_slide_1(self):
+        picture = self.cleaned_data.get("slide_1")
+        w, h = get_image_dimensions(picture)
+        if w != 1920 and h != 800:
+            raise forms.ValidationError("Размеры слайда не валидны")
+        return picture
+
+    def clean_slide_2(self):
+        picture = self.cleaned_data.get("slide_2")
+        w, h = get_image_dimensions(picture)
+        if w != 1920 and h != 800:
+            raise forms.ValidationError("Размеры слайда не валидны")
+        return picture
+
+    def clean_slide_3(self):
+        picture = self.cleaned_data.get("slide_3")
+        w, h = get_image_dimensions(picture)
+        if w != 1920 and h != 800:
+            raise forms.ValidationError("Размеры слайда не валидны")
+        return picture
+
+    class Meta:
+        model = MainPage
+        fields = ('slide_1', 'slide_2', 'slide_3', 'header', 'text', 'show_urls')
+        widgets = {'header': TextInput(attrs={'class': 'form-control'}),
+                   'text': Textarea(attrs={'rows': 5,
+                                           'class': 'form-control'})}
+
+
+class BlockForm(ModelForm):
+    def clean_image(self):
+        picture = self.cleaned_data.get("image")
+        w, h = get_image_dimensions(picture)
+        if w != 1000 and h != 600:
+            raise forms.ValidationError("Размеры слайда не валидны")
+        return picture
+
+    class Meta:
+        model = Block
+        fields = ('image', 'header', 'description')
+        widgets = {'header': TextInput(attrs={'class': 'form-control'}),
+                   'description': Textarea(attrs={'rows': 5,
+                                                  'class': 'form-control'})}
+
+
+BlockFormSet = modelformset_factory(Block, form=BlockForm, extra=0, can_delete=True)
+
+
+class AboutPageForm(ModelForm):
+    class Meta:
+        model = AboutPage
+        fields = ('header', 'text', 'avatar', 'additional_header', 'additional_text')
+        widgets = {'header': TextInput(attrs={'class': 'form-control'}),
+                   'text': Textarea(attrs={'rows': 5,
+                                           'class': 'form-control'}),
+                   'additional_header': TextInput(attrs={'class': 'form-control'}),
+                   'additional_text': Textarea(attrs={'rows': 5,
+                                                      'class': 'form-control'})}
+
+
+class PhotoForm(ModelForm):
+    class Meta:
+        model = Photo
+        fields = ('photo', 'is_main')
+
+
+class DocumentForm(ModelForm):
+    class Meta:
+        model = Document
+        fields = ('name', 'document')
+        widgets = {'name': TextInput(attrs={'class': 'form-control'})}
+
+
+DocumentFormSet = modelformset_factory(Document, form=DocumentForm, extra=0, can_delete=True)
 
 
 # region SYSTEM-SETTINGS form
@@ -44,6 +130,15 @@ class TariffForm(ModelForm):
 
 
 class ServiceForTariffForm(ModelForm):
+    units = forms.ModelChoiceField(required=False, label='Ед. изм.', queryset=Unit.objects.select_related(),
+                                   widget=Select(attrs={'class': 'form-select',
+                                                        'disabled': 'true'}))
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if kwargs.get('instance'):
+            self.fields['units'].initial = kwargs.get('instance').service.unit.id
+
     class Meta:
         model = ServiceForTariff
         fields = ('service', 'tariff', 'cost_for_unit')

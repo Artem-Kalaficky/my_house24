@@ -196,7 +196,7 @@
           </li>
           {% endif %}
           {% if user.role.has_site_management %}
-          <li class="nav-item {% block site_manage %}<!--menu-is-opening menu-open-->{% endblock %}">
+          <li class="nav-item {% block site-management %}{% endblock %}">
             <a href="#" class="nav-link">
               <i class="fa fa-desktop" style="width: 23px"></i>
               <p style="color: #494949; font-size: 14px; font-weight: 600">
@@ -206,15 +206,15 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="#" class="nav-link {% block home %}{% endblock %}">
+                <a href="{% url 'main' %}" {% block main %}class="nav-link"{% endblock %}>
                   <i class="far fa-circle nav-icon"></i>
-                  <p style="font-size: 14px">Главная страница</p>
+                  <p style="font-size: 14px" {% block main-active %}{% endblock %}>Главная страница</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="#" class="nav-link {% block about %}{% endblock %}">
+                <a href="{% url 'about' %}" {% block about %}class="nav-link"{% endblock %}>
                   <i class="far fa-circle nav-icon"></i>
-                  <p style="font-size: 14px">О нас</p>
+                  <p style="font-size: 14px" {% block about-active %}{% endblock %}>О нас</p>
                 </a>
               </li>
               <li class="nav-item">
@@ -232,7 +232,7 @@
             </ul>
           </li>
           {% endif %}
-          <li class="nav-item {% block settings %}<!--menu-is-opening menu-open-->{% endblock %}">
+          <li class="nav-item {% block settings %}{% endblock %}">
             <a href="#" class="nav-link">
               <i class="fa fa-cogs" style="width: 23px"></i>
               <p style="color: #494949; font-size: 14px; font-weight: 600">
