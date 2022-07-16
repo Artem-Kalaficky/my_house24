@@ -22,7 +22,6 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(max_length=32, blank=True, verbose_name='Имя')
     last_name = models.CharField(max_length=32, blank=True, verbose_name='Фамилия')
     patronymic = models.CharField(max_length=32, blank=True, verbose_name='Отчество')
-    remember_me = models.BooleanField(default=False, verbose_name='Запомнить меня')
     avatar = models.ImageField(upload_to='gallery/', null=True, blank=True, verbose_name='Аватар')
     telephone = models.CharField(max_length=20, null=True, blank=True, verbose_name='Телефон')
     viber = models.CharField(max_length=20, null=True, blank=True, verbose_name='Вайбер')

@@ -8,9 +8,9 @@ from django.urls import reverse_lazy, reverse
 from django.views.generic import TemplateView, ListView, DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
-from main.models import MainPage
+from main.models import MainPage, Block, AboutPage
 from .forms import RoleFormSet, ItemForm, RequisiteForm, ServiceFormSet, UnitFormSet, ServiceForTariffFormSet, \
-    TariffForm, ServiceForTariffForm
+    TariffForm, ServiceForTariffForm, MainPageForm, SeoForm, BlockFormSet, AboutPageForm
 from users.forms import UserCreateForm, ChangeUserInfoForm
 from users.models import UserProfile, Role
 from .models import Item, Requisites, Service, Unit, Tariff, ServiceForTariff
@@ -29,11 +29,53 @@ class StatisticsTemplateView(StaffRequiredMixin, TemplateView):
 
 # region SITE-MANAGEMENT
 class MainUpdateView(StaffRequiredMixin, SuccessMessageMixin, UpdateView):
-    model = MainPage
     template_name = 'crm/pages/site-management/main.html'
     success_url = reverse_lazy('main')
     success_message = 'Данные о странице обновлены!'
 
+    def get_object(self, queryset=None):
+        obj = get_object_or_404(MainPage, pk=1)
+        return obj
+
+    def get_form(self, form_class=None):
+        if form_class is None:
+            form_class = MainPageForm(self.request.POST or None, self.request.FILES or None, instance=self.object)
+        return form_class
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['seo_block'] = SeoForm(self.request.POST or None, instance=self.object.seo, prefix='seo_block')
+        context['formset'] = BlockFormSet(self.request.POST or None, self.request.FILES or None,
+                                          queryset=Block.objects.all(), prefix='formset')
+        return context
+
+    def form_valid(self, form):
+        seo_block = self.get_context_data()['seo_block']
+        formset = self.get_context_data()['formset']
+        if seo_block.is_valid():
+            seo_block.save()
+        for obj in formset:
+            if obj.is_valid():
+                obj.save()
+        form.save(commit=False)
+        form.seo = seo_block.instance
+        form.save()
+        return super().form_valid(form)
+
+
+class AboutUpdateView(StaffRequiredMixin, SuccessMessageMixin, UpdateView):
+    template_name = 'crm/pages/site-management/about.html'
+    success_url = reverse_lazy('about')
+    success_message = 'Данные о странице обновлены!'
+
+    def get_object(self, queryset=None):
+        obj = get_object_or_404(AboutPage, pk=1)
+        return obj
+
+    def get_form(self, form_class=None):
+        if form_class is None:
+            form_class = AboutPageForm(self.request.POST or None, self.request.FILES or None, instance=self.object)
+        return form_class
 # endregion SITE-MANAGEMENT
 
 

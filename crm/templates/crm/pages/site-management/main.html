@@ -1,35 +1,173 @@
 {% extends 'crm/layout/base.html' %}
 {% load static %}
 
+{% block style %}
+    <link rel="stylesheet" type="text/css" href="{% static 'crm/dist/css/bootstrap3-wysihtml5.min.css' %}">
+{% endblock %}
+
 {% block site-management %}menu-is-opening menu-open{% endblock %}
 {% block main %}class="nav-link active-link" style="color: black; background-color: #e1f1ea"{% endblock %}
 {% block main-active %}class="black"{% endblock %}
 
-{% block title %}Роли{% endblock %}
-{% block name_page %}Роли{% endblock %}
-{% block nav %}Роли{% endblock %}
+{% block title %}Редактирование страницы{% endblock %}
+{% block name_page %}Редактирование страницы{% endblock %}
+{% block nav %}Редактирование страницы{% endblock %}
 
 {% block content %}
-    <div class="box" style="background-color: #ffffff; margin: 0 10px 0 10px; border-top: 3px #d2d6de solid; min-height: 365px; border-radius: 4px">
+    <div class="my-box" style="min-height: 0">
         <div class="container-fluid">
-            Ukfdyfz
+            <div class="row" style="padding: 5px">
+                <div class="col-xl-6">
+                    <h5 style="color: #444444">Редактирование страницы "Главная"</h5>
+                </div>
+                <div class="col-xl-6" style="text-align: right">
+                    <button type="button" class="btn btn-default" style="font-size: 13px">Обновить robots и sitemap</button>
+                </div>
+            </div>
+            <div class="dropdown-divider" style="margin: 0; padding: 0"></div>
+
+            <form method="post" id="form" enctype="multipart/form-data">
+                {% csrf_token %}
+                <h4 style="padding: 20px 0 5px 5px">Слайдер</h4>
+                <div class="dropdown-divider" style="margin: 0; padding: 0"></div>
+
+                <!--Slide-->
+                <div class="row" style="padding: 20px 5px 5px 5px">
+                    <div class="col-xl-4 col-md-4" style="text-align: -webkit-center">
+                        <h5 style="text-align: left">Слайд 1</h5>
+                        <img src="{{ object.slide_1.url }}" height="300" width="100%">
+                        <p style="font-size: 14px; font-weight: bold; text-align: left; padding: 5px; margin: 0">Рекомендуемый размер: (1920х800)</p>
+                        <div style="text-align: left; padding: 5px; margin: 0">
+                            <span style="font-size: 14px; color: red">{{ form.slide_1.errors }}</span>
+                            <input type="file" name="slide_1" accept="image/*" id="id_slide_1" style="text-align: left; font-size: 14px">
+                        </div>
+                    </div>
+                    <div class="col-xl-4 col-md-4" style="text-align: -webkit-center">
+                        <h5 style="text-align: left">Слайд 2</h5>
+                        <img src="{{ object.slide_2.url }}" height="300" width="100%">
+                        <p style="font-size: 14px; font-weight: bold; text-align: left; padding: 5px; margin: 0">Рекомендуемый размер: (1920х800)</p>
+                        <div style="text-align: left; padding: 5px; margin: 0">
+                            <span style="font-size: 14px; color: red">{{ form.slide_2.errors }}</span>
+                            <input type="file" name="slide_2" accept="image/*" id="id_slide_2" style="text-align: left; font-size: 14px">
+                        </div>
+                    </div>
+                    <div class="col-xl-4 col-md-4" style="text-align: -webkit-center">
+                        <h5 style="text-align: left">Слайд 3</h5>
+                        <img src="{{ object.slide_3.url }}" height="300" width="100%">
+                        <p style="font-size: 14px; font-weight: bold; text-align: left; padding: 5px; margin: 0">Рекомендуемый размер: (1920х800)</p>
+                        <div style="text-align: left; padding: 5px; margin: 0">
+                            <span style="font-size: 14px; color: red">{{ form.slide_3.errors }}</span>
+                            <input type="file" name="slide_3" accept="image/*" id="id_slide_3" style="text-align: left; font-size: 14px">
+                        </div>
+                    </div>
+                </div>
+                <!--End Slide-->
+
+                <!--Short information-->
+                <h4 style="padding: 30px 0 5px 5px">Краткая информация</h4>
+                <div class="dropdown-divider" style="margin: 0; padding: 0"></div>
+                <p style="font-size: 14px; font-weight: bold; text-align: left; padding: 20px 0 0 5px; margin: 0">Заголовок</p>
+                <div style="padding: 3px">
+                    {{ form.header }}
+                </div>
+                <p style="font-size: 14px; font-weight: bold; text-align: left; padding: 20px 0 0 5px; margin: 0">Краткий текст</p>
+                <div style="padding: 3px; margin-bottom: 5px">
+                    {{ form.text }}
+                </div>
+                <div style="padding: 3px">
+                    {{ form.show_urls }}
+                     <span style="font-size: 14px; font-weight: bold; text-align: left; padding: 20px 0 0 5px; margin: 0">Показать ссылки на приложения</span>
+                </div>
+                <!--End Short information-->
+
+                <!--Blocks Formset-->
+                <h4 style="padding: 30px 0 5px 5px">Рядом с нами</h4>
+                <div class="dropdown-divider" style="margin: 0; padding: 0"></div>
+                {{ formset.management_form }}
+                <div id="formset" style="margin-top: 20px; padding: 3px" class="row">
+                    {% for form in formset %}
+                        <div id="{{ form.prefix }}-form" style="padding: 7px" class="col-xl-4 col-md-6">
+                            {{ form.id }}
+                            <h5 style="text-align: left">Блок {{ forloop.counter }}</h5>
+                            <div style="text-align: -webkit-center">
+                                <img src="{{ form.instance.image.url }}" height="200" width="100%">
+                            </div>
+                            <p style="font-size: 14px; font-weight: bold; text-align: left; padding: 5px 0 5px 0; margin: 0">Рекомендуемый размер: (1000x600)</p>
+                            <input type="file" name="{{ form.prefix }}-image" accept="image/*" id="id_{{ form.prefix }}-image" style="font-size: 14px">
+                            <div style="margin-top: 7px">
+                                <p style="font-size: 14px; font-weight: bold; text-align: left; margin: 0">Заголовок блока</p>
+                                {{ form.header }}
+                            </div>
+                            <div style="margin-top: 7px">
+                                <p style="font-size: 14px; font-weight: bold; text-align: left; margin: 0">Описание</p>
+                                {{ form.description }}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                <!--End Blocks Formset-->
+
+                <!--SEO блок-->
+                <h4 style="padding: 30px 0 5px 5px">Настройки SEO</h4>
+                <div class="dropdown-divider" style="margin: 0; padding: 0"></div>
+                <div style="padding: 3px; margin-top: 20px">
+                    <p style="font-size: 14px; font-weight: bold; text-align: left; padding: 20px 0 0 5px; margin: 0">{{ seo_block.title.label }}</p>
+                    {{ seo_block.title }}
+                </div>
+                <div style="padding: 3px">
+                    <p style="font-size: 14px; font-weight: bold; text-align: left; padding: 20px 0 0 5px; margin: 0">{{ seo_block.description.label }}</p>
+                    {{ seo_block.description }}
+                </div>
+                <div style="padding: 3px">
+                    <p style="font-size: 14px; font-weight: bold; text-align: left; padding: 20px 0 0 5px; margin: 0">{{ seo_block.keywords.label }}</p>
+                    {{ seo_block.keywords }}
+                </div>
+                <!--End SEO блок-->
+
+                <div style="text-align: center; padding: 15px 0 20px 0">
+                    <a href="{% url 'main' %}" class="btn btn-default">Отменить</a>
+                    <button type="submit" class="btn btn-success">Сохранить</button>
+                </div>
+            </form>
         </div>
     </div>
+    <div style="height: 40px;"></div>
 {% endblock %}
 
 {% block script %}
-<script>
-    {% if messages %}
-    Swal.fire({
-      backdrop: false,
-      position: 'top-end',
-      padding: 0,
-      icon: 'success',
-      width: 300,
-      html: '{% for message in messages %}{{ message }}{% endfor %}',
-      showConfirmButton: false,
-      timer: 1500,
-    })
-    {% endif %}
-</script>
+    <script src="{% static 'crm/dist/js/bootstrap3-wysihtml5.all.js' %}"></script>
+    <script src="{% static 'crm/dist/js/bootstrap-wysihtml5.ru-RU.js' %}"></script>
+    <script>
+        {% if messages %}
+        Swal.fire({
+          backdrop: false,
+          position: 'top-end',
+          padding: 0,
+          icon: 'success',
+          width: 300,
+          html: '{% for message in messages %}{{ message }}{% endfor %}',
+          showConfirmButton: false,
+          timer: 2500,
+        })
+        {% endif %}
+
+        $('#id_text, #id_formset-0-description, #id_formset-1-description, #id_formset-2-description, #id_formset-3-description, #id_formset-4-description, #id_formset-5-description').wysihtml5({
+            locale: 'ru-RU',
+            toolbar: {
+                "font-styles": true, //Font styling, e.g. h1, h2, etc. Default true
+                "emphasis": true, //Italics, bold, etc. Default true
+                "lists": true, //(Un)ordered lists, e.g. Bullets, Numbers. Default true
+                "html": false, //Button which allows you to edit the generated HTML. Default false
+                "link": false, //Button to insert a link. Default true
+                "image": false, //Button to insert an image. Default true,
+                "color": false, //Button to change color of font
+                "blockquote": false, //Blockquote
+                "fa": true,
+                "size": 'none' //default: none, other options are xs, sm, lg
+            }
+        });
+    </script>
 {% endblock %}
+
+
+

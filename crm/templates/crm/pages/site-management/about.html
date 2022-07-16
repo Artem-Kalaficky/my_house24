@@ -1,0 +1,86 @@
+{% extends 'crm/layout/base.html' %}
+{% load static %}
+
+{% block style %}
+    <link rel="stylesheet" type="text/css" href="{% static 'crm/dist/css/bootstrap3-wysihtml5.min.css' %}">
+{% endblock %}
+
+{% block site-management %}menu-is-opening menu-open{% endblock %}
+{% block about %}class="nav-link active-link" style="color: black; background-color: #e1f1ea"{% endblock %}
+{% block about-active %}class="black"{% endblock %}
+
+{% block title %}Редактирование страницы{% endblock %}
+{% block name_page %}Редактирование страницы{% endblock %}
+{% block nav %}Редактирование страницы{% endblock %}
+
+{% block content %}
+    <div class="my-box" style="min-height: 0">
+        <div class="container-fluid">
+            <div style="padding: 5px">
+                <h5 style="color: #444444">Редактирование страницы "О нас"</h5>
+            </div>
+            <div class="dropdown-divider" style="margin: 0; padding: 0"></div>
+
+            <form method="post" id="form" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <!--Information-->
+                <h4 style="padding: 20px 0 5px 5px">Информация</h4>
+                <div class="dropdown-divider" style="margin: 0; padding: 0"></div>
+                <div class="row">
+                    <div class="col-xl-8 col-md-6">
+                        <p style="font-size: 14px; font-weight: bold; text-align: left; padding: 20px 0 0 5px; margin: 0">Заголовок</p>
+                        <div style="padding: 3px">
+                            {{ form.header }}
+                        </div>
+                        <p style="font-size: 14px; font-weight: bold; text-align: left; padding: 20px 0 0 5px; margin: 0">Краткий текст</p>
+                        <div style="padding: 3px">
+                            {{ form.text }}
+                        </div>
+                    </div>
+                    <div class="col-xl-4 col-md-6">
+                        <div class="row">
+                        </div>
+                    </div>
+                </div>
+                <!--End Information-->
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'crm/dist/js/bootstrap3-wysihtml5.all.js' %}"></script>
+    <script src="{% static 'crm/dist/js/bootstrap-wysihtml5.ru-RU.js' %}"></script>
+    <script>
+        {% if messages %}
+        Swal.fire({
+          backdrop: false,
+          position: 'top-end',
+          padding: 0,
+          icon: 'success',
+          width: 300,
+          html: '{% for message in messages %}{{ message }}{% endfor %}',
+          showConfirmButton: false,
+          timer: 2500,
+        })
+        {% endif %}
+
+        $('#id_text').wysihtml5({
+            locale: 'ru-RU',
+            toolbar: {
+                "font-styles": true, //Font styling, e.g. h1, h2, etc. Default true
+                "emphasis": true, //Italics, bold, etc. Default true
+                "lists": true, //(Un)ordered lists, e.g. Bullets, Numbers. Default true
+                "html": false, //Button which allows you to edit the generated HTML. Default false
+                "link": false, //Button to insert a link. Default true
+                "image": false, //Button to insert an image. Default true,
+                "color": false, //Button to change color of font
+                "blockquote": false, //Blockquote
+                "fa": true,
+                "size": 'none' //default: none, other options are xs, sm, lg
+            }
+        });
+        //$('html, iframe, body').addClass('form-control')
+    </script>
+{% endblock %}

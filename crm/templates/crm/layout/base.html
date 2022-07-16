@@ -206,15 +206,15 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="{{ mainpage.get_absolute_url }}" {% block main %}class="nav-link"{% endblock %}>
+                <a href="{% url 'main' %}" {% block main %}class="nav-link"{% endblock %}>
                   <i class="far fa-circle nav-icon"></i>
                   <p style="font-size: 14px" {% block main-active %}{% endblock %}>Главная страница</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="#" class="nav-link {% block about %}{% endblock %}">
+                <a href="{% url 'about' %}" {% block about %}class="nav-link"{% endblock %}>
                   <i class="far fa-circle nav-icon"></i>
-                  <p style="font-size: 14px">О нас</p>
+                  <p style="font-size: 14px" {% block about-active %}{% endblock %}>О нас</p>
                 </a>
               </li>
               <li class="nav-item">

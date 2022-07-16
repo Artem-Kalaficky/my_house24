@@ -16,24 +16,20 @@ class MainPage(models.Model):
     slide_1 = models.ImageField(upload_to='gallery/', verbose_name='Слайд 1')
     slide_2 = models.ImageField(upload_to='gallery/', verbose_name='Слайд 2')
     slide_3 = models.ImageField(upload_to='gallery/', verbose_name='Слайд 3')
-    header = models.CharField(max_length=64, verbose_name='Заголовок')
-    text = models.TextField(verbose_name='Краткий текст')
+    header = models.CharField(max_length=64, blank=True, verbose_name='Заголовок')
+    text = models.TextField(blank=True, verbose_name='Краткий текст')
     show_urls = models.BooleanField(default=True, verbose_name='Показывать ссылки на приложения')
     seo = models.OneToOneField(Seo, on_delete=models.PROTECT, verbose_name='SEO-блок')
-    slug = models.SlugField(null=True)
 
     class Meta:
         verbose_name = 'Главная страница'
-
-    def get_absolute_url(self):
-        return reverse('main', kwargs={'slug': self.slug})
 
 
 class Block(models.Model):
     page_id = models.ForeignKey(MainPage, on_delete=models.CASCADE, verbose_name='Главная страница')
     image = models.ImageField(upload_to='gallery/', verbose_name='Изображение')
-    header = models.CharField(max_length=64, verbose_name='Заголовок')
-    description = models.TextField(verbose_name='Описание')
+    header = models.CharField(blank=True, max_length=64, verbose_name='Заголовок')
+    description = models.TextField(blank=True, verbose_name='Описание')
 
     class Meta:
         verbose_name = 'Блок'
@@ -53,7 +49,6 @@ class AboutPage(models.Model):
 
 
 class Photo(models.Model):
-    page_id = models.ForeignKey(AboutPage, on_delete=models.CASCADE, verbose_name='О нас')
     photo = models.ImageField(upload_to='gallery/', verbose_name='Фото')
     is_main = models.BooleanField(default=True, verbose_name='Главное фото')
 
@@ -63,7 +58,7 @@ class Photo(models.Model):
 
 
 class Document(models.Model):
-    page_id = models.ForeignKey(AboutPage, on_delete=models.CASCADE, verbose_name='О нас')
+    name = models.CharField(max_length=64, verbose_name='Название документа')
     document = models.FileField(upload_to='files/', verbose_name='Документ')
 
     class Meta:

@@ -3,7 +3,7 @@ from django.urls import path
 from .views import StatisticsTemplateView, RoleCreateView, UsersListView, UserDetailView, UserCreateView,\
     UserUpdateView, UserDeleteView, ItemsListView, ItemCreateView, ItemUpdateView, ItemDeleteView, RequisiteUpdate, \
     ServiceCreateView, TariffsListView, TariffDetailView, TariffCreateView, TariffDeleteView, TariffUpdateView, \
-    MainUpdateView
+    MainUpdateView, AboutUpdateView
 
 
 urlpatterns = [
@@ -12,7 +12,8 @@ urlpatterns = [
 
 
     # SITE-MANAGEMENT pages
-    path('site-management/<slug:slug>/', MainUpdateView.as_view(), name='main'),
+    path('site-management/main/', MainUpdateView.as_view(), name='main'),
+    path('site-management/about/', AboutUpdateView.as_view(), name='about'),
 
     # SYSTEM-SETTINGS pages
     # services
