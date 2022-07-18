@@ -3,6 +3,11 @@
 
 {% block style %}
     <link rel="stylesheet" type="text/css" href="{% static 'crm/dist/css/bootstrap3-wysihtml5.min.css' %}">
+    <style>
+        iframe {
+            max-width: 100%;
+        }
+    </style>
 {% endblock %}
 
 {% block site-management %}menu-is-opening menu-open{% endblock %}
@@ -110,7 +115,7 @@
                 <!--SEO блок-->
                 <h4 style="padding: 30px 0 5px 5px">Настройки SEO</h4>
                 <div class="dropdown-divider" style="margin: 0; padding: 0"></div>
-                <div style="padding: 3px; margin-top: 20px">
+                <div style="padding: 3px; margin-top: 5px">
                     <p style="font-size: 14px; font-weight: bold; text-align: left; padding: 20px 0 0 5px; margin: 0">{{ seo_block.title.label }}</p>
                     {{ seo_block.title }}
                 </div>

@@ -1,0 +1,149 @@
+{% extends 'crm/layout/base.html' %}
+{% load static %}
+
+{% block style %}
+    <link rel="stylesheet" type="text/css" href="{% static 'crm/dist/css/bootstrap3-wysihtml5.min.css' %}">
+    <style>
+        iframe {
+            max-width: 100%;
+            max-height: 158px;
+        }
+
+        .fa-trash-alt:hover {
+            cursor: pointer;
+        }
+    </style>
+{% endblock %}
+
+{% block site-management %}menu-is-opening menu-open{% endblock %}
+{% block about_service %}class="nav-link active-link" style="color: black; background-color: #e1f1ea"{% endblock %}
+{% block about_service-active %}class="black"{% endblock %}
+
+{% block title %}Редактирование страницы{% endblock %}
+{% block name_page %}Редактирование страницы{% endblock %}
+{% block nav %}Редактирование страницы{% endblock %}
+
+{% block content %}
+    <div class="my-box" style="min-height: 0">
+        <div class="container-fluid">
+            <div style="padding: 5px">
+                <h5 style="color: #444444">Редактирование страницы "Услуги"</h5>
+            </div>
+            <div class="dropdown-divider" style="margin: 0; padding: 0"></div>
+
+            <form method="post" id="form" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <!--Services Formset-->
+                <h4 style="padding: 20px 0 5px 5px">Услуги</h4>
+                <div class="dropdown-divider" style="margin: 0; padding: 0"></div>
+                {{ formset.management_form }}
+                <div id="formset" style="padding: 20px 7px 5px 7px" class="row">
+                    {% for form in formset %}
+                        <div id="{{ form.prefix }}-form" style="padding: 6px" class="col-xl-4 col-md-6">
+                            {{ form.id }}
+                            <span style="text-align: left; font-size: 19px">Услуга {{ forloop.counter }}</span>
+                            <span style="float: right"><a onclick="delete_service(this.id)" id="{{ form.prefix }}" style="color: red; text-align: right"><i class="fa fa-trash-alt"></i></a></span>
+                            <div style="text-align: -webkit-center">
+                                <img src="{% if form.instance.image %}{{ form.instance.image.url }}{% else %}{% static 'crm/dist/img/default' %}{% endif %}" height="200" width="100%">
+                            </div>
+                            <p style="font-size: 14px; font-weight: bold; text-align: left; padding: 10px 0 5px 0; margin: 0">Рекомендуемый размер: (650x300)</p>
+                            <div style="width: 100%; border: 1px lightgrey solid">
+                                <input type="file" name="{{ form.prefix }}-image" accept="image/*" id="id_{{ form.prefix }}-image" style="font-size: 14px; padding: 4px">
+                            </div>
+                            <p style="font-size: 14px; font-weight: bold; text-align: left; padding: 10px 0 5px 0; margin: 0">Название услуги</p>
+                            {{ form.name }}
+                            <p style="font-size: 14px; font-weight: bold; text-align: left; padding: 10px 0 5px 0; margin: 0">Описание услуги</p>
+                            {{ form.description }}
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <div class="delete-list" style="display: none"></div>
+
+                <div id="empty_form" style="display: none">
+                    <div id="{{ formset.empty_form.prefix }}-form" style="padding: 6px" class="col-xl-4 col-md-6">
+                        {{ formset.empty_form.id }}
+                        <span style="text-align: left; font-size: 19px">Новая услуга</span>
+                        <span style="float: right"><a onclick="delete_service(this.id)" id="{{ formset.empty_form.prefix }}" style="color: red; text-align: right"><i class="fa fa-trash-alt"></i></a></span>
+                        <div style="text-align: -webkit-center">
+                            <img src="{% static 'crm/dist/img/default' %}" height="200" width="100%">
+                        </div>
+                        <p style="font-size: 14px; font-weight: bold; text-align: left; padding: 10px 0 5px 0; margin: 0">Рекомендуемый размер: (650x300)</p>
+                        <div style="width: 100%; border: 1px lightgrey solid">
+                            <input type="file" name="{{ formset.empty_form.prefix }}-image" accept="image/*" id="id_{{ formset.empty_form.prefix }}-image" style="font-size: 14px; padding: 4px">
+                        </div>
+                        <p style="font-size: 14px; font-weight: bold; text-align: left; padding: 10px 0 5px 0; margin: 0">Название услуги</p>
+                        {{ formset.empty_form.name }}
+                        <p style="font-size: 14px; font-weight: bold; text-align: left; padding: 10px 0 5px 0; margin: 0">Описание услуги</p>
+                        {{ formset.empty_form.description }}
+                    </div>
+                </div>
+                <!--End Services Formset-->
+
+                <!--SEO блок-->
+                <h4 style="padding: 30px 0 5px 5px">Настройки SEO</h4>
+                <div class="dropdown-divider" style="margin: 0; padding: 0"></div>
+                <div style="padding: 3px; margin-top: 5px">
+                    <p style="font-size: 14px; font-weight: bold; text-align: left; padding: 20px 0 0 5px; margin: 0">{{ seo_block.title.label }}</p>
+                    {{ seo_block.title }}
+                </div>
+                <div style="padding: 3px">
+                    <p style="font-size: 14px; font-weight: bold; text-align: left; padding: 20px 0 0 5px; margin: 0">{{ seo_block.description.label }}</p>
+                    {{ seo_block.description }}
+                </div>
+                <div style="padding: 3px">
+                    <p style="font-size: 14px; font-weight: bold; text-align: left; padding: 20px 0 0 5px; margin: 0">{{ seo_block.keywords.label }}</p>
+                    {{ seo_block.keywords }}
+                </div>
+                <!--End SEO блок-->
+
+                <div style="text-align: center; padding: 15px 0 20px 0">
+                    <a href="{% url 'about_service' %}" class="btn btn-default">Отменить</a>
+                    <button id="add" type="button" class="btn btn-success">Добавить услугу</button>
+                    <button type="submit" class="btn btn-success">Сохранить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'crm/dist/js/bootstrap3-wysihtml5.all.js' %}"></script>
+    <script src="{% static 'crm/dist/js/bootstrap-wysihtml5.ru-RU.js' %}"></script>
+    <script src="{% static 'crm/scripts/site-managment/about_service.js' %}"></script>
+    <script>
+        $('textarea:visible').addClass('textarea')
+        $('.textarea').wysihtml5({
+            locale: 'ru-RU',
+            toolbar: {
+                "font-styles": true, //Font styling, e.g. h1, h2, etc. Default true
+                "emphasis": true, //Italics, bold, etc. Default true
+                "lists": true, //(Un)ordered lists, e.g. Bullets, Numbers. Default true
+                "html": false, //Button which allows you to edit the generated HTML. Default false
+                "link": false, //Button to insert a link. Default true
+                "image": false, //Button to insert an image. Default true,
+                "color": false, //Button to change color of font
+                "blockquote": false, //Blockquote
+                "fa": true,
+                "size": 'none' //default: none, other options are xs, sm, lg
+            }
+        });
+
+
+        {% if messages %}
+            Swal.fire({
+                backdrop: false,
+                position: 'top-end',
+                padding: 0,
+                icon: 'success',
+                width: 300,
+                html: '{% for message in messages %}{{ message }}{% endfor %}',
+                showConfirmButton: false,
+                timer: 2000,
+            })
+        {% endif %}
+    </script>
+{% endblock %}
+
+

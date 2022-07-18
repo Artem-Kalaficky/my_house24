@@ -218,15 +218,15 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a href="#" class="nav-link {% block about_services %}{% endblock %}">
+                <a href="{% url 'about_service' %}" {% block about_service %}class="nav-link"{% endblock %}>
                   <i class="far fa-circle nav-icon"></i>
-                  <p style="font-size: 14px">Услуги</p>
+                  <p style="font-size: 14px" {% block about_service-active %}{% endblock %}>Услуги</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="#" class="nav-link {% block contact %}{% endblock %}">
+                <a href="{% url 'contact' %}" {% block contact %}class="nav-link"{% endblock %}>
                   <i class="far fa-circle nav-icon"></i>
-                  <p style="font-size: 14px">Контакты</p>
+                  <p style="font-size: 14px" {% block contact-active %}{% endblock %}>Контакты</p>
                 </a>
               </li>
             </ul>
