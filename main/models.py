@@ -1,3 +1,4 @@
+from django.core.validators import FileExtensionValidator
 from django.db import models
 from django.urls import reverse
 
@@ -5,7 +6,7 @@ from django.urls import reverse
 class Seo(models.Model):
     title = models.CharField(max_length=64, verbose_name='Title')
     description = models.TextField(verbose_name='Description')
-    keywords = models.CharField(max_length=64, verbose_name='Keywords')
+    keywords = models.TextField(verbose_name='Keywords')
 
     class Meta:
         verbose_name = 'SEO-блок'
@@ -49,7 +50,7 @@ class AboutPage(models.Model):
 
 
 class Photo(models.Model):
-    photo = models.ImageField(upload_to='gallery/', verbose_name='Фото')
+    photo = models.ImageField(upload_to='gallery/', blank=True, verbose_name='Фото')
     is_main = models.BooleanField(default=True, verbose_name='Главное фото')
 
     class Meta:
@@ -59,7 +60,8 @@ class Photo(models.Model):
 
 class Document(models.Model):
     name = models.CharField(max_length=64, verbose_name='Название документа')
-    document = models.FileField(upload_to='files/', verbose_name='Документ')
+    document = models.FileField(upload_to='files/', verbose_name='Документ',
+                                validators=[FileExtensionValidator(['pdf', 'jpg'])])
 
     class Meta:
         verbose_name = 'Документ'
@@ -74,10 +76,9 @@ class ServicePage(models.Model):
 
 
 class AboutService(models.Model):
-    page_id = models.ForeignKey(MainPage, on_delete=models.CASCADE, verbose_name='Страница наших услуг')
-    image = models.ImageField(upload_to='gallery/', verbose_name='Изображение')
-    name = models.CharField(max_length=64, verbose_name='Название услуги')
-    description = models.TextField(verbose_name='Описание услуги')
+    image = models.ImageField(upload_to='gallery/', blank=True, verbose_name='Изображение')
+    name = models.CharField(max_length=64, blank=True, verbose_name='Название услуги')
+    description = models.TextField(blank=True, verbose_name='Описание услуги')
 
     class Meta:
         verbose_name = 'Об услуге'

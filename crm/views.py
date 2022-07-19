@@ -3,17 +3,19 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.db import IntegrityError
 from django.db.models import Q
 from django.forms import modelformset_factory
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.views.generic import TemplateView, ListView, DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
-from main.models import MainPage, Block, AboutPage
+from main.models import MainPage, Block, AboutPage, Photo, Document, ServicePage, AboutService, ContactPage
 from .forms import RoleFormSet, ItemForm, RequisiteForm, ServiceFormSet, UnitFormSet, ServiceForTariffFormSet, \
-    TariffForm, ServiceForTariffForm, MainPageForm, SeoForm, BlockFormSet, AboutPageForm
+    TariffForm, ServiceForTariffForm, MainPageForm, SeoForm, BlockFormSet, AboutPageForm, PhotoForm, DocumentFormSet, \
+    ServicePageForm, AboutServiceFormSet, ContactPageForm
 from users.forms import UserCreateForm, ChangeUserInfoForm
 from users.models import UserProfile, Role
-from .models import Item, Requisites, Service, Unit, Tariff, ServiceForTariff
+from .models import Item, Requisites, Service, Unit, Tariff, ServiceForTariff, House
 
 
 class StaffRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
@@ -25,6 +27,34 @@ class StaffRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
 
 class StatisticsTemplateView(StaffRequiredMixin, TemplateView):
     template_name = 'crm/pages/statistics.html'
+
+
+# region Houses
+class HousesListView(StaffRequiredMixin, SuccessMessageMixin, ListView):
+    template_name = 'crm/pages/houses/houses_list.html'
+    context_object_name = 'houses'
+
+    def get_queryset(self):
+        queryset = House.objects.all()
+        if self.request.GET.get('filter-address') == '1':
+            queryset = queryset.order_by('address')
+        if self.request.GET.get('filter-address') == '0':
+            queryset = queryset.order_by('-address')
+        if self.request.GET.get('filter-name') == '1':
+            queryset = queryset.order_by('name')
+        if self.request.GET.get('filter-name') == '0':
+            queryset = queryset.order_by('-name')
+        if self.request.GET.get('name'):
+            queryset = queryset.filter(name__icontains=self.request.GET.get('name'))
+        if self.request.GET.get('address'):
+            queryset = queryset.filter(address__icontains=self.request.GET.get('address'))
+        return queryset
+
+
+class HouseDetailView(StaffRequiredMixin, DetailView):
+    queryset = House.objects.prefetch_related('users__role')
+    template_name = 'crm/pages/houses/house_detail.html'
+# endregion Houses
 
 
 # region SITE-MANAGEMENT
@@ -76,6 +106,112 @@ class AboutUpdateView(StaffRequiredMixin, SuccessMessageMixin, UpdateView):
         if form_class is None:
             form_class = AboutPageForm(self.request.POST or None, self.request.FILES or None, instance=self.object)
         return form_class
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['photo_form'] = PhotoForm(self.request.POST or None, self.request.FILES or None, prefix='photo_form')
+        context['add_photo_form'] = PhotoForm(self.request.POST or None, self.request.FILES or None,
+                                              prefix='add_photo_form')
+        context['formset'] = DocumentFormSet(self.request.POST or None, self.request.FILES or None,
+                                             queryset=Document.objects.all(), prefix='formset')
+        context['seo_block'] = SeoForm(self.request.POST or None, instance=self.object.seo, prefix='seo_block')
+        context['gallery'] = Photo.objects.all()
+        return context
+
+    def form_valid(self, form):
+        formset = self.get_context_data()['formset']
+        photo_form = self.get_context_data()['photo_form']
+        add_photo_form = self.get_context_data()['add_photo_form']
+        seo_block = self.get_context_data()['seo_block']
+        if photo_form.is_valid():
+            if photo_form.cleaned_data['photo']:
+                photo_form.save()
+        if add_photo_form.is_valid():
+            if add_photo_form.cleaned_data['photo']:
+                add_photo_form.save()
+        if formset.is_valid():
+            formset.save()
+        if seo_block.is_valid():
+            seo_block.save()
+        form.save(commit=False)
+        form.seo = seo_block.instance
+        form.save()
+        return super().form_valid(form)
+
+
+class PhotoDeleteView(DeleteView):
+    model = Photo
+    success_url = reverse_lazy('about')
+
+    def get(self, request, *args, **kwargs):
+        return self.post(request, *args, **kwargs)
+
+
+class ServicePageUpdateView(StaffRequiredMixin, SuccessMessageMixin, UpdateView):
+    template_name = 'crm/pages/site-management/about_service.html'
+    success_url = reverse_lazy('about_service')
+    success_message = 'Данные о странице обновлены!'
+
+    def get_object(self, queryset=None):
+        obj = get_object_or_404(ServicePage, pk=1)
+        return obj
+
+    def get_form(self, form_class=None):
+        if form_class is None:
+            form_class = ServicePageForm(self.request.POST or None, instance=self.object)
+        return form_class
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['formset'] = AboutServiceFormSet(self.request.POST or None, self.request.FILES or None,
+                                                 queryset=AboutService.objects.all(), prefix='formset')
+        context['seo_block'] = SeoForm(self.request.POST or None, instance=self.object.seo, prefix='seo_block')
+        return context
+
+    def form_valid(self, form):
+        formset = self.get_context_data()['formset']
+        seo_block = self.get_context_data()['seo_block']
+        formset.save(commit=False)
+        for obj in formset:
+            if obj.is_valid() and obj.cleaned_data and not obj.cleaned_data['DELETE']:
+                obj.save()
+        for obj in formset.deleted_objects:
+            obj.delete()
+        if seo_block.is_valid():
+            seo_block.save()
+        form.save(commit=False)
+        form.seo = seo_block.instance
+        form.save()
+        return super().form_valid(form)
+
+
+class ContactPageUpdateView(StaffRequiredMixin, SuccessMessageMixin, UpdateView):
+    template_name = 'crm/pages/site-management/contacts.html'
+    success_url = reverse_lazy('contact')
+    success_message = 'Данные о странице обновлены!'
+
+    def get_object(self, queryset=None):
+        obj = get_object_or_404(ContactPage, pk=1)
+        return obj
+
+    def get_form(self, form_class=None):
+        if form_class is None:
+            form_class = ContactPageForm(self.request.POST or None, instance=self.object)
+        return form_class
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['seo_block'] = SeoForm(self.request.POST or None, instance=self.object.seo, prefix='seo_block')
+        return context
+
+    def form_valid(self, form):
+        seo_block = self.get_context_data()['seo_block']
+        if seo_block.is_valid():
+            seo_block.save()
+        form.save(commit=False)
+        form.seo = seo_block.instance
+        form.save()
+        return super().form_valid(form)
 # endregion SITE-MANAGEMENT
 
 
@@ -226,6 +362,17 @@ class TariffDeleteView(SuccessMessageMixin, DeleteView):
     model = Tariff
     success_url = reverse_lazy('tariffs_list')
     success_message = 'Тариф успешно удалён!'
+
+
+def get_units(request):
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        if request.method == 'GET':
+            if request.GET.get('test'):
+                unit_id = Service.objects.get(pk=request.GET.get('test')).unit_id
+                response = {'unit_id': unit_id}
+            else:
+                response = {'unit_id': None}
+            return JsonResponse(response, status=200)
 # endregion tariffs page
 
 

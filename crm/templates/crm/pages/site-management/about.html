@@ -3,6 +3,15 @@
 
 {% block style %}
     <link rel="stylesheet" type="text/css" href="{% static 'crm/dist/css/bootstrap3-wysihtml5.min.css' %}">
+    <style>
+        iframe {
+            max-width: 100%;
+        }
+
+        .fa-trash:hover {
+            cursor: pointer;
+        }
+    </style>
 {% endblock %}
 
 {% block site-management %}menu-is-opening menu-open{% endblock %}
@@ -21,7 +30,7 @@
             </div>
             <div class="dropdown-divider" style="margin: 0; padding: 0"></div>
 
-            <form method="post" id="form" enctype="multipart/form-data">
+            <form action="{% url 'about' %}" method="post" id="form" enctype="multipart/form-data">
                 {% csrf_token %}
 
                 <!--Information-->
@@ -38,12 +47,185 @@
                             {{ form.text }}
                         </div>
                     </div>
-                    <div class="col-xl-4 col-md-6">
-                        <div class="row">
+                    <div class="col-xl-4 col-md-6" style="padding-left: 20px">
+                        <h5 style="padding-top: 20px">Фото директора</h5>
+                        <div style="max-width: 250px; text-align: -webkit-center">
+                            <img src="{{ object.avatar.url }}" height="310" width="100%">
+                        </div>
+                        <p style="font-size: 14px; font-weight: bold; text-align: left; padding: 5px; margin: 0">Рекомендуемый размер: (250х310)</p>
+                        <div style="text-align: left; padding: 5px; margin: 0">
+                            <span style="font-size: 14px; color: red">{{ form.avatar.errors }}</span>
+                            <input type="file" name="avatar" accept="image/*" id="id_avatar" style="text-align: left; font-size: 14px">
                         </div>
                     </div>
                 </div>
                 <!--End Information-->
+
+                <!--Gallery-->
+                <h4 style="padding: 20px 0 5px 5px">Фотогалерея</h4>
+                <div class="dropdown-divider" style="margin: 0; padding: 0"></div>
+                <div class="row" style="padding-top: 20px">
+                    {% for photo in gallery %}
+                        {% if photo.is_main %}
+                        <div class="col-xl-2 col-md-4 col-sm-6" style="text-align: -webkit-center">
+                            <img src="{{ photo.photo.url }}" height="150" width="100%" style="border: 1px lightgrey solid; padding: 4px; border-radius: 5px">
+                            <div style="padding-top: 5px; text-align: center">
+                                <a href="" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ forloop.counter }}"><i class="fa fa-trash-alt" style="color: red"></i></a>
+                            </div>
+                        </div>
+                        {% endif %}
+                        <!-- Modal -->
+                        <div class="modal fade" id="deleteModal-{{ forloop.counter }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="deleteModalLabel-{{ forloop.counter }}" aria-hidden="true">
+                          <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                              <div class="modal-header bg-danger">
+                                <h5 class="modal-title" id="deleteModal1Label-{{ forloop.counter }}">Подтверждение удаления</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                              </div>
+                                  <div class="modal-body">
+                                      Вы действительно хотите удалить фото с галереи?
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                                    <a href="{% url 'photo_delete' photo.id %}" class="btn btn-danger">Удалить</a>
+                                  </div>
+                            </div>
+                          </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                <p style="font-size: 14px; font-weight: bold; text-align: left; padding: 5px; margin: 0">Рекомендуемый размер: (1200x1200)</p>
+                <div style="text-align: left; padding: 5px; margin: 0">
+                    <span style="font-size: 14px; color: red">{{ photo_form.photo.errors }}</span>
+                    <input type="file" name="photo_form-photo" accept="image/*" id="id_photo_form-photo">
+                    <input type="checkbox" name="photo_form-is_main" id="id_photo_form-is_main" checked hidden>
+                </div>
+                <!--End Gallery-->
+
+                <!--Add Information-->
+                <h4 style="padding: 20px 0 5px 5px">Дополнительная информация</h4>
+                <div class="dropdown-divider" style="margin: 0; padding: 0"></div>
+                <div class="row">
+                    <div class="col-xl-8 col-md-6">
+                        <p style="font-size: 14px; font-weight: bold; text-align: left; padding: 20px 0 0 5px; margin: 0">Заголовок</p>
+                        <div style="padding: 3px">
+                            {{ form.additional_header }}
+                        </div>
+                        <p style="font-size: 14px; font-weight: bold; text-align: left; padding: 20px 0 0 5px; margin: 0">Краткий текст</p>
+                        <div style="padding: 3px">
+                            {{ form.additional_text }}
+                        </div>
+                    </div>
+                </div>
+                <!--End Add Information-->
+
+                <!--Add Gallery-->
+                <h4 style="padding: 20px 0 5px 5px">Дополнительная фотогалерея</h4>
+                <div class="dropdown-divider" style="margin: 0; padding: 0"></div>
+                <div class="row" style="padding-top: 20px">
+                    {% for photo in gallery %}
+                        {% if not photo.is_main %}
+                        <div class="col-xl-2 col-md-4 col-sm-6" style="text-align: -webkit-center">
+                            <img src="{{ photo.photo.url }}" height="150" width="100%" style="border: 1px lightgrey solid; padding: 4px; border-radius: 5px">
+                            <div style="padding-top: 5px; text-align: center">
+                                <a href="" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ forloop.counter }}"><i class="fa fa-trash-alt" style="color: red"></i></a>
+                            </div>
+                        </div>
+                        {% endif %}
+                        <!-- Modal -->
+                        <div class="modal fade" id="deleteModal-{{ forloop.counter }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="deleteModalLabel-{{ forloop.counter }}" aria-hidden="true">
+                          <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                              <div class="modal-header bg-danger">
+                                <h5 class="modal-title" id="deleteModal1Label-{{ forloop.counter }}">Подтверждение удаления</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                              </div>
+                                  <div class="modal-body">
+                                      Вы действительно хотите удалить фото с галереи?
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                                    <a href="{% url 'photo_delete' photo.id %}" class="btn btn-danger">Удалить</a>
+                                  </div>
+                            </div>
+                          </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                <p style="font-size: 14px; font-weight: bold; text-align: left; padding: 5px; margin: 0">Рекомендуемый размер: (1200x1200)</p>
+                <div style="text-align: left; padding: 5px; margin: 0">
+                    <span style="font-size: 14px; color: red">{{ add_photo_form.photo.errors }}</span>
+                    <input type="file" name="add_photo_form-photo" accept="image/*" id="id_add_photo_form-photo">
+                    <input type="checkbox" name="add_photo_form-is_main" id="id_add_photo_form" hidden>
+                </div>
+                <!--End Add Gallery-->
+
+                <!--Documents formset-->
+                <h4 style="padding: 20px 0 5px 5px">Документы</h4>
+                <div class="dropdown-divider" style="margin: 0; padding: 0"></div>
+                {{ formset.management_form }}
+                <div id="formset">
+                    {% for form in formset %}
+                        <div id="{{ form.prefix }}-form" style="padding: 7px">
+                            {{ form.id }}
+                            <div style="max-width: 700px">
+                                <i class="fa fa-file-pdf fa-3x pull-left" style="width: 32px;" aria-hidden="true"></i>
+                                <div style="display: inline-block">
+                                    <p style="font-size: 14px; font-weight: bold; text-align: left; padding: 5px; margin: 0">PDF, JPG (макс. размер 20 Mb)</p>
+                                    <input type="file" name="{{ form.prefix }}-document" id="id_{{ form.prefix }}-document" style="margin-left: 5px">
+                                    <a onclick="delete_doc(this.id)" id="{{ form.prefix }}" style="color: red; text-align: right"><i class="fa fa-trash"></i></a>
+                                </div>
+                                <p style="font-size: 14px; font-weight: bold; text-align: left; padding: 20px 0 0 5px; margin: 0">Название документа</p>
+                                {{ form.name }}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <div>
+                    <button id="add" type="button" class="btn btn-success" style="margin: 10px 0 5px 7px; font-size: 14px">Добавить документ</button>
+                </div>
+
+                <div class="delete-list" style="display: none"></div>
+
+                <div id="empty_form" style="display: none">
+                    <div id="{{ formset.empty_form.prefix }}-form" style="padding: 7px">
+                            {{ formset.empty_form.id }}
+                            <div style="max-width: 700px">
+                                <i class="fa fa-file-pdf fa-3x pull-left" style="width: 32px;" aria-hidden="true"></i>
+                                <div style="display: inline-block">
+                                    <p style="font-size: 14px; font-weight: bold; text-align: left; padding: 5px; margin: 0">PDF, JPG (макс. размер 20 Mb)</p>
+                                    <input type="file" name="{{ formset.empty_form.prefix }}-document" id="id_{{ formset.empty_form.prefix }}-document" style="margin-left: 5px">
+                                    <a onclick="delete_doc(this.id)" id="{{ formset.empty_form.prefix }}" style="color: red; text-align: right"><i class="fa fa-trash"></i></a>
+                                </div>
+                                <p style="font-size: 14px; font-weight: bold; text-align: left; padding: 20px 0 0 5px; margin: 0">Название документа</p>
+                                {{ formset.empty_form.name }}
+                            </div>
+                        </div>
+                </div>
+                <!--End Documents formset-->
+
+                <!--SEO блок-->
+                <h4 style="padding: 30px 0 5px 5px">Настройки SEO</h4>
+                <div class="dropdown-divider" style="margin: 0; padding: 0"></div>
+                <div style="padding: 3px; margin-top: 5px">
+                    <p style="font-size: 14px; font-weight: bold; text-align: left; padding: 20px 0 0 5px; margin: 0">{{ seo_block.title.label }}</p>
+                    {{ seo_block.title }}
+                </div>
+                <div style="padding: 3px">
+                    <p style="font-size: 14px; font-weight: bold; text-align: left; padding: 20px 0 0 5px; margin: 0">{{ seo_block.description.label }}</p>
+                    {{ seo_block.description }}
+                </div>
+                <div style="padding: 3px">
+                    <p style="font-size: 14px; font-weight: bold; text-align: left; padding: 20px 0 0 5px; margin: 0">{{ seo_block.keywords.label }}</p>
+                    {{ seo_block.keywords }}
+                </div>
+                <!--End SEO блок-->
+
+                <div style="text-align: center; padding: 15px 0 20px 0">
+                    <a href="{% url 'about' %}" class="btn btn-default">Отменить</a>
+                    <button type="submit" class="btn btn-success">Сохранить</button>
+                </div>
             </form>
         </div>
     </div>
@@ -52,21 +234,10 @@
 {% block script %}
     <script src="{% static 'crm/dist/js/bootstrap3-wysihtml5.all.js' %}"></script>
     <script src="{% static 'crm/dist/js/bootstrap-wysihtml5.ru-RU.js' %}"></script>
+    <script src="{% static 'crm/scripts/site-managment/about.js' %}"></script>
     <script>
-        {% if messages %}
-        Swal.fire({
-          backdrop: false,
-          position: 'top-end',
-          padding: 0,
-          icon: 'success',
-          width: 300,
-          html: '{% for message in messages %}{{ message }}{% endfor %}',
-          showConfirmButton: false,
-          timer: 2500,
-        })
-        {% endif %}
-
-        $('#id_text').wysihtml5({
+    $(function () {
+        $('#id_text, #id_additional_text').wysihtml5({
             locale: 'ru-RU',
             toolbar: {
                 "font-styles": true, //Font styling, e.g. h1, h2, etc. Default true
@@ -81,6 +252,22 @@
                 "size": 'none' //default: none, other options are xs, sm, lg
             }
         });
-        //$('html, iframe, body').addClass('form-control')
+
+
+        {% if messages %}
+            Swal.fire({
+                backdrop: false,
+                position: 'top-end',
+                padding: 0,
+                icon: 'success',
+                width: 300,
+                html: '{% for message in messages %}{{ message }}{% endfor %}',
+                showConfirmButton: false,
+                timer: 2000,
+            })
+        {% endif %}
+    })
     </script>
 {% endblock %}
+
+

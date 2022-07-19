@@ -4,6 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  {% block meta %}{% endblock %}
   <title>{% block title %}Сайт Управляющей Компании ЖКХ - "МОЙ ДОМ 24"{% endblock %}</title>
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -12,6 +13,7 @@
   <!-- Theme style -->
   <link rel="stylesheet" href="{% static 'crm/dist/css/adminlte.min.css' %}">
   <link rel="stylesheet" href="{% static 'crm/bootstrap5dist/css/bootstrap.min.css' %}">
+  <link rel="stylesheet" href="{% static 'crm/styles/base.css' %}">
   <style>
       .active-link {
           background-color: #e7e7e7;
@@ -23,7 +25,7 @@
   {% block style %}{% endblock %}
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light" style="height: 50px">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light" style="height: 50px; position: fixed; top: 0; width: 100%; z-index: 100">
         <div class="container" style="max-width: 1140px">
             <a href="{% url 'main_page' %}"><img src="{% static 'crm/dist/img/logo.svg' %}" width="145" height="40"></a>
             <div>
@@ -33,16 +35,16 @@
                 <div class="collapse navbar-collapse" id="navbarScroll">
                     <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px; padding-top: 2px">
                         <li class="nav-item">
-                            <a class="nav-link {% block main %}{% endblock %}" href="#" style="padding-right: 15px; padding-left: 15px; font-size: 15px">Главная</a>
+                            <a class="nav-link {% block main %}{% endblock %}" href="{% url 'main_page' %}" style="padding-right: 15px; padding-left: 15px; font-size: 15px">Главная</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link {% block about %}{% endblock %}" href="#" style="padding-right: 15px; padding-left: 15px; font-size: 15px;">О нас</a>
+                            <a class="nav-link {% block about %}{% endblock %}" href="{% url 'about_page' %}" style="padding-right: 15px; padding-left: 15px; font-size: 15px;">О нас</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link {% block services %}{% endblock %}" href="#" style="padding-right: 15px; padding-left: 15px; font-size: 15px">Услуги</a>
+                            <a class="nav-link {% block services %}{% endblock %}" href="{% url 'about_services_page' %}" style="padding-right: 15px; padding-left: 15px; font-size: 15px">Услуги</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link {% block contacts %}{% endblock %}" href="#" style="padding-right: 15px; padding-left: 15px; font-size: 15px">Контакты</a>
+                            <a class="nav-link {% block contacts %}{% endblock %}" href="{% url 'contact_page' %}" style="padding-right: 15px; padding-left: 15px; font-size: 15px">Контакты</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{% if user.is_authenticated and not user.is_staff %}{% url 'cabinet' %}{% else %}{% url 'owner_login' %}{% endif %}" style="padding-right: 15px; padding-left: 15px; font-size: 15px"><i class="fas fa-sign-in-alt"></i> Вход</a>
@@ -52,6 +54,14 @@
             </div>
         </div>
     </nav>
+
+    {% block content %}{% endblock %}
+
+    <footer class="footer  bg-light">
+        <div class="container" style="height: 60px; display: flex; align-items: center; justify-content: center">
+            <p class="text-muted" style="font-size: 14px; margin: 0">Разработано <a href="https://avada-media.ua/">AVADA-MEDIA</a>. На базе системы управления <a href="https://avada-media.ua/moydom24/">"МойДом24"</a></p>
+        </div>
+    </footer>
 <!-- ./wrapper -->
 
 <!-- REQUIRED SCRIPTS -->

@@ -1,0 +1,55 @@
+{% extends 'main/layout/base.html' %}
+{% load static %}
+
+{% block meta %}
+    <meta name="title" content="{{ page.seo.title }}"/>
+    <meta name="keywords" content="{{ page.seo.keywords }}"/>
+    <meta name="description" content="{{ page.seo.description }}"/>
+{% endblock %}
+
+{% block style %}
+    <style>
+        p {
+            font-size: 14px;
+        }
+    </style>
+{% endblock %}
+
+{% block title %}CRM-система для ОСМД - "<МОЙ></МОЙ> ДОМ 24"{% endblock %}
+
+{% block services %}active-link{% endblock %}
+
+{% block content %}
+    <div class="container" style="margin-top: 50px; max-width: 1140px">
+        <div>
+            <ol class="breadcrumb" style="background-color: white; padding-top: 10px">
+              <li class="breadcrumb-item" style="font-size: 14px"><a href="{% url 'main_page' %}" style="color: #494949"><i class="fa fa-home" style="padding-right: 3px"></i>Главная</a></li>
+              <li class="breadcrumb-item active" style="font-size: 14px">Услуги</li>
+            </ol>
+        </div>
+
+        <div style="margin-top: 70px">
+            <p style="font-size: 26px">Наши услуги</p>
+            <div class="dropdown-divider" style="margin: 0; padding: 0"></div>
+
+            <div style="margin-bottom: 30px">
+                {% for service in services %}
+                    <div class="row">
+                        <div class="col-xl-7" style="padding-top: 20px">
+                            <div style="border: 1px lightgrey solid; border-radius: 4px; text-align: -webkit-center">
+                                <img src="{% if service.image %}{{ service.image.url }}{% else %}{% static 'crm/dist/img/default' %}{% endif %}" height="300" width="100%" style="padding: 4px">
+                            </div>
+                        </div>
+                        <div class="col-xl-5">
+                            <div style="padding: 30px 0 20px 10px">
+                                <p style="font-size: 26px">{{ service.name }}</p>
+                                <div class="dropdown-divider" style="margin: 0; padding: 0"></div>
+                                <p>{% autoescape off %}{{ service.description }}{% endautoescape %}</p>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

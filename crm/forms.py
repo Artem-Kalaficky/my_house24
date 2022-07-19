@@ -1,12 +1,14 @@
 from django import forms
 from django.core.files.images import get_image_dimensions
-from django.forms import ModelForm, modelformset_factory, TextInput, Select, Textarea, NumberInput
+from django.forms import ModelForm, modelformset_factory, TextInput, Select, Textarea, NumberInput, URLInput, EmailInput
 
-from main.models import MainPage, Seo, Block, AboutPage, Photo, Document
+from main.models import MainPage, Seo, Block, AboutPage, Photo, Document, ServicePage, AboutService, ContactPage
 from users.models import Role
 from .models import Item, Requisites, Service, Unit, Tariff, ServiceForTariff
 
 
+# region SITE-MANAGEMENT
+# region Main Page
 class SeoForm(ModelForm):
     class Meta:
         model = Seo
@@ -65,9 +67,18 @@ class BlockForm(ModelForm):
 
 
 BlockFormSet = modelformset_factory(Block, form=BlockForm, extra=0, can_delete=True)
+# endregion Main Page
 
 
+# region About Page
 class AboutPageForm(ModelForm):
+    def clean_avatar(self):
+        picture = self.cleaned_data.get("avatar")
+        w, h = get_image_dimensions(picture)
+        if w != 250 and h != 310:
+            raise forms.ValidationError("Размеры картинки не валидны")
+        return picture
+
     class Meta:
         model = AboutPage
         fields = ('header', 'text', 'avatar', 'additional_header', 'additional_text')
@@ -93,6 +104,47 @@ class DocumentForm(ModelForm):
 
 
 DocumentFormSet = modelformset_factory(Document, form=DocumentForm, extra=0, can_delete=True)
+# endregion About Page
+
+
+# region Services Page
+class ServicePageForm(ModelForm):
+    class Meta:
+        model = ServicePage
+        fields = ()
+
+
+class AboutServiceForm(ModelForm):
+    class Meta:
+        model = AboutService
+        fields = ('image', 'name', 'description')
+        widgets = {'name': TextInput(attrs={'class': 'form-control'}),
+                   'description': Textarea(attrs={'rows': 6,
+                                                  'class': 'form-control'})}
+
+
+AboutServiceFormSet = modelformset_factory(AboutService, form=AboutServiceForm, extra=0, can_delete=True)
+# endregion Services Page
+
+
+# region Contact Page
+class ContactPageForm(ModelForm):
+    class Meta:
+        model = ContactPage
+        fields = ('header', 'text', 'url', 'full_name', 'location', 'address', 'telephone', 'email', 'map')
+        widgets = {'header': TextInput(attrs={'class': 'form-control'}),
+                   'text': Textarea(attrs={'rows': 5,
+                                           'class': 'form-control'}),
+                   'url': URLInput(attrs={'class': 'form-control'}),
+                   'full_name': TextInput(attrs={'class': 'form-control'}),
+                   'location': TextInput(attrs={'class': 'form-control'}),
+                   'address': TextInput(attrs={'class': 'form-control'}),
+                   'telephone': TextInput(attrs={'class': 'form-control'}),
+                   'email': EmailInput(attrs={'class': 'form-control'}),
+                   'map': Textarea(attrs={'rows': 5,
+                                          'class': 'form-control'})}
+# endregion Contact Page
+# endregion SITE-MANAGEMENT
 
 
 # region SYSTEM-SETTINGS form
