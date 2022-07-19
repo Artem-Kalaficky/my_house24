@@ -167,5 +167,27 @@
               error.insertAfter(element);
           }
         });
+
+        $('select:visible').addClass('current-select')
+        $('.current-select').change(function () {
+            let id = this.id
+            let value = $(this).val()
+            $.ajax({
+                url: '{% url "get_units" %}',
+                type: 'GET',
+                data: {'test': value},
+                success: (data) => {
+                    let id_unit = id.replace(/service/g, 'units')
+                    if (data.unit_id) {
+                        $('#' + id_unit).parent().find('option[value=' + data.unit_id + ']').prop('selected', 'true')
+                    } else {
+                        $('#' + id_unit).parent().find('option[value=""]').prop('selected', 'true')
+                    }
+                },
+                error: (data) => {
+                    console.log('no')
+                }
+            })
+        })
     </script>
 {% endblock %}

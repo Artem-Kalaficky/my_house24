@@ -3,6 +3,7 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.db import IntegrityError
 from django.db.models import Q
 from django.forms import modelformset_factory
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.views.generic import TemplateView, ListView, DetailView
@@ -14,7 +15,7 @@ from .forms import RoleFormSet, ItemForm, RequisiteForm, ServiceFormSet, UnitFor
     ServicePageForm, AboutServiceFormSet, ContactPageForm
 from users.forms import UserCreateForm, ChangeUserInfoForm
 from users.models import UserProfile, Role
-from .models import Item, Requisites, Service, Unit, Tariff, ServiceForTariff
+from .models import Item, Requisites, Service, Unit, Tariff, ServiceForTariff, House
 
 
 class StaffRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
@@ -26,6 +27,34 @@ class StaffRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
 
 class StatisticsTemplateView(StaffRequiredMixin, TemplateView):
     template_name = 'crm/pages/statistics.html'
+
+
+# region Houses
+class HousesListView(StaffRequiredMixin, SuccessMessageMixin, ListView):
+    template_name = 'crm/pages/houses/houses_list.html'
+    context_object_name = 'houses'
+
+    def get_queryset(self):
+        queryset = House.objects.all()
+        if self.request.GET.get('filter-address') == '1':
+            queryset = queryset.order_by('address')
+        if self.request.GET.get('filter-address') == '0':
+            queryset = queryset.order_by('-address')
+        if self.request.GET.get('filter-name') == '1':
+            queryset = queryset.order_by('name')
+        if self.request.GET.get('filter-name') == '0':
+            queryset = queryset.order_by('-name')
+        if self.request.GET.get('name'):
+            queryset = queryset.filter(name__icontains=self.request.GET.get('name'))
+        if self.request.GET.get('address'):
+            queryset = queryset.filter(address__icontains=self.request.GET.get('address'))
+        return queryset
+
+
+class HouseDetailView(StaffRequiredMixin, DetailView):
+    queryset = House.objects.prefetch_related('users__role')
+    template_name = 'crm/pages/houses/house_detail.html'
+# endregion Houses
 
 
 # region SITE-MANAGEMENT
@@ -333,6 +362,17 @@ class TariffDeleteView(SuccessMessageMixin, DeleteView):
     model = Tariff
     success_url = reverse_lazy('tariffs_list')
     success_message = 'Тариф успешно удалён!'
+
+
+def get_units(request):
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        if request.method == 'GET':
+            if request.GET.get('test'):
+                unit_id = Service.objects.get(pk=request.GET.get('test')).unit_id
+                response = {'unit_id': unit_id}
+            else:
+                response = {'unit_id': None}
+            return JsonResponse(response, status=200)
 # endregion tariffs page
 
 

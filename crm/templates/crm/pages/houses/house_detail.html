@@ -1,0 +1,88 @@
+{% extends 'crm/layout/base.html' %}
+{% load static %}
+
+{% block houses %}class="nav-link active-link" style="color: black; background-color: #e1f1ea"{% endblock %}
+
+{% block title %}{{ house.name }}{% endblock %}
+{% block name_page %}{{ house.name }}{% endblock %}
+{% block previos_link %}<a href="{% url 'houses_list' %}" style="color: #494949">/ Дома</a>{% endblock %}
+{% block nav %}{{ house.name }}{% endblock %}
+
+{% block content %}
+    <div class="my-box" style="min-height: 0">
+        <div class="container-fluid">
+            <div style="text-align: right; margin-bottom: 5px; padding-top: 5px">
+                <a href="#" class="btn btn-primary" style="font-size: 14px; max-height: 34px">Редактировать дом</a>
+            </div>
+            <div class="dropdown-divider" style="border-color:lightgrey"></div>
+            <div class="row">
+                <div class="col-xl-4">
+                    <table class="table table-hover table-striped table-responsive no-padding" style="color: #333333; font-size: 14px; padding-bottom: 20px;">
+                        <tbody>
+                            <tr>
+                                <td style="width: 30%"><span style="font-weight: bold">Название</span></td>
+                                <td style="width: 70%">{{ house.name }}</td>
+                                <td style="width: 0%"></td>
+                            </tr>
+                            <tr>
+                                <td style="width: 30%"><span style="font-weight: bold">Адрес</span></td>
+                                <td style="width: 70%">{{ house.address }}</td>
+                                <td style="width: 0%"></td>
+                            </tr>
+                            <tr>
+                                <td style="width: 30%"><span style="font-weight: bold">Секций</span></td>
+                                <td style="width: 70%">{{ house.sections.all|length }}</td>
+                                <td style="width: 0%"></td>
+                            </tr>
+                            <tr>
+                                <td style="width: 30%"><span style="font-weight: bold">Этажей</span></td>
+                                <td style="width: 70%">{{ house.floors.all|length }}</td>
+                                <td style="width: 0%"></td>
+                            </tr>
+                            <tr>
+                                <td style="width: 30%"><span style="font-weight: bold">Пользователи</span></td>
+                                <td style="width: 70%">{% for user in house.users.all %}<p style="padding: 0; margin: 0"><b>{{ user.role.get_role_display }}: </b><a href="{% url 'user_detail' user.id %}" style="text-decoration: none"> {{ user.first_name }} {{ user.last_name }}</a>{% endfor %}</p></td>
+                                <td style="width: 0%"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-xl-8" style="padding-bottom: 30px">
+                    <div class="row">
+                        <div class="col-xl-6">
+                            <div style="border: 1px lightgrey solid; text-align: -webkit-center; border-radius: 4px">
+                                <img src="{% if house.image_1 %}{{ house.image_1.url }}{% else %}{% static 'crm/dist/img/default' %}{% endif %}" height="350" width="100%" style="padding: 4px">
+                            </div>
+                        </div>
+                        <div class="col-xl-6">
+                            <div class="row" style="padding-bottom: 18px">
+                                <div class="col-xl-6">
+                                    <div style="border: 1px lightgrey solid; text-align: -webkit-center; border-radius: 4px">
+                                        <img src="{% if house.image_2 %}{{ house.image_2.url }}{% else %}{% static 'crm/dist/img/default' %}{% endif %}" height="165" width="100%" style="padding: 4px">
+                                    </div>
+                                </div>
+                                <div class="col-xl-6">
+                                    <div style="border: 1px lightgrey solid; text-align: -webkit-center; border-radius: 4px">
+                                        <img src="{% if house.image_3 %}{{ house.image_3.url }}{% else %}{% static 'crm/dist/img/default' %}{% endif %}" height="165" width="100%" style="padding: 4px">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xl-6">
+                                    <div style="border: 1px lightgrey solid; text-align: -webkit-center; border-radius: 4px">
+                                        <img src="{% if house.image_4 %}{{ house.image_4.url }}{% else %}{% static 'crm/dist/img/default' %}{% endif %}" height="165" width="100%" style="padding: 4px">
+                                    </div>
+                                </div>
+                                <div class="col-xl-6">
+                                    <div style="border: 1px lightgrey solid; text-align: -webkit-center; border-radius: 4px">
+                                        <img src="{% if house.image_5 %}{{ house.image_5.url }}{% else %}{% static 'crm/dist/img/default' %}{% endif %}" height="165" width="100%" style="padding: 4px">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -3,13 +3,17 @@ from django.urls import path
 from .views import StatisticsTemplateView, RoleCreateView, UsersListView, UserDetailView, UserCreateView,\
     UserUpdateView, UserDeleteView, ItemsListView, ItemCreateView, ItemUpdateView, ItemDeleteView, RequisiteUpdate, \
     ServiceCreateView, TariffsListView, TariffDetailView, TariffCreateView, TariffDeleteView, TariffUpdateView, \
-    MainUpdateView, AboutUpdateView, PhotoDeleteView, ServicePageUpdateView, ContactPageUpdateView
+    MainUpdateView, AboutUpdateView, PhotoDeleteView, ServicePageUpdateView, ContactPageUpdateView, get_units, \
+    HousesListView, HouseDetailView
 
 
 urlpatterns = [
     # statistics page
     path('', StatisticsTemplateView.as_view(), name='home'),
 
+    # houses
+    path('houses/<int:pk>/', HouseDetailView.as_view(), name='house_detail'),
+    path('houses/', HousesListView.as_view(), name='houses_list'),
 
     # SITE-MANAGEMENT pages
     path('site-management/main/', MainUpdateView.as_view(), name='main'),
@@ -28,6 +32,7 @@ urlpatterns = [
     path('system-settings/tariffs/<int:pk>/', TariffDetailView.as_view(), name='tariff_detail'),
     path('system-settings/tariffs/create/', TariffCreateView.as_view(), name='tariff_create'),
     path('system-settings/tariffs/', TariffsListView.as_view(), name='tariffs_list'),
+    path('get-units/', get_units, name='get_units'),
 
     # roles
     path('system-settings/roles/', RoleCreateView.as_view(), name='roles'),

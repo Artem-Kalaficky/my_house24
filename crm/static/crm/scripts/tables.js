@@ -13,5 +13,9 @@ function clear() {
     delete localStorage.status
     delete localStorage.income_expense
     delete localStorage.tariff
+    delete localStorage.name
+    delete localStorage.address
+    delete localStorage.input_name
+    delete localStorage.input_address
 }
 
