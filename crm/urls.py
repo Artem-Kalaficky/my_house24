@@ -4,16 +4,23 @@ from .views import StatisticsTemplateView, RoleCreateView, UsersListView, UserDe
     UserUpdateView, UserDeleteView, ItemsListView, ItemCreateView, ItemUpdateView, ItemDeleteView, RequisiteUpdate, \
     ServiceCreateView, TariffsListView, TariffDetailView, TariffCreateView, TariffDeleteView, TariffUpdateView, \
     MainUpdateView, AboutUpdateView, PhotoDeleteView, ServicePageUpdateView, ContactPageUpdateView, get_units, \
-    HousesListView, HouseDetailView
+    HousesListView, HouseDetailView, HouseCreateView, HouseDeleteView, get_role, HouseUpdateView, OwnersListView
 
 
 urlpatterns = [
     # statistics page
     path('', StatisticsTemplateView.as_view(), name='home'),
 
+    # owners
+    path('owners/', OwnersListView.as_view(), name='owners_list'),
+
     # houses
+    path('houses/delete/<int:pk>/', HouseDeleteView.as_view(), name='house_delete'),
+    path('houses/update/<int:pk>/', HouseUpdateView.as_view(), name='house_update'),
     path('houses/<int:pk>/', HouseDetailView.as_view(), name='house_detail'),
+    path('houses/create/', HouseCreateView.as_view(), name='house_create'),
     path('houses/', HousesListView.as_view(), name='houses_list'),
+    path('get-role/', get_role, name='get_role'),
 
     # SITE-MANAGEMENT pages
     path('site-management/main/', MainUpdateView.as_view(), name='main'),

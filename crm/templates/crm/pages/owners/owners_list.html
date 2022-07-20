@@ -1,0 +1,72 @@
+{% extends 'crm/layout/base.html' %}
+{% load static %}
+
+{% block style %}
+    <style>
+        .sort-name:hover {
+            cursor: pointer;
+        }
+        .sort-address:hover {
+            cursor: pointer;
+        }
+        .hover-li:hover {
+            background-color: lightgrey;
+            color: #6c757d;
+        }
+    </style>
+
+{% endblock %}
+
+{% block owners %}class="nav-link active-link" style="color: black; background-color: #e1f1ea"{% endblock %}
+
+{% block title %}Владельцы квартир{% endblock %}
+{% block name_page %}Владельцы квартир{% endblock %}
+{% block nav %}Владельцы квартир{% endblock %}
+
+{% block content %}
+    <div style="text-align: right; padding-right: 10px; padding-bottom: 10px">
+        <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Выберите действие <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" style="padding: 5px">
+            <li class="hover-li"><a href="#" class="text-muted">Добавить владельца квартиры</a></li>
+            <li class="hover-li"><a href="#" class="text-muted">Отправить сообщение должникам</a></li>
+            <li class="hover-li"><a href="#" class="text-muted">Отправить приглашение</a></li>
+        </ul>
+    </div>
+    <div class="my-box" style="min-height: 0">
+        <div class="container-fluid">
+            <div style="text-align: right; padding-right: 2px; padding-top: 5px; margin-bottom: 5px">
+                <a id="clear" href="{% url 'owners_list' %}" class="btn btn-default" style="font-size: 14px; max-height: 34px">Очистить</a>
+            </div>
+            <form method="get" id="form">
+
+            </form>
+            <div style="padding-bottom: 15px">
+                <span>Колличество владельце: <b>{{ owners|length }}</b></span>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'crm/scripts/owners/owners_list.js' %}"></script>
+    <script>
+        init_data()
+
+        {% if messages %}
+        Swal.fire({
+          backdrop: false,
+          position: 'top-end',
+          padding: 0,
+          icon: 'success',
+          width: 300,
+          html: '{% for message in messages %}{{ message }}{% endfor %}',
+          showConfirmButton: false,
+          timer: 1500,
+        })
+        {% endif %}
+
+        $('#clear').click(clear)
+    </script>
+{% endblock %}

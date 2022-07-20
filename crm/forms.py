@@ -1,10 +1,94 @@
 from django import forms
 from django.core.files.images import get_image_dimensions
-from django.forms import ModelForm, modelformset_factory, TextInput, Select, Textarea, NumberInput, URLInput, EmailInput
+from django.forms import ModelForm, modelformset_factory, TextInput, Select, Textarea, NumberInput, URLInput, \
+    EmailInput, formset_factory
 
 from main.models import MainPage, Seo, Block, AboutPage, Photo, Document, ServicePage, AboutService, ContactPage
-from users.models import Role
-from .models import Item, Requisites, Service, Unit, Tariff, ServiceForTariff
+from users.models import Role, UserProfile
+from .models import Item, Requisites, Service, Unit, Tariff, ServiceForTariff, House, Section, Floor
+
+
+# region Owners
+
+# endregion Owners
+
+
+# region Houses
+class HouseForm(ModelForm):
+    def clean_image_1(self):
+        if self.cleaned_data.get("image_1"):
+            picture = self.cleaned_data.get("image_1")
+            w, h = get_image_dimensions(picture)
+            if w != 522 and h != 350:
+                raise forms.ValidationError("Размеры изображения не валидны")
+            return picture
+
+    def clean_image_2(self):
+        if self.cleaned_data.get("image_2"):
+            picture = self.cleaned_data.get("image_2")
+            w, h = get_image_dimensions(picture)
+            if w != 248 and h != 160:
+                raise forms.ValidationError("Размеры изображения не валидны")
+            return picture
+
+    def clean_image_3(self):
+        if self.cleaned_data.get("image_3"):
+            picture = self.cleaned_data.get("image_3")
+            w, h = get_image_dimensions(picture)
+            if w != 248 and h != 160:
+                raise forms.ValidationError("Размеры изображения не валидны")
+            return picture
+
+    def clean_image_4(self):
+        if self.cleaned_data.get("image_4"):
+            picture = self.cleaned_data.get("image_4")
+            w, h = get_image_dimensions(picture)
+            if w != 248 and h != 160:
+                raise forms.ValidationError("Размеры изображения не валидны")
+            return picture
+
+    def clean_image_5(self):
+        if self.cleaned_data.get("image_5"):
+            picture = self.cleaned_data.get("image_5")
+            w, h = get_image_dimensions(picture)
+            if w != 248 and h != 160:
+                raise forms.ValidationError("Размеры изображения не валидны")
+            return picture
+
+    class Meta:
+        model = House
+        fields = ('name', 'address', 'image_1', 'image_2', 'image_3', 'image_4', 'image_5')
+        widgets = {'name': TextInput(attrs={'class': 'form-control'}),
+                   'address': TextInput(attrs={'class': 'form-control'})}
+
+
+class SectionForm(ModelForm):
+    class Meta:
+        model = Section
+        fields = ('name',)
+        widgets = {'name': TextInput(attrs={'class': 'form-control'})}
+
+
+class FloorForm(ModelForm):
+    class Meta:
+        model = Floor
+        fields = ('name',)
+        widgets = {'name': TextInput(attrs={'class': 'form-control'})}
+
+
+class UserForm(forms.Form):
+    user = forms.ModelChoiceField(required=False, label='ФИО',
+                                  queryset=UserProfile.objects.filter(is_staff=True),
+                                  widget=Select(attrs={'class': 'form-select',
+                                                       'onchange': 'select_user(this.id)'}))
+    role = forms.CharField(label='Роль', widget=TextInput(attrs={'class': 'form-control',
+                                                                 'readonly': 'true'}))
+
+
+SectionFormSet = modelformset_factory(Section, form=SectionForm, extra=0, can_delete=True)
+FloorFormSet = modelformset_factory(Floor, form=FloorForm, extra=0, can_delete=True)
+UserFormSet = formset_factory(form=UserForm, extra=0, can_delete=True)
+# endregion Houses
 
 
 # region SITE-MANAGEMENT

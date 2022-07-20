@@ -1,0 +1,296 @@
+{% extends 'crm/layout/base.html' %}
+{% load static %}
+
+{% block style %}
+    <style>
+        input.error {
+            border: red 1px solid;
+            position: relative;
+            box-shadow: 0 0 4px 0 firebrick;
+        }
+
+        .container-fluid {
+            font-size: 14px;
+        }
+    </style>
+{% endblock %}
+
+{% block houses %}class="nav-link active-link" style="color: black; background-color: #e1f1ea"{% endblock %}
+
+{% block title %}{{ house.name }}{% endblock %}
+{% block name_page %}{{ house.name }}{% endblock %}
+{% block previos_link %}<a href="{% url 'houses_list' %}" style="color: #494949">/ Дома </a><a href="{% url 'house_detail' house.id %}" style="color: #494949">/ {{ house.name }}</a>{% endblock %}
+{% block nav %}Редактирование{% endblock %}
+
+{% block content %}
+    <div class="my-box" style="min-height: 0">
+        <div class="container-fluid">
+            <form method="post" enctype="multipart/form-data" id="form">
+                {% csrf_token %}
+
+                <!--House Form-->
+                <div class="row" style="padding: 5px">
+                    <div class="col-xl-4">
+                        <p style="font-weight: bold; margin: 0">{{ form.name.label }}</p>
+                        {{ form.name }}
+                        <p style="font-weight: bold; margin: 0; padding-top: 10px">{{ form.address.label }}</p>
+                        {{ form.address }}
+                        <p id='img1' style="font-weight: bold; margin: 0; padding-top: 15px">Изображение #1. Размер: (522x350)</p>
+                        <input type="file" name="image_1" accept="image/*" id="id_image_1">
+                        {{ form.image_1.errors }}
+                        <p id='id_image_2' style="font-weight: bold; margin: 0; padding-top: 15px">Изображение #2. Размер: (248x160)</p>
+                        <input type="file" name="image_2" accept="image/*" id="id_image_2">
+                        {{ form.image_2.errors }}
+                        <p id='id_image_3' style="font-weight: bold; margin: 0; padding-top: 15px">Изображение #3. Размер: (248x160)</p>
+                        <input type="file" name="image_3" accept="image/*" id="id_image_3">
+                        {{ form.image_3.errors }}
+                        <p id='id_image_4' style="font-weight: bold; margin: 0; padding-top: 15px">Изображение #4. Размер: (248x160)</p>
+                        <input type="file" name="image_4" accept="image/*" id="id_image_4">
+                        {{ form.image_4.errors }}
+                        <p id='id_image_5' style="font-weight: bold; margin: 0; padding-top: 15px">Изображение #5. Размер: (248x160)</p>
+                        <input type="file" name="image_5" accept="image/*" id="id_image_5">
+                        {{ form.image_5.errors }}
+                    </div>
+                    <div class="col-xl-8">
+                        <div class="row">
+                            <div class="col-xl-6">
+                                <div style="border: 1px lightgrey solid; text-align: -webkit-center; border-radius: 4px">
+                                    <img id="id_image_1" src="{% if house.image_1 %}{{ house.image_1.url }}{% else %}{% static 'crm/dist/img/default' %}{% endif %}" height="350" width="100%" style="padding: 4px">
+                                </div>
+                            </div>
+                            <div class="col-xl-6">
+                                <div class="row" style="padding-bottom: 18px">
+                                    <div class="col-xl-6">
+                                        <div style="border: 1px lightgrey solid; text-align: -webkit-center; border-radius: 4px">
+                                            <img id="id_image_2" src="{% if house.image_2 %}{{ house.image_2.url }}{% else %}{% static 'crm/dist/img/default' %}{% endif %}" height="165" width="100%" style="padding: 4px">
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-6">
+                                        <div style="border: 1px lightgrey solid; text-align: -webkit-center; border-radius: 4px">
+                                            <img id="id_image_3" src="{% if house.image_3 %}{{ house.image_3.url }}{% else %}{% static 'crm/dist/img/default' %}{% endif %}" height="165" width="100%" style="padding: 4px">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xl-6">
+                                        <div style="border: 1px lightgrey solid; text-align: -webkit-center; border-radius: 4px">
+                                            <img id="id_image_4" src="{% if house.image_4 %}{{ house.image_4.url }}{% else %}{% static 'crm/dist/img/default' %}{% endif %}" height="165" width="100%" style="padding: 4px">
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-6">
+                                        <div style="border: 1px lightgrey solid; text-align: -webkit-center; border-radius: 4px">
+                                            <img id="id_image_5" src="{% if house.image_5 %}{{ house.image_5.url }}{% else %}{% static 'crm/dist/img/default' %}{% endif %}" height="165" width="100%" style="padding: 4px">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--End House Form-->
+
+                <!--Formsets-->
+                <div style="padding: 20px 5px 10px 5px">
+                    <nav>
+                      <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                        <button class="nav-link active" id="nav-section-tab" data-toggle="tab" data-target="#nav-section" type="button" role="tab" aria-controls="nav-section" aria-selected="true">Секции</button>
+                        <button class="nav-link" id="nav-floor-tab" data-toggle="tab" data-target="#nav-floor" type="button" role="tab" aria-controls="nav-floor" aria-selected="false">Этажи</button>
+                        <button class="nav-link" id="nav-user-tab" data-toggle="tab" data-target="#nav-user" type="button" role="tab" aria-controls="nav-user" aria-selected="false">Пользователи</button>
+                      </div>
+                    </nav>
+                    <div class="tab-content" id="nav-tabContent">
+
+                      <!--Section Formset-->
+                      <div class="tab-pane fade show active" id="nav-section" role="tabpanel" aria-labelledby="nav-section-tab">
+                            <div class="row">
+                                <div class="col-xl-8">
+                                    {{ section_formset.management_form }}
+                                    <div id="section_formset">
+                                        {% for form in section_formset %}
+                                            <div id="{{ form.prefix }}-form" style="padding: 7px">
+                                                {{ form.id }}
+                                                <p style="font-weight: bold; margin: 0">{{ form.name.label }}</p>
+                                                <div class="input-group">
+                                                    {{ form.name }}
+                                                    <div class="input-group-append">
+                                                        <button onclick="delete_section(this.id)" id="{{ form.prefix }}" type="button" class="btn btn-danger"><i class="fa fa-trash-alt"></i></button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+
+                                    <div style="text-align: right">
+                                        <button id="add-section" type="button" class="btn btn-outline-success" style="margin: 7px">Добавить</button>
+                                    </div>
+                                    <div class="dropdown-divider" style="margin: 0; padding: 0"></div>
+
+                                    <div class="delete-list-section" style="display: none"></div>
+
+                                    <div id="empty_form-section" style="display: none">
+                                        <div id="{{ section_formset.empty_form.prefix }}-form" style="padding: 7px">
+                                            {{ section_formset.empty_form.id }}
+                                            <p style="font-weight: bold; margin: 0">{{ section_formset.empty_form.name.label }}</p>
+                                            <div class="input-group">
+                                                {{ section_formset.empty_form.name }}
+                                                <div class="input-group-append">
+                                                    <button onclick="delete_section(this.id)" id="{{ section_formset.empty_form.prefix }}" type="button" class="btn btn-danger"><i class="fa fa-trash-alt"></i></button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                      </div>
+                      <!--End Section Formset-->
+
+                      <!--Floor Formset-->
+                      <div class="tab-pane fade" id="nav-floor" role="tabpanel" aria-labelledby="nav-floor-tab">
+                            <div class="row">
+                                <div class="col-xl-8">
+                                    {{ floor_formset.management_form }}
+                                    <div id="floor_formset">
+                                        {% for form in floor_formset %}
+                                            <div id="{{ form.prefix }}-form" style="padding: 7px">
+                                            {{ form.id }}
+                                            <p style="font-weight: bold; margin: 0">{{ form.name.label }}</p>
+                                            <div class="input-group">
+                                                {{ form.name }}
+                                                <div class="input-group-append">
+                                                    <button onclick="delete_floor(this.id)" id="{{ form.prefix }}" type="button" class="btn btn-danger"><i class="fa fa-trash-alt"></i></button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+
+                                    <div style="text-align: right">
+                                        <button id="add-floor" type="button" class="btn btn-outline-success" style="margin: 7px">Добавить</button>
+                                    </div>
+                                    <div class="dropdown-divider" style="margin: 0; padding: 0"></div>
+
+                                    <div class="delete-list-floor" style="display: none"></div>
+
+                                    <div id="empty_form-floor" style="display: none">
+                                        <div id="{{ floor_formset.empty_form.prefix }}-form" style="padding: 7px">
+                                            {{ floor_formset.empty_form.id }}
+                                            <p style="font-weight: bold; margin: 0">{{ floor_formset.empty_form.name.label }}</p>
+                                            <div class="input-group">
+                                                {{ floor_formset.empty_form.name }}
+                                                <div class="input-group-append">
+                                                    <button onclick="delete_floor(this.id)" id="{{ floor_formset.empty_form.prefix }}" type="button" class="btn btn-danger"><i class="fa fa-trash-alt"></i></button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                      </div>
+                      <!--End Floor Formset-->
+
+                      <!--User Formset-->
+                      <div class="tab-pane fade" id="nav-user" role="tabpanel" aria-labelledby="nav-user-tab">
+                          <div class="row">
+                              <div class="col-xl-8">
+                                    {{ user_formset.management_form }}
+                                    <div id="user_formset">
+                                        {% for form in user_formset %}
+                                            <div id="{{ form.prefix }}-form" style="padding: 7px" class="row">
+                                                <div class="col-xl-8">
+                                                    {{ form.id }}
+                                                    <p style="font-weight: bold; margin: 0">{{ form.user.label }}</p>
+                                                    {{ form.user }}
+                                                </div>
+                                                <div class="col-xl-4">
+                                                    <p style="font-weight: bold; margin: 0">{{ form.role.label }}</p>
+                                                    <div class="input-group">
+                                                        {{ form.role }}
+                                                        <div class="input-group-append">
+                                                            <button onclick="delete_user(this.id)" id="{{ form.prefix }}" type="button" class="btn btn-danger"><i class="fa fa-trash-alt"></i></button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+
+                                    <div style="text-align: right">
+                                        <button id="add-user" type="button" class="btn btn-outline-success" style="margin: 7px">Добавить</button>
+                                    </div>
+                                    <div class="dropdown-divider" style="margin: 0; padding: 0"></div>
+
+                                    <div class="delete-list-user" style="display: none"></div>
+
+                                    <div id="empty_form-user" style="display: none">
+                                        <div id="{{ user_formset.empty_form.prefix }}-form" style="padding: 7px" class="row">
+                                            <div class="col-xl-8">
+                                                {{ user_formset.empty_form.id }}
+                                                <p style="font-weight: bold; margin: 0">{{ user_formset.empty_form.user.label }}</p>
+                                                {{ user_formset.empty_form.user }}
+                                            </div>
+                                            <div class="col-xl-4">
+                                                <p style="font-weight: bold; margin: 0">{{ user_formset.empty_form.role.label }}</p>
+                                                <div class="input-group">
+                                                    {{ user_formset.empty_form.role }}
+                                                    <div class="input-group-append">
+                                                        <button onclick="delete_user(this.id)" id="{{ user_formset.empty_form.prefix }}" type="button" class="btn btn-danger"><i class="fa fa-trash-alt"></i></button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                              </div>
+                          </div>
+                      </div>
+                      <!--End User Formset-->
+
+                    </div>
+                </div>
+                <!--End Formsets-->
+
+                <div style="text-align: right; padding: 15px 16px 15px 0">
+                    <a href="{% url 'houses_list' %}" class="btn btn-default">Отменить</a>
+                    <button type="submit" class="btn btn-success">Сохранить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div style="height: 30px"></div>
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'crm/scripts/houses/house_create.js' %}"></script>
+    <script>
+        function select_user(index) {
+            let user_id = $('#' + index).val()
+            $.ajax({
+                url: '{% url "get_role" %}',
+                type: 'GET',
+                data: {'user': user_id},
+                success: (data) => {
+                    let id_role = index.replace(/user/g, 'role')
+                    if (data.role) {
+                        $('#' + id_role).attr('value', data.role)
+                    } else {
+                        $('#' + id_role).attr('value', "")
+                    }
+                },
+                error: (data) => {
+                    console.log('no')
+                }
+            })
+        }
+
+        $("#form").validate({
+          messages: {
+            name: "* Обязательное поле",
+            address: "* Обязательное поле",
+          },
+          wrapper: 'span',
+          errorPlacement: function (error, element) {
+              error.css({'text-align': 'left', 'font-size': '14px', 'color': 'red', 'width': '100%'});
+              error.insertAfter(element);
+          }
+        });
+    </script>
+{% endblock %}

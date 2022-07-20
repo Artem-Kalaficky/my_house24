@@ -12,7 +12,7 @@
     <div class="my-box" style="min-height: 0">
         <div class="container-fluid">
             <div style="text-align: right; margin-bottom: 5px; padding-top: 5px">
-                <a href="#" class="btn btn-primary" style="font-size: 14px; max-height: 34px">Редактировать дом</a>
+                <a href="{% url 'house_update' house.id %}" class="btn btn-primary" style="font-size: 14px; max-height: 34px">Редактировать дом</a>
             </div>
             <div class="dropdown-divider" style="border-color:lightgrey"></div>
             <div class="row">
@@ -41,7 +41,7 @@
                             </tr>
                             <tr>
                                 <td style="width: 30%"><span style="font-weight: bold">Пользователи</span></td>
-                                <td style="width: 70%">{% for user in house.users.all %}<p style="padding: 0; margin: 0"><b>{{ user.role.get_role_display }}: </b><a href="{% url 'user_detail' user.id %}" style="text-decoration: none"> {{ user.first_name }} {{ user.last_name }}</a>{% endfor %}</p></td>
+                                <td style="width: 70%">{% if house.users.all %}{% for user in house.users.all %}<p style="padding: 0; margin: 0"><b>{{ user.role.get_role_display }}: </b><a href="{% url 'user_detail' user.id %}" style="text-decoration: none"> {{ user.first_name }} {{ user.last_name }}</a>{% endfor %}{% else %}<b>Не назначено</b>{% endif %}</p></td>
                                 <td style="width: 0%"></td>
                             </tr>
                         </tbody>
