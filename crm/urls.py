@@ -4,7 +4,8 @@ from .views import StatisticsTemplateView, RoleCreateView, UsersListView, UserDe
     UserUpdateView, UserDeleteView, ItemsListView, ItemCreateView, ItemUpdateView, ItemDeleteView, RequisiteUpdate, \
     ServiceCreateView, TariffsListView, TariffDetailView, TariffCreateView, TariffDeleteView, TariffUpdateView, \
     MainUpdateView, AboutUpdateView, PhotoDeleteView, ServicePageUpdateView, ContactPageUpdateView, get_units, \
-    HousesListView, HouseDetailView, HouseCreateView, HouseDeleteView, get_role, HouseUpdateView, OwnersListView
+    HousesListView, HouseDetailView, HouseCreateView, HouseDeleteView, get_role, HouseUpdateView, OwnersListView,\
+    OwnerDetailView, OwnerCreateView, OwnerDeleteView, OwnerUpdateView, OwnerInviteView
 
 
 urlpatterns = [
@@ -12,6 +13,11 @@ urlpatterns = [
     path('', StatisticsTemplateView.as_view(), name='home'),
 
     # owners
+    path('owners/delete/<int:pk>/', OwnerDeleteView.as_view(), name='owner_delete'),
+    path('owners/update/<int:pk>/', OwnerUpdateView.as_view(), name='owner_update'),
+    path('owners/<int:pk>/', OwnerDetailView.as_view(), name='owner_detail'),
+    path('owners/invite/', OwnerInviteView.as_view(), name='owner_invite'),
+    path('owners/create/', OwnerCreateView.as_view(), name='owner_create'),
     path('owners/', OwnersListView.as_view(), name='owners_list'),
 
     # houses

@@ -141,6 +141,6 @@ class ChangeUserInfoForm(UserChangeForm):
             user.set_password(self.cleaned_data['password1'])
             if commit:
                 user.save()
-            send_change_password_notification(user.email)
+            send_change_password_notification.delay(user.email)
             return user
 # endregion ADMIN USER

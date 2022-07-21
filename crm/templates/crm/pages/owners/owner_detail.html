@@ -1,0 +1,92 @@
+{% extends 'crm/layout/base.html' %}
+{% load static %}
+
+{% block owners %}class="nav-link active-link" style="color: black; background-color: #e1f1ea"{% endblock %}
+
+{% block title %}Профиль владельца{% endblock %}
+{% block name_page %}Профиль владельца{% endblock %}
+{% block previos_link %}<a href="{% url 'owners_list' %}" style="color: #494949">/ Владельцы квартир</a>{% endblock %}
+{% block nav %}Профиль владельца{% endblock %}
+
+{% block content %}
+    <div class="my-box" style="min-height: 0">
+        <div class="container-fluid">
+            <div style="text-align: right; margin-bottom: 5px; padding-top: 5px">
+                <a href="{% url 'owner_login' %}" class="btn btn-default" style="font-size: 14px; max-height: 34px"><i class="fa fa-external-link-alt"></i> Перейти в кабинет</a>
+                <a href="#" class="btn btn-primary" style="font-size: 14px; max-height: 34px">Редактировать профиль</a>
+            </div>
+            <div class="dropdown-divider" style="border-color:lightgrey"></div>
+            <div class="userAvatar">
+                <img style="border: 3px lightgrey solid" class="img-circle img-responsive" src="{% if userprofile.avatar  %}{{ userprofile.avatar.url }}{% else %}{% static 'crm/dist/img/default_avatar.jpeg' %}{% endif %}" height="160" width="160">
+            </div>
+            <table class="table table-hover table-striped table-responsive no-padding" style="color: #333333; font-size: 14px; padding-bottom: 20px; padding-top: 20px">
+                <tbody>
+                    <tr>
+                        <td style="width: 50%"><span style="font-weight: bold">Статус</span></td>
+                        <td style="width: 50%">
+                            {% if userprofile.status == 'is_active' %}
+                            <small class="btn btn-sm btn-success status">Активен</small>
+                            {% elif userprofile.status == 'new' %}
+                            <small class="btn btn-sm btn-warning status">Новый</small>
+                            {% elif userprofile.status == 'disable' %}
+                            <small class="btn btn-sm btn-danger status">Отключен</small>
+                            {% endif %}
+                        </td>
+                        <td style="width: 0%"></td>
+                    </tr>
+                    <tr>
+                        <td style="width: 50%"><span style="font-weight: bold">ID</span></td>
+                        <td style="width: 50%">{{ userprofile.user_id }}</td>
+                        <td style="width: 0%"></td>
+                    </tr>
+                    <tr>
+                        <td style="width: 50%"><span style="font-weight: bold">Фамилия</span></td>
+                        <td style="width: 50%">{% if userprofile.last_name %}{{ userprofile.last_name }}{% else %}(не указано){% endif %}</td>
+                        <td style="width: 0%"></td>
+                    </tr>
+                    <tr>
+                        <td style="width: 50%"><span style="font-weight: bold">Имя</span></td>
+                        <td style="width: 50%">{% if userprofile.first_name %}{{ userprofile.first_name }}{% else %}(не указано){% endif %}</td>
+                        <td style="width: 0%"></td>
+                    </tr>
+                    <tr>
+                        <td style="width: 50%"><span style="font-weight: bold">Отчество</span></td>
+                        <td style="width: 50%">{% if userprofile.patronymic %}{{ userprofile.patronymic }}{% else %}(не указано){% endif %}</td>
+                        <td style="width: 0%"></td>
+                    </tr>
+                    <tr>
+                        <td style="width: 50%"><span style="font-weight: bold">Дата рождения</span></td>
+                        <td style="width: 50%">{% if userprofile.birth_date %}{{ userprofile.birth_date|date:"d.m.Y" }}{% else %}(не указано){% endif %}</td>
+                        <td style="width: 0%"></td>
+                    </tr>
+                    <tr>
+                        <td style="width: 50%"><span style="font-weight: bold">О Владельце (заметки)</span></td>
+                        <td style="width: 50%">{% if userprofile.notes %}{{ userprofile.notes }}{% else %}(не указано){% endif %}</td>
+                        <td style="width: 0%"></td>
+                    </tr>
+                    <tr>
+                        <td style="width: 50%"><span style="font-weight: bold">Телефон</span></td>
+                        <td style="width: 50%">{% if userprofile.telephone %}{{ userprofile.telephone }}{% else %}(не указано){% endif %}</td>
+                        <td style="width: 0%"></td>
+                    </tr>
+                    <tr>
+                        <td style="width: 50%"><span style="font-weight: bold">Viber</span></td>
+                        <td style="width: 50%">{% if userprofile.viber %}{{ userprofile.viber }}{% else %}(не указано){% endif %}</td>
+                        <td style="width: 0%"></td>
+                    </tr>
+                    <tr>
+                        <td style="width: 50%"><span style="font-weight: bold">Telegram</span></td>
+                        <td style="width: 50%">{% if userprofile.telegram %}{{ userprofile.telegram }}{% else %}(не указано){% endif %}</td>
+                        <td style="width: 0%"></td>
+                    </tr>
+                    <tr>
+                        <td style="width: 50%"><span style="font-weight: bold">E-mail</span></td>
+                        <td style="width: 50%">{% if userprofile.email %}{{ userprofile.email }}{% else %}(не указано){% endif %}</td>
+                        <td style="width: 0%"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div style="height: 30px"></div>
+{% endblock %}

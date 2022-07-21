@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db import IntegrityError
@@ -5,16 +6,19 @@ from django.db.models import Q
 from django.forms import modelformset_factory
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
+from django.template.loader import render_to_string
 from django.urls import reverse_lazy, reverse
 from django.views.generic import TemplateView, ListView, DetailView
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView, ProcessFormView, FormView
 
+from users.tasks import send_invite_letter
 from .models import Item, Requisites, Service, Unit, Tariff, ServiceForTariff, House, Section, Floor
 from main.models import MainPage, Block, AboutPage, Photo, Document, ServicePage, AboutService, ContactPage
 from users.models import UserProfile, Role
 from .forms import RoleFormSet, ItemForm, RequisiteForm, ServiceFormSet, UnitFormSet, ServiceForTariffFormSet, \
     TariffForm, ServiceForTariffForm, MainPageForm, SeoForm, BlockFormSet, AboutPageForm, PhotoForm, DocumentFormSet, \
-    ServicePageForm, AboutServiceFormSet, ContactPageForm, SectionFormSet, FloorFormSet, UserFormSet, HouseForm
+    ServicePageForm, AboutServiceFormSet, ContactPageForm, SectionFormSet, FloorFormSet, UserFormSet, HouseForm, \
+    OwnerCreateForm, OwnerUpdateForm, InviteForm
 from users.forms import UserCreateForm, ChangeUserInfoForm
 
 
@@ -34,9 +38,75 @@ class OwnersListView(StaffRequiredMixin, SuccessMessageMixin, ListView):
     template_name = 'crm/pages/owners/owners_list.html'
     context_object_name = 'owners'
 
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['houses'] = House.objects.all()
+        return context
+
     def get_queryset(self):
         queryset = UserProfile.objects.filter(is_staff=False)
+        if self.request.GET.get('filter-name') == '1':
+            queryset = queryset.order_by('last_name')
+        if self.request.GET.get('filter-name') == '0':
+            queryset = queryset.order_by('-last_name')
+        if self.request.GET.get('filter-date') == '1':
+            queryset = queryset.order_by('date_joined')
+        if self.request.GET.get('filter-date') == '0':
+            queryset = queryset.order_by('-date_joined')
+        if self.request.GET.get('id'):
+            queryset = queryset.filter(user_id__icontains=self.request.GET.get('id'))
+        if self.request.GET.get('name'):
+            queryset = queryset.filter(Q(last_name__icontains=self.request.GET.get('name')) |
+                                       Q(first_name__icontains=self.request.GET.get('name')) |
+                                       Q(patronymic__icontains=self.request.GET.get('name')))
+        if self.request.GET.get('email'):
+            queryset = queryset.filter(email__icontains=self.request.GET.get('email'))
+        if self.request.GET.get('telephone'):
+            queryset = queryset.filter(telephone__icontains=self.request.GET.get('telephone'))
+        if self.request.GET.get('date'):
+            queryset = queryset.filter(date_joined=self.request.GET.get('date'))
+        if self.request.GET.get('status'):
+            queryset = queryset.filter(status=self.request.GET.get('status'))
         return queryset
+
+
+class OwnerDetailView(StaffRequiredMixin, DetailView):
+    model = UserProfile
+    template_name = 'crm/pages/owners/owner_detail.html'
+
+
+class OwnerCreateView(StaffRequiredMixin, SuccessMessageMixin, CreateView):
+    model = UserProfile
+    template_name = 'crm/pages/owners/owner_create.html'
+    form_class = OwnerCreateForm
+    success_url = reverse_lazy('owners_list')
+    success_message = 'Владелец квартиры успешно добавлен!'
+
+
+class OwnerUpdateView(StaffRequiredMixin, SuccessMessageMixin, UpdateView):
+    model = UserProfile
+    form_class = OwnerUpdateForm
+    template_name = 'crm/pages/owners/owner_update.html'
+    success_url = reverse_lazy('owners_list')
+    success_message = 'Данные о владельце успешно обновлены!'
+
+
+class OwnerDeleteView(SuccessMessageMixin, DeleteView):
+    model = UserProfile
+    success_url = reverse_lazy('owners_list')
+    success_message = 'Владелец квартиры успешно удалён!'
+
+
+class OwnerInviteView(StaffRequiredMixin, SuccessMessageMixin, FormView):
+    template_name = 'crm/pages/owners/owner_invite.html'
+    form_class = InviteForm
+    success_message = 'Приглашение владельцу успешно отправлено!'
+    success_url = reverse_lazy('owners_list')
+
+    def form_valid(self, form):
+        body_text = render_to_string('crm/elements/invite.txt')
+        send_invite_letter.delay(form.cleaned_data['email'], body_text)
+        return super().form_valid(form)
 # endregion Owners
 
 
@@ -517,12 +587,18 @@ class RoleCreateView(StaffRequiredMixin, SuccessMessageMixin, CreateView):
 
 
 # region users page
-class UsersListView(StaffRequiredMixin, ListView):
+class UsersListView(SuccessMessageMixin, StaffRequiredMixin, ListView):
     template_name = 'crm/pages/system_settings/users/users_list.html'
     context_object_name = 'users'
 
     def get_queryset(self):
         queryset = UserProfile.objects.filter(is_staff=True).select_related('role').order_by('pk')
+        if self.request.GET.get('user_id'):
+            user = get_object_or_404(UserProfile, pk=self.request.GET.get('user_id'))
+            context = {'user': user}
+            body_text = render_to_string('crm/elements/invite_for_admin.txt', context)
+            send_invite_letter.delay(user.email, body_text)
+            messages.add_message(self.request, messages.SUCCESS, 'Приглашение успешно отправлено')
         if self.request.GET.get('user'):
             queryset = queryset.filter(Q(last_name__icontains=self.request.GET.get('user')) |
                                        Q(first_name__icontains=self.request.GET.get('user')))

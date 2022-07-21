@@ -17,5 +17,8 @@ function clear() {
     delete localStorage.address
     delete localStorage.input_name
     delete localStorage.input_address
+    delete localStorage.id
+    delete localStorage.date
+    delete localStorage.sort_date
 }
 
