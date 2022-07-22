@@ -1,0 +1,140 @@
+{% extends 'crm/layout/base.html' %}
+{% load static %}
+
+{% block style %}
+    <style>
+        .sort-name:hover {
+            cursor: pointer;
+        }
+        .sort-date:hover {
+            cursor: pointer;
+        }
+        .hover-li:hover {
+            background-color: lightgrey;
+        }
+    </style>
+
+{% endblock %}
+
+{% block apartments %}class="nav-link active-link" style="color: black; background-color: #e1f1ea"{% endblock %}
+
+{% block title %}Квартиры{% endblock %}
+{% block name_page %}Квартиры{% endblock %}
+{% block nav %}Квартиры{% endblock %}
+
+{% block content %}
+    <div style="text-align: right; padding-right: 10px; padding-bottom: 10px">
+        <a href="#" class="btn btn-success">Добавить квартиру</a>
+    </div>
+    <div class="my-box" style="min-height: 0">
+        <div class="container-fluid">
+            <div style="text-align: right; padding-right: 2px; padding-top: 5px; margin-bottom: 5px">
+                <a id="clear" href="{% url 'apartments_list' %}" class="btn btn-default" style="font-size: 14px; max-height: 34px">Очистить</a>
+            </div>
+            <form method="get" id="form">
+                <table class="table table-hover table-striped table-responsive no-padding" style="color: #333333; font-size: 14px">
+                    <thead>
+                        <tr>
+                            <th style="width: 7%" class="sort-number"><span style="color: #72afd2" id="sort-number-span">№квартиры </span></th>
+                            <th style="width: 30%" class="sort-house"><span style="color: #72afd2" id="sort-house-span">Дом </span></th>
+                            <th style="width: 10%" class="sort-section"><span style="color: #72afd2" id="sort-section-span">Секция </span></th>
+                            <th style="width: 10%" class="sort-floor"><span style="color: #72afd2" id="sort-floor-span">Этаж </span></th>
+                            <th style="width: 30%" class="sort-owner"><span style="color: #72afd2" id="sort-owner-span">Владелец </span></th>
+                            <th style="width: 7%">Остаток(грн)</th>
+                            <th style="width: 6%"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="padding: 5px; min-width: 90px"><input type="text" class="form-control" name="input_number" id="input_number"></td>
+                            <td style="padding: 5px; min-width: 150px">
+                                <select class="form-select" name="input_house" id="input_house">
+                                    <option hidden disabled selected value></option>
+                                    {% for house in houses %}
+                                        <option value="{{ house.id }}">{{ house.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                            <td style="padding: 5px; min-width: 150px">
+                                <select class="form-select" name="input_section" id="input_section" {% if not sections %}style="font-size: 15px; height: 38px; color: grey"{% endif %}>
+                                    <option hidden disabled selected value></option>
+                                    {% if sections %}
+                                        {% for section in sections %}
+                                            <option value="{{ section.id }}">{{ section.name }}</option>
+                                        {% endfor %}
+                                        {% else %}
+                                            <option value="" disabled selected hidden >Выберите дом</option>
+                                    {% endif %}
+                                </select>
+                            </td>
+                            <td style="padding: 5px; min-width: 150px">
+                                <select class="form-select" name="input_floor" id="input_floor" {% if not floors %}style="font-size: 15px; height: 38px; color: grey"{% endif %}>
+                                    <option hidden disabled selected value></option>
+                                    {% if floors %}
+                                        {% for floor in floors %}
+                                            <option value="{{ floor.id }}">{{ floor.name }}</option>
+                                        {% endfor %}
+                                        {% else %}
+                                            <option value="" disabled selected hidden >Выберите дом</option>
+                                    {% endif %}
+                                </select>
+                            </td>
+                            <td style="padding: 5px; min-width: 150px">
+                                <select class="form-select" name="input_owner" id="input_owner">
+                                    <option hidden disabled selected value></option>
+                                    {% for owner in owners %}
+                                        <option value="{{ owner.id }}">{{ owner.first_name }} {{ owner.last_name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                            <td style="padding: 5px; min-width: 90px">
+                                <select class="form-select" name="debt" id="debt">
+                                  <option hidden disabled selected value></option>
+                                  <option value="is_active">Есть долг</option>
+                                  <option value="new">Нет долга</option>
+                                </select>
+                            </td>
+                            <td></td>
+                        </tr>
+                        {% for apartment in apartments %}
+                            <tr>
+                                <td data-href="" class="tr-link">{{ apartment.number }}</td>
+                                <td data-href="" class="tr-link">{% for house in houses %}{% for section in house.sections.all %}{% if section.id == apartment.section.id %}{{ house.name }}{% endif %}{% endfor %}{% endfor %}
+
+
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </form>
+            <div style="padding-bottom: 15px">
+                <span>Колличество квартир: <b>{{ apartments|length }}</b></span>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'crm/scripts/owners/owners_list.js' %}"></script>
+    <script>
+        // Filters
+        init_data()
+        $('#clear').click(clear)
+
+
+        // Messages
+        {% if messages %}
+        Swal.fire({
+          backdrop: false,
+          position: 'top-end',
+          padding: 0,
+          icon: 'success',
+          width: 300,
+          html: '{% for message in messages %}{{ message }}{% endfor %}',
+          showConfirmButton: false,
+          timer: 1500,
+        })
+        {% endif %}
+    </script>
+{% endblock %}

@@ -12,6 +12,12 @@
         .hover-li:hover {
             background-color: lightgrey;
         }
+        input[type="date"]:in-range::-webkit-datetime-edit-year-field,
+        input[type="date"]:in-range::-webkit-datetime-edit-month-field,
+        input[type="date"]:in-range::-webkit-datetime-edit-day-field,
+        input[type="date"]:in-range::-webkit-datetime-edit-text {
+            color: transparent
+        }
     </style>
 
 {% endblock %}
@@ -85,6 +91,7 @@
                                   <option value="no">Нет</option>
                                 </select>
                             </td>
+                            <td></td>
                         </tr>
                         {% for owner in owners %}
                             <tr>
@@ -150,8 +157,12 @@
 {% block script %}
     <script src="{% static 'crm/scripts/owners/owners_list.js' %}"></script>
     <script>
+        // Filters
         init_data()
+        $('#clear').click(clear)
 
+
+        // Messages
         {% if messages %}
         Swal.fire({
           backdrop: false,
@@ -164,7 +175,5 @@
           timer: 1500,
         })
         {% endif %}
-
-        $('#clear').click(clear)
     </script>
 {% endblock %}

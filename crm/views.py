@@ -9,10 +9,10 @@ from django.shortcuts import get_object_or_404
 from django.template.loader import render_to_string
 from django.urls import reverse_lazy, reverse
 from django.views.generic import TemplateView, ListView, DetailView
-from django.views.generic.edit import CreateView, UpdateView, DeleteView, ProcessFormView, FormView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormView
 
 from users.tasks import send_invite_letter
-from .models import Item, Requisites, Service, Unit, Tariff, ServiceForTariff, House, Section, Floor
+from .models import Item, Requisites, Service, Unit, Tariff, ServiceForTariff, House, Section, Floor, Apartment
 from main.models import MainPage, Block, AboutPage, Photo, Document, ServicePage, AboutService, ContactPage
 from users.models import UserProfile, Role
 from .forms import RoleFormSet, ItemForm, RequisiteForm, ServiceFormSet, UnitFormSet, ServiceForTariffFormSet, \
@@ -31,6 +31,29 @@ class StaffRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
 
 class StatisticsTemplateView(StaffRequiredMixin, TemplateView):
     template_name = 'crm/pages/statistics.html'
+
+
+# region Apartments
+class ApartmentsListView(StaffRequiredMixin, SuccessMessageMixin, ListView):
+    template_name = 'crm/pages/apartments/apartments_list.html'
+    context_object_name = 'apartments'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['houses'] = House.objects.prefetch_related('sections__apartment_set').all()
+        context['owners'] = UserProfile.objects.filter(is_staff=False)
+        # h = House.objects.get(pk=1)
+        # sections = h.sections.all()
+        # floors = h.floors.all()
+        context['sections'] = None
+        context['floors'] = None
+        return context
+
+    def get_queryset(self):
+        queryset = Apartment.objects.all()
+        return queryset
+
+# endregion Apartments
 
 
 # region Owners
@@ -71,7 +94,7 @@ class OwnersListView(StaffRequiredMixin, SuccessMessageMixin, ListView):
 
 
 class OwnerDetailView(StaffRequiredMixin, DetailView):
-    model = UserProfile
+    queryset = UserProfile.objects.select_related('role')
     template_name = 'crm/pages/owners/owner_detail.html'
 
 
@@ -84,7 +107,7 @@ class OwnerCreateView(StaffRequiredMixin, SuccessMessageMixin, CreateView):
 
 
 class OwnerUpdateView(StaffRequiredMixin, SuccessMessageMixin, UpdateView):
-    model = UserProfile
+    queryset = UserProfile.objects.select_related('role')
     form_class = OwnerUpdateForm
     template_name = 'crm/pages/owners/owner_update.html'
     success_url = reverse_lazy('owners_list')
@@ -169,6 +192,7 @@ class HouseCreateView(StaffRequiredMixin, SuccessMessageMixin, CreateView):
             if obj.is_valid() and obj.cleaned_data and not obj.cleaned_data['DELETE']:
                 floor = obj.save()
                 house.floors.add(floor)
+
         if user_formset.is_valid():
             for obj in user_formset:
                 if obj.cleaned_data and not obj.cleaned_data['DELETE']:
@@ -181,7 +205,7 @@ class HouseCreateView(StaffRequiredMixin, SuccessMessageMixin, CreateView):
 
 
 class HouseUpdateView(StaffRequiredMixin, SuccessMessageMixin, UpdateView):
-    model = House
+    queryset = House.objects.prefetch_related('users__role')
     template_name = 'crm/pages/houses/house_update.html'
     success_url = reverse_lazy('houses_list')
     success_message = 'Данные о доме обновлены!'
@@ -208,29 +232,23 @@ class HouseUpdateView(StaffRequiredMixin, SuccessMessageMixin, UpdateView):
         floor_formset = self.get_context_data()['floor_formset']
         user_formset = self.get_context_data()['user_formset']
         house = form.save(commit=False)
-        house.save()
-        section_formset.save(commit=False)
-        floor_formset.save(commit=False)
+        house.users.clear()
         for obj in section_formset:
             if obj.is_valid() and obj.cleaned_data and not obj.cleaned_data['DELETE']:
                 section = obj.save()
                 house.sections.add(section)
-        for obj in section_formset.deleted_objects:
-            obj.delete()
+        section_formset.save()
         for obj in floor_formset:
             if obj.is_valid() and obj.cleaned_data and not obj.cleaned_data['DELETE']:
                 floor = obj.save()
                 house.floors.add(floor)
-        for obj in floor_formset.deleted_objects:
-            obj.delete()
-        if user_formset.is_valid():
-            for obj in user_formset:
-                if obj.cleaned_data and not obj.cleaned_data['DELETE']:
-                    user = obj.cleaned_data['user']
-                    house.users.add(user)
-                    if obj.cleaned_data['DELETE']:
-                        user = obj.cleaned_data['user']
-                        house.users.delete(user)
+        floor_formset.save()
+
+        for obj in user_formset:
+            if obj.is_valid() and obj.cleaned_data and not obj.cleaned_data['DELETE']:
+                user = obj.cleaned_data['user']
+                house.users.add(user)
+        house.save()
         return super().form_valid(form)
 
 

@@ -31,8 +31,7 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
     CHOICES = (('is_active', 'Активен'),
                ('new', 'Новый'),
                ('disable', 'Отключен'))
-    status = models.CharField(max_length=16, choices=CHOICES, default='new', null=True, blank=True,
-                              verbose_name='Статус')
+    status = models.CharField(max_length=16, choices=CHOICES, default='new', verbose_name='Статус')
     role = models.ForeignKey('Role', on_delete=models.PROTECT, null=True, blank=True, verbose_name='Роль')
 
     USERNAME_FIELD = 'email'

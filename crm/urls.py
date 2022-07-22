@@ -1,16 +1,21 @@
 from django.urls import path
 
-from .views import StatisticsTemplateView, RoleCreateView, UsersListView, UserDetailView, UserCreateView,\
-    UserUpdateView, UserDeleteView, ItemsListView, ItemCreateView, ItemUpdateView, ItemDeleteView, RequisiteUpdate, \
-    ServiceCreateView, TariffsListView, TariffDetailView, TariffCreateView, TariffDeleteView, TariffUpdateView, \
-    MainUpdateView, AboutUpdateView, PhotoDeleteView, ServicePageUpdateView, ContactPageUpdateView, get_units, \
-    HousesListView, HouseDetailView, HouseCreateView, HouseDeleteView, get_role, HouseUpdateView, OwnersListView,\
-    OwnerDetailView, OwnerCreateView, OwnerDeleteView, OwnerUpdateView, OwnerInviteView
+from .views import (
+    StatisticsTemplateView, RoleCreateView, UsersListView, UserDetailView, UserCreateView,
+    UserUpdateView, UserDeleteView, ItemsListView, ItemCreateView, ItemUpdateView, ItemDeleteView, RequisiteUpdate,
+    ServiceCreateView, TariffsListView, TariffDetailView, TariffCreateView, TariffDeleteView, TariffUpdateView,
+    MainUpdateView, AboutUpdateView, PhotoDeleteView, ServicePageUpdateView, ContactPageUpdateView, get_units,
+    HousesListView, HouseDetailView, HouseCreateView, HouseDeleteView, get_role, HouseUpdateView, OwnersListView,
+    OwnerDetailView, OwnerCreateView, OwnerDeleteView, OwnerUpdateView, OwnerInviteView, ApartmentsListView
+)
 
 
 urlpatterns = [
     # statistics page
     path('', StatisticsTemplateView.as_view(), name='home'),
+
+    # apartments
+    path('apartments/', ApartmentsListView.as_view(), name='apartments_list'),
 
     # owners
     path('owners/delete/<int:pk>/', OwnerDeleteView.as_view(), name='owner_delete'),

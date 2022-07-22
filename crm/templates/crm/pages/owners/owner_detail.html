@@ -13,7 +13,7 @@
         <div class="container-fluid">
             <div style="text-align: right; margin-bottom: 5px; padding-top: 5px">
                 <a href="{% url 'owner_login' %}" class="btn btn-default" style="font-size: 14px; max-height: 34px"><i class="fa fa-external-link-alt"></i> Перейти в кабинет</a>
-                <a href="#" class="btn btn-primary" style="font-size: 14px; max-height: 34px">Редактировать профиль</a>
+                <a href="{% url 'owner_update' userprofile.id %}" class="btn btn-primary" style="font-size: 14px; max-height: 34px">Редактировать профиль</a>
             </div>
             <div class="dropdown-divider" style="border-color:lightgrey"></div>
             <div class="userAvatar">
