@@ -24,15 +24,14 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
     patronymic = models.CharField(max_length=32, blank=True, verbose_name='Отчество')
     avatar = models.ImageField(upload_to='gallery/', null=True, blank=True, verbose_name='Аватар')
     telephone = models.CharField(max_length=20, null=True, blank=True, verbose_name='Телефон')
-    viber = models.CharField(max_length=20, null=True, blank=True, verbose_name='Вайбер')
-    telegram = models.CharField(max_length=20, null=True, blank=True, verbose_name='Телеграм')
+    viber = models.CharField(max_length=20, null=True, blank=True, verbose_name='Viber')
+    telegram = models.CharField(max_length=20, null=True, blank=True, verbose_name='Telegram')
     notes = models.TextField(null=True, blank=True, verbose_name='О владельце (заметки)')
     birth_date = models.DateField(null=True, blank=True, verbose_name='Дата рождения')
     CHOICES = (('is_active', 'Активен'),
                ('new', 'Новый'),
                ('disable', 'Отключен'))
-    status = models.CharField(max_length=16, choices=CHOICES, default='new', null=True, blank=True,
-                              verbose_name='Статус')
+    status = models.CharField(max_length=16, choices=CHOICES, default='new', verbose_name='Статус')
     role = models.ForeignKey('Role', on_delete=models.PROTECT, null=True, blank=True, verbose_name='Роль')
 
     USERNAME_FIELD = 'email'
@@ -45,7 +44,7 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
         verbose_name_plural = 'Профили'
 
     def __str__(self):
-        return self.email
+        return f"{self.first_name} {self.last_name}"
 
 
 class Role(models.Model):

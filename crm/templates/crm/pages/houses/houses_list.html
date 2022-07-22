@@ -20,7 +20,7 @@
 
 {% block content %}
     <div style="text-align: right; padding-right: 10px; padding-bottom: 10px">
-        <a href="#" class="btn btn-success">Добавить дом</a>
+        <a href="{% url 'house_create' %}" class="btn btn-success">Добавить дом</a>
     </div>
     <div class="my-box" style="min-height: 0">
         <div class="container-fluid">
@@ -51,11 +51,32 @@
                                 <td data-href="{% url 'house_detail' house.id %}" class="tr-link">{{ house.address }}</td>
                                 <td style="padding: 6px 5px 7px 4px; float: right">
                                     <div class="btn-group pull-right">
-                                        <a class="btn btn-default btn-sm" href="#" title="Редактировать" data-toggle="tooltip"><i class="fa fa-pencil-alt"></i></a>
+                                        <a class="btn btn-default btn-sm" href="{% url 'house_update' house.id %}" title="Редактировать" data-toggle="tooltip"><i class="fa fa-pencil-alt"></i></a>
                                         <button type="button" class="btn btn-default btn-sm not-allowed" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ forloop.counter }}"><i class="fa fa-trash"></i></button>
                                     </div>
                                 </td>
                             </tr>
+                            <!-- Modal -->
+                            <div class="modal fade" id="deleteModal-{{ forloop.counter }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="deleteModalLabel-{{ forloop.counter }}" aria-hidden="true">
+                              <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                  <div class="modal-header bg-danger">
+                                    <h5 class="modal-title" id="deleteModal1Label-{{ forloop.counter }}">Подтверждение удаления</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                  </div>
+                                  <form method="post" action="{% url 'house_delete' house.id %}">
+                                      {% csrf_token %}
+                                      <div class="modal-body">
+                                          Вы действительно хотите удалить дом <b>{{ house.name }}</b>?
+                                      </div>
+                                      <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                                        <button type="submit" class="btn btn-danger">Удалить</button>
+                                      </div>
+                                  </form>
+                                </div>
+                              </div>
+                            </div>
                         {% endfor %}
                     </tbody>
                 </table>

@@ -17,4 +17,4 @@ def send_activation_notification(user):
                'sign': signer.sign(user.email)}
     subject = render_to_string('users/elements/email/activation_letter_subject.txt', context)
     body_text = render_to_string('users/elements/email/activation_letter_body.txt', context)
-    send_activation_letter(subject, body_text, user.email)
+    send_activation_letter.delay(subject, body_text, user.email)

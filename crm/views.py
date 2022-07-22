@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db import IntegrityError
@@ -5,17 +6,20 @@ from django.db.models import Q
 from django.forms import modelformset_factory
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
+from django.template.loader import render_to_string
 from django.urls import reverse_lazy, reverse
 from django.views.generic import TemplateView, ListView, DetailView
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormView
 
+from users.tasks import send_invite_letter
+from .models import Item, Requisites, Service, Unit, Tariff, ServiceForTariff, House, Section, Floor, Apartment
 from main.models import MainPage, Block, AboutPage, Photo, Document, ServicePage, AboutService, ContactPage
+from users.models import UserProfile, Role
 from .forms import RoleFormSet, ItemForm, RequisiteForm, ServiceFormSet, UnitFormSet, ServiceForTariffFormSet, \
     TariffForm, ServiceForTariffForm, MainPageForm, SeoForm, BlockFormSet, AboutPageForm, PhotoForm, DocumentFormSet, \
-    ServicePageForm, AboutServiceFormSet, ContactPageForm
+    ServicePageForm, AboutServiceFormSet, ContactPageForm, SectionFormSet, FloorFormSet, UserFormSet, HouseForm, \
+    OwnerCreateForm, OwnerUpdateForm, InviteForm
 from users.forms import UserCreateForm, ChangeUserInfoForm
-from users.models import UserProfile, Role
-from .models import Item, Requisites, Service, Unit, Tariff, ServiceForTariff, House
 
 
 class StaffRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
@@ -27,6 +31,106 @@ class StaffRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
 
 class StatisticsTemplateView(StaffRequiredMixin, TemplateView):
     template_name = 'crm/pages/statistics.html'
+
+
+# region Apartments
+class ApartmentsListView(StaffRequiredMixin, SuccessMessageMixin, ListView):
+    template_name = 'crm/pages/apartments/apartments_list.html'
+    context_object_name = 'apartments'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['houses'] = House.objects.prefetch_related('sections__apartment_set').all()
+        context['owners'] = UserProfile.objects.filter(is_staff=False)
+        # h = House.objects.get(pk=1)
+        # sections = h.sections.all()
+        # floors = h.floors.all()
+        context['sections'] = None
+        context['floors'] = None
+        return context
+
+    def get_queryset(self):
+        queryset = Apartment.objects.all()
+        return queryset
+
+# endregion Apartments
+
+
+# region Owners
+class OwnersListView(StaffRequiredMixin, SuccessMessageMixin, ListView):
+    template_name = 'crm/pages/owners/owners_list.html'
+    context_object_name = 'owners'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['houses'] = House.objects.all()
+        return context
+
+    def get_queryset(self):
+        queryset = UserProfile.objects.filter(is_staff=False)
+        if self.request.GET.get('filter-name') == '1':
+            queryset = queryset.order_by('last_name')
+        if self.request.GET.get('filter-name') == '0':
+            queryset = queryset.order_by('-last_name')
+        if self.request.GET.get('filter-date') == '1':
+            queryset = queryset.order_by('date_joined')
+        if self.request.GET.get('filter-date') == '0':
+            queryset = queryset.order_by('-date_joined')
+        if self.request.GET.get('id'):
+            queryset = queryset.filter(user_id__icontains=self.request.GET.get('id'))
+        if self.request.GET.get('name'):
+            queryset = queryset.filter(Q(last_name__icontains=self.request.GET.get('name')) |
+                                       Q(first_name__icontains=self.request.GET.get('name')) |
+                                       Q(patronymic__icontains=self.request.GET.get('name')))
+        if self.request.GET.get('email'):
+            queryset = queryset.filter(email__icontains=self.request.GET.get('email'))
+        if self.request.GET.get('telephone'):
+            queryset = queryset.filter(telephone__icontains=self.request.GET.get('telephone'))
+        if self.request.GET.get('date'):
+            queryset = queryset.filter(date_joined=self.request.GET.get('date'))
+        if self.request.GET.get('status'):
+            queryset = queryset.filter(status=self.request.GET.get('status'))
+        return queryset
+
+
+class OwnerDetailView(StaffRequiredMixin, DetailView):
+    queryset = UserProfile.objects.select_related('role')
+    template_name = 'crm/pages/owners/owner_detail.html'
+
+
+class OwnerCreateView(StaffRequiredMixin, SuccessMessageMixin, CreateView):
+    model = UserProfile
+    template_name = 'crm/pages/owners/owner_create.html'
+    form_class = OwnerCreateForm
+    success_url = reverse_lazy('owners_list')
+    success_message = 'Владелец квартиры успешно добавлен!'
+
+
+class OwnerUpdateView(StaffRequiredMixin, SuccessMessageMixin, UpdateView):
+    queryset = UserProfile.objects.select_related('role')
+    form_class = OwnerUpdateForm
+    template_name = 'crm/pages/owners/owner_update.html'
+    success_url = reverse_lazy('owners_list')
+    success_message = 'Данные о владельце успешно обновлены!'
+
+
+class OwnerDeleteView(SuccessMessageMixin, DeleteView):
+    model = UserProfile
+    success_url = reverse_lazy('owners_list')
+    success_message = 'Владелец квартиры успешно удалён!'
+
+
+class OwnerInviteView(StaffRequiredMixin, SuccessMessageMixin, FormView):
+    template_name = 'crm/pages/owners/owner_invite.html'
+    form_class = InviteForm
+    success_message = 'Приглашение владельцу успешно отправлено!'
+    success_url = reverse_lazy('owners_list')
+
+    def form_valid(self, form):
+        body_text = render_to_string('crm/elements/invite.txt')
+        send_invite_letter.delay(form.cleaned_data['email'], body_text)
+        return super().form_valid(form)
+# endregion Owners
 
 
 # region Houses
@@ -54,6 +158,115 @@ class HousesListView(StaffRequiredMixin, SuccessMessageMixin, ListView):
 class HouseDetailView(StaffRequiredMixin, DetailView):
     queryset = House.objects.prefetch_related('users__role')
     template_name = 'crm/pages/houses/house_detail.html'
+
+
+class HouseCreateView(StaffRequiredMixin, SuccessMessageMixin, CreateView):
+    template_name = 'crm/pages/houses/house_create.html'
+    success_message = 'Дом успешно добавлен!'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['section_formset'] = SectionFormSet(self.request.POST or None,
+                                                    queryset=Section.objects.none(), prefix='section_formset')
+        context['floor_formset'] = FloorFormSet(self.request.POST or None,
+                                                queryset=Floor.objects.none(), prefix='floor_formset')
+        context['user_formset'] = UserFormSet(self.request.POST or None)
+        return context
+
+    def get_form(self, form_class=None):
+        if form_class is None:
+            form_class = HouseForm(self.request.POST or None, self.request.FILES or None)
+        return form_class
+
+    def form_valid(self, form):
+        section_formset = self.get_context_data()['section_formset']
+        floor_formset = self.get_context_data()['floor_formset']
+        user_formset = self.get_context_data()['user_formset']
+        house = form.save(commit=False)
+        house.save()
+        for obj in section_formset:
+            if obj.is_valid() and obj.cleaned_data and not obj.cleaned_data['DELETE']:
+                section = obj.save()
+                house.sections.add(section)
+        for obj in floor_formset:
+            if obj.is_valid() and obj.cleaned_data and not obj.cleaned_data['DELETE']:
+                floor = obj.save()
+                house.floors.add(floor)
+
+        if user_formset.is_valid():
+            for obj in user_formset:
+                if obj.cleaned_data and not obj.cleaned_data['DELETE']:
+                    user = obj.cleaned_data['user']
+                    house.users.add(user)
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse('houses_list')
+
+
+class HouseUpdateView(StaffRequiredMixin, SuccessMessageMixin, UpdateView):
+    queryset = House.objects.prefetch_related('users__role')
+    template_name = 'crm/pages/houses/house_update.html'
+    success_url = reverse_lazy('houses_list')
+    success_message = 'Данные о доме обновлены!'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['section_formset'] = SectionFormSet(self.request.POST or None,
+                                                    queryset=self.object.sections.all(), prefix='section_formset')
+        context['floor_formset'] = FloorFormSet(self.request.POST or None,
+                                                queryset=self.object.floors.all(), prefix='floor_formset')
+        users = self.object.users.all()
+        context['user_formset'] = UserFormSet(self.request.POST or None,
+                                              initial=[{'user': x.id,
+                                                        'role': x.role.get_role_display()} for x in users])
+        return context
+
+    def get_form(self, form_class=None):
+        if form_class is None:
+            form_class = HouseForm(self.request.POST or None, self.request.FILES or None, instance=self.object)
+        return form_class
+
+    def form_valid(self, form):
+        section_formset = self.get_context_data()['section_formset']
+        floor_formset = self.get_context_data()['floor_formset']
+        user_formset = self.get_context_data()['user_formset']
+        house = form.save(commit=False)
+        house.users.clear()
+        for obj in section_formset:
+            if obj.is_valid() and obj.cleaned_data and not obj.cleaned_data['DELETE']:
+                section = obj.save()
+                house.sections.add(section)
+        section_formset.save()
+        for obj in floor_formset:
+            if obj.is_valid() and obj.cleaned_data and not obj.cleaned_data['DELETE']:
+                floor = obj.save()
+                house.floors.add(floor)
+        floor_formset.save()
+
+        for obj in user_formset:
+            if obj.is_valid() and obj.cleaned_data and not obj.cleaned_data['DELETE']:
+                user = obj.cleaned_data['user']
+                house.users.add(user)
+        house.save()
+        return super().form_valid(form)
+
+
+class HouseDeleteView(SuccessMessageMixin, DeleteView):
+    model = House
+    success_url = reverse_lazy('houses_list')
+    success_message = 'Дом успешно удалён!'
+
+
+def get_role(request):
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        if request.method == 'GET':
+            if request.GET.get('user'):
+                role = UserProfile.objects.get(pk=request.GET.get('user')).role.get_role_display()
+                response = {'role': role}
+            else:
+                response = {'role': None}
+            return JsonResponse(response, status=200)
 # endregion Houses
 
 
@@ -392,12 +605,18 @@ class RoleCreateView(StaffRequiredMixin, SuccessMessageMixin, CreateView):
 
 
 # region users page
-class UsersListView(StaffRequiredMixin, ListView):
+class UsersListView(SuccessMessageMixin, StaffRequiredMixin, ListView):
     template_name = 'crm/pages/system_settings/users/users_list.html'
     context_object_name = 'users'
 
     def get_queryset(self):
         queryset = UserProfile.objects.filter(is_staff=True).select_related('role').order_by('pk')
+        if self.request.GET.get('user_id'):
+            user = get_object_or_404(UserProfile, pk=self.request.GET.get('user_id'))
+            context = {'user': user}
+            body_text = render_to_string('crm/elements/invite_for_admin.txt', context)
+            send_invite_letter.delay(user.email, body_text)
+            messages.add_message(self.request, messages.SUCCESS, 'Приглашение успешно отправлено')
         if self.request.GET.get('user'):
             queryset = queryset.filter(Q(last_name__icontains=self.request.GET.get('user')) |
                                        Q(first_name__icontains=self.request.GET.get('user')))

@@ -1,6 +1,16 @@
 {% extends 'crm/layout/base.html' %}
 {% load static %}
 
+{% block style %}
+    <style>
+        input.error {
+            border: red 1px solid;
+            position: relative;
+            box-shadow: 0 0 4px 0 firebrick;
+        }
+    </style>
+{% endblock %}
+
 {% block settings %}menu-is-opening menu-open{% endblock %}
 {% block items %}class="nav-link active-link" style="color: black; background-color: #e1f1ea"{% endblock %}
 {% block items-active %}class="black"{% endblock %}

@@ -32,5 +32,11 @@ $(document).ready(function() {
 
 // Mask for telephone
 $(function(){
-  $("#id_telephone").mask("+380(099) 999-99-99");
+  $("#id_telephone, #id_viber").mask("+380(099) 999-99-99");
 });
+
+// preview avatar
+$('input[type=file]').change(function (event){
+	console.log('ghbdtn')
+    $('img[id="' + this.id + '"]').attr('src', URL.createObjectURL(event.target.files[0]))
+})

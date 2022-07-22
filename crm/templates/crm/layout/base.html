@@ -12,6 +12,9 @@
   <link rel="stylesheet" href="{% static 'crm/bootstrap5dist/css/bootstrap.min.css' %}">
   <!-- Theme style -->
   <link rel="stylesheet" href="{% static 'crm/dist/css/adminlte.min.css' %}">
+  <!-- Select2 style -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <!-- My style -->
   <link rel="stylesheet" href="{% static 'crm/styles/base.css' %}">
   <style>
 
@@ -137,7 +140,7 @@
           {% endif %}
           {% if user.role.has_apartment %}
           <li class="nav-item">
-            <a href="#" class="nav-link {% block apartments %}{% endblock %}">
+            <a id="apartments" href="{% url 'apartments_list' %}" {% block apartments %}class="nav-link"{% endblock %}>
               <i class="fas fa-key" style="width: 23px"></i>
               <p style="color: #494949; font-size: 14px; font-weight: 600">
                 Квартиры
@@ -147,7 +150,7 @@
           {% endif %}
           {% if user.role.has_owner %}
           <li class="nav-item">
-            <a href="#" class="nav-link {% block owners %}{% endblock %}">
+            <a id="owners" href="{% url 'owners_list' %}" {% block owners %}class="nav-link"{% endblock %}>
               <i class="fas fa-users" style="width: 23px"></i>
               <p style="color: #494949; font-size: 14px; font-weight: 600">
                 Владельцы квартир
@@ -344,10 +347,12 @@
 <!-- AdminLTE App -->
 <script src="{% static 'crm/dist/js/adminlte.min.js' %}"></script>
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<!-- Select2 -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <!-- My -->
 <script src="{% static 'crm/scripts/tables.js' %}"></script>
 <script>
-    $('#users, #items, #tariffs, #houses').click(clear)
+    $('#users, #items, #tariffs, #houses, #owners, #apartments').click(clear)
 </script>
 {% block script %}{% endblock %}
 </body>

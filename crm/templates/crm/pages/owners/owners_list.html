@@ -1,0 +1,179 @@
+{% extends 'crm/layout/base.html' %}
+{% load static %}
+
+{% block style %}
+    <style>
+        .sort-name:hover {
+            cursor: pointer;
+        }
+        .sort-date:hover {
+            cursor: pointer;
+        }
+        .hover-li:hover {
+            background-color: lightgrey;
+        }
+        input[type="date"]:in-range::-webkit-datetime-edit-year-field,
+        input[type="date"]:in-range::-webkit-datetime-edit-month-field,
+        input[type="date"]:in-range::-webkit-datetime-edit-day-field,
+        input[type="date"]:in-range::-webkit-datetime-edit-text {
+            color: transparent
+        }
+    </style>
+
+{% endblock %}
+
+{% block owners %}class="nav-link active-link" style="color: black; background-color: #e1f1ea"{% endblock %}
+
+{% block title %}Владельцы квартир{% endblock %}
+{% block name_page %}Владельцы квартир{% endblock %}
+{% block nav %}Владельцы квартир{% endblock %}
+
+{% block content %}
+    <div style="text-align: right; padding-right: 10px; padding-bottom: 10px">
+        <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Выберите действие <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+            <li class="hover-li"><a style="padding: 5px; color: #6c757d" href="{% url 'owner_create' %}">Добавить владельца квартиры</a></li>
+            <li class="hover-li"><a style="padding: 5px; color: #6c757d" href="#">Отправить сообщение должникам</a></li>
+            <li class="hover-li"><a style="padding: 5px; color: #6c757d" href="{% url 'owner_invite' %}">Отправить приглашение</a></li>
+        </ul>
+    </div>
+    <div class="my-box" style="min-height: 0">
+        <div class="container-fluid">
+            <div style="text-align: right; padding-right: 2px; padding-top: 5px; margin-bottom: 5px">
+                <a id="clear" href="{% url 'owners_list' %}" class="btn btn-default" style="font-size: 14px; max-height: 34px">Очистить</a>
+            </div>
+            <form method="get" id="form">
+                <table class="table table-hover table-striped table-responsive no-padding" style="color: #333333; font-size: 14px">
+                    <thead>
+                        <tr>
+                            <th style="width: 6%">ID</th>
+                            <th style="width: 15%" class="sort-name"><span style="color: #72afd2" id="sort-name-span">ФИО </span></th>
+                            <th style="width: 10%">Телефон</th>
+                            <th style="width: 12%">E-mail</th>
+                            <th style="width: 15%">Дом</th>
+                            <th style="width: 15%">Квартира</th>
+                            <th style="width: 10%" class="sort-date"><span style="color: #72afd2" id="sort-date-span">Добавлен </span></th>
+                            <th style="width: 6%">Статус</th>
+                            <th style="width: 6%">Есть долг</th>
+                            <th style="width: 5%"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="padding: 5px"><input type="text" class="form-control" name="id" id="id"></td>
+                            <td style="padding: 5px"><input type="text" class="form-control" name="name" id="name"></td>
+                            <td style="padding: 5px"><input type="text" class="form-control" name="telephone" id="telephone"></td>
+                            <td style="padding: 5px"><input type="text" class="form-control" name="email" id="email"></td>
+                            <td style="padding: 5px">
+                                <select class="form-select" name="house" id="house">
+                                    <option hidden disabled selected value></option>
+                                    {% for house in houses %}
+                                        <option value="{{ house.id }}">{{ house.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                            <td style="padding: 5px"><input type="text" class="form-control" name="apartment" id="apartment"></td>
+                            <td style="padding: 5px"><input type="date" class="form-control" name="date" id="date"></td>
+                            <td style="padding: 5px">
+                                <select class="form-select" name="status" id="status">
+                                  <option hidden disabled selected value></option>
+                                  <option value="is_active">Активный</option>
+                                  <option value="new">Новый</option>
+                                  <option value="disable">Отключен</option>
+                                </select>
+                            </td>
+                            <td style="padding: 5px">
+                                <select class="form-select" name="debt" id="debt">
+                                  <option hidden disabled selected value></option>
+                                  <option value="yes">Да</option>
+                                  <option value="no">Нет</option>
+                                </select>
+                            </td>
+                            <td></td>
+                        </tr>
+                        {% for owner in owners %}
+                            <tr>
+                                <td data-href="{% url 'owner_detail' owner.id %}" class="tr-link">{{ owner.user_id }}</td>
+                                <td data-href="{% url 'owner_detail' owner.id %}" class="tr-link">{{ owner.last_name }} {{ owner.first_name }} {{ owner.patronymic }}</td>
+                                <td data-href="{% url 'owner_detail' owner.id %}" class="tr-link">{% if owner.telephone %}{{ owner.telephone }}{% else %}(не указан){% endif %}</td>
+                                <td data-href="{% url 'owner_detail' owner.id %}" class="tr-link">{{ owner.email }}</td>
+                                <td data-href="{% url 'owner_detail' owner.id %}" class="tr-link"><a href="#" style="text-decoration: none">Позже</a></td>
+                                <td data-href="{% url 'owner_detail' owner.id %}" class="tr-link"><a href="#" style="text-decoration: none">Позже</a></td>
+                                <td data-href="{% url 'owner_detail' owner.id %}" class="tr-link">{{ owner.date_joined|date:"d.m.Y" }}</td>
+                                <td data-href="{% url 'owner_detail' owner.id %}" class="tr-link">
+                                    {% if owner.status == 'is_active' %}
+                                    <small class="btn btn-sm btn-success status">Активен</small>
+                                    {% elif owner.status == 'new' %}
+                                    <small class="btn btn-sm btn-warning status">Новый</small>
+                                    {% elif owner.status == 'disable' %}
+                                    <small class="btn btn-sm btn-danger status">Отключен</small>
+                                    {% endif %}
+                                </td>
+                                <td data-href="{% url 'owner_detail' owner.id %}" class="tr-link">Позже</td>
+                                <td style="padding: 6px 5px 7px 4px; float: right">
+                                    <div class="btn-group pull-right">
+                                        <button type="button" class="btn btn-default btn-sm" title="Отправить сообщение" data-toggle="tooltip"><i class="fa fa-envelope"></i></button>
+                                        <a class="btn btn-default btn-sm" href="{% url 'owner_update' owner.id %}" title="Редактировать" data-toggle="tooltip"><i class="fa fa-pencil-alt"></i></a>
+                                        <button title="Удалить владельца" type="button" class="btn btn-default btn-sm not-allowed" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ forloop.counter }}"><i class="fa fa-trash-alt"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <!-- Modal -->
+                            <div class="modal fade" id="deleteModal-{{ forloop.counter }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="deleteModalLabel-{{ forloop.counter }}" aria-hidden="true">
+                              <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                  <div class="modal-header bg-danger">
+                                    <h5 class="modal-title" id="deleteModal1Label-{{ forloop.counter }}">Подтверждение удаления</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                  </div>
+                                  <form method="post" action="{% url 'owner_delete' owner.id %}">
+                                      {% csrf_token %}
+                                      <div class="modal-body">
+                                          Вы действительно хотите удалить владельца <b>{{ owner.first_name }} {{ owner.last_name }}</b>?
+                                      </div>
+                                      <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                                        <button type="submit" class="btn btn-danger">Удалить</button>
+                                      </div>
+                                  </form>
+                                </div>
+                              </div>
+                            </div>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <input type="hidden" name="filter-name" value="" id="filter-name">
+                <input type="hidden" name="filter-date" value="" id="filter-date">
+            </form>
+            <div style="padding-bottom: 15px">
+                <span>Колличество владельцев: <b>{{ owners|length }}</b></span>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'crm/scripts/owners/owners_list.js' %}"></script>
+    <script>
+        // Filters
+        init_data()
+        $('#clear').click(clear)
+
+
+        // Messages
+        {% if messages %}
+        Swal.fire({
+          backdrop: false,
+          position: 'top-end',
+          padding: 0,
+          icon: 'success',
+          width: 300,
+          html: '{% for message in messages %}{{ message }}{% endfor %}',
+          showConfirmButton: false,
+          timer: 1500,
+        })
+        {% endif %}
+    </script>
+{% endblock %}

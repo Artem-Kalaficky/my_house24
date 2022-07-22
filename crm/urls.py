@@ -1,19 +1,37 @@
 from django.urls import path
 
-from .views import StatisticsTemplateView, RoleCreateView, UsersListView, UserDetailView, UserCreateView,\
-    UserUpdateView, UserDeleteView, ItemsListView, ItemCreateView, ItemUpdateView, ItemDeleteView, RequisiteUpdate, \
-    ServiceCreateView, TariffsListView, TariffDetailView, TariffCreateView, TariffDeleteView, TariffUpdateView, \
-    MainUpdateView, AboutUpdateView, PhotoDeleteView, ServicePageUpdateView, ContactPageUpdateView, get_units, \
-    HousesListView, HouseDetailView
+from .views import (
+    StatisticsTemplateView, RoleCreateView, UsersListView, UserDetailView, UserCreateView,
+    UserUpdateView, UserDeleteView, ItemsListView, ItemCreateView, ItemUpdateView, ItemDeleteView, RequisiteUpdate,
+    ServiceCreateView, TariffsListView, TariffDetailView, TariffCreateView, TariffDeleteView, TariffUpdateView,
+    MainUpdateView, AboutUpdateView, PhotoDeleteView, ServicePageUpdateView, ContactPageUpdateView, get_units,
+    HousesListView, HouseDetailView, HouseCreateView, HouseDeleteView, get_role, HouseUpdateView, OwnersListView,
+    OwnerDetailView, OwnerCreateView, OwnerDeleteView, OwnerUpdateView, OwnerInviteView, ApartmentsListView
+)
 
 
 urlpatterns = [
     # statistics page
     path('', StatisticsTemplateView.as_view(), name='home'),
 
+    # apartments
+    path('apartments/', ApartmentsListView.as_view(), name='apartments_list'),
+
+    # owners
+    path('owners/delete/<int:pk>/', OwnerDeleteView.as_view(), name='owner_delete'),
+    path('owners/update/<int:pk>/', OwnerUpdateView.as_view(), name='owner_update'),
+    path('owners/<int:pk>/', OwnerDetailView.as_view(), name='owner_detail'),
+    path('owners/invite/', OwnerInviteView.as_view(), name='owner_invite'),
+    path('owners/create/', OwnerCreateView.as_view(), name='owner_create'),
+    path('owners/', OwnersListView.as_view(), name='owners_list'),
+
     # houses
+    path('houses/delete/<int:pk>/', HouseDeleteView.as_view(), name='house_delete'),
+    path('houses/update/<int:pk>/', HouseUpdateView.as_view(), name='house_update'),
     path('houses/<int:pk>/', HouseDetailView.as_view(), name='house_detail'),
+    path('houses/create/', HouseCreateView.as_view(), name='house_create'),
     path('houses/', HousesListView.as_view(), name='houses_list'),
+    path('get-role/', get_role, name='get_role'),
 
     # SITE-MANAGEMENT pages
     path('site-management/main/', MainUpdateView.as_view(), name='main'),
