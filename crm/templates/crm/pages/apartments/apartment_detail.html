@@ -1,0 +1,71 @@
+{% extends 'crm/layout/base.html' %}
+{% load static %}
+
+{% block apartments %}class="nav-link active-link" style="color: black; background-color: #e1f1ea"{% endblock %}
+
+{% block title %}Квартира №{{ apartment.number }}, {% for house in houses %}{% for section in house.sections.all %}{% if section.id == apartment.section.id %}{{ house.name }}{% endif %}{% endfor %}{% endfor %}{% endblock %}
+{% block name_page %}Квартира №{{ apartment.number }}, {% for house in houses %}{% for section in house.sections.all %}{% if section.id == apartment.section.id %}{{ house.name }}{% endif %}{% endfor %}{% endfor %}{% endblock %}
+{% block previos_link %}<a href="{% url 'apartments_list' %}" style="color: #494949">/ Квартиры</a>{% endblock %}
+{% block nav %}Квартира №{{ apartment.number }}, {% for house in houses %}{% for section in house.sections.all %}{% if section.id == apartment.section.id %}{{ house.name }}{% endif %}{% endfor %}{% endfor %}{% endblock %}
+
+{% block content %}
+    <div class="my-box" style="min-height: 0">
+        <div class="container-fluid">
+            <span style="font-size: 20px" class="text-muted">Просмотр квартиры</span>
+            <div style="float: right; margin-bottom: 5px; padding-top: 5px; display: inline-block">
+                <a href="#" class="btn btn-default" style="font-size: 14px; max-height: 34px"><i class="fa fa-dollar-sign"></i> Принять платёж</a>
+                <a href="#" class="btn btn-default" style="font-size: 14px; max-height: 34px"><i class="fa fa-copy"></i> Оформить квитанцию</a>
+                <a href="#" class="btn btn-primary" style="font-size: 14px; max-height: 34px">Редактировать квартиру</a>
+            </div>
+            <div class="dropdown-divider" style="border-color:lightgrey; margin-top: 15px"></div>
+            <table class="table table-hover table-striped table-responsive no-padding" style="color: #333333; font-size: 14px">
+                <tbody>
+                    <tr>
+                        <td style="width: 50%"><span style="font-weight: bold">Лицевой счет</span></td>
+                        <td style="width: 50%">(нет счета)</td>
+                        <td style="width: 0%"></td>
+                    </tr>
+                    <tr>
+                        <td style="width: 50%"><span style="font-weight: bold">Номер квартиры</span></td>
+                        <td style="width: 50%">{{ apartment.number }}</td>
+                        <td style="width: 0%"></td>
+                    </tr>
+                    <tr>
+                        <td style="width: 50%"><span style="font-weight: bold">Площадь</span></td>
+                        <td style="width: 50%">{% if apartment.area %}{{ apartment.area }}м²{% else %}(не задана){% endif %}</td>
+                        <td style="width: 0%"></td>
+                    </tr>
+                    <tr>
+                        <td style="width: 50%"><span style="font-weight: bold">Дом</span></td>
+                        <td style="width: 50%">{% for house in houses %}{% for section in house.sections.all %}{% if section.id == apartment.section.id %}<a href="{% url 'house_detail' house.id %}">{{ house.name }}</a>{% endif %}{% endfor %}{% endfor %}</td>
+                        <td style="width: 0%"></td>
+                    </tr>
+                    <tr>
+                        <td style="width: 50%"><span style="font-weight: bold">Секция</span></td>
+                        <td style="width: 50%">{{ apartment.section.name }}</td>
+                        <td style="width: 0%"></td>
+                    </tr>
+                    <tr>
+                        <td style="width: 50%"><span style="font-weight: bold">Этаж</span></td>
+                        <td style="width: 50%">{{ apartment.floor.name }}</td>
+                        <td style="width: 0%"></td>
+                    </tr>
+                    <tr>
+                        <td style="width: 50%"><span style="font-weight: bold">Владелец</span></td>
+                        <td style="width: 50%">{% if apartment.owner %}<a href="{% url 'owner_detail' apartment.owner.id %}">{{ apartment.owner }}</a>{% else %}(нет владельца){% endif %}</td>
+                        <td style="width: 0%"></td>
+                    </tr>
+                    <tr>
+                        <td style="width: 50%"><span style="font-weight: bold">Тариф</span></td>
+                        <td style="width: 50%">{% if apartment.tariff %}<a href="{% url 'tariff_detail' apartment.tariff.id %}">{{ apartment.tariff }}</a>{% else %}(нет тарифа){% endif %}</td>
+                        <td style="width: 0%"></td>
+                    </tr>
+                </tbody>
+            </table>
+            <p style="margin: 0; font-size: 15px"><a href="#">Посмотреть показания счетчиков</a></p>
+            <p style="margin: 0; font-size: 15px"><a href="#">Посмотреть приходы</a></p>
+            <p style="margin: 0; font-size: 15px; padding-bottom: 15px"><a href="#">Посмотреть квитанции</a></p>
+        </div>
+    </div>
+    <div style="height: 30px"></div>
+{% endblock %}

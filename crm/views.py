@@ -1,10 +1,13 @@
+import json
+
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.messages.views import SuccessMessageMixin
+from django.core.serializers.json import DjangoJSONEncoder
 from django.db import IntegrityError
 from django.db.models import Q
 from django.forms import modelformset_factory
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.template.loader import render_to_string
 from django.urls import reverse_lazy, reverse
@@ -12,13 +15,14 @@ from django.views.generic import TemplateView, ListView, DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormView
 
 from users.tasks import send_invite_letter
-from .models import Item, Requisites, Service, Unit, Tariff, ServiceForTariff, House, Section, Floor, Apartment
+from .models import Item, Requisites, Service, Unit, Tariff, ServiceForTariff, House, Section, Floor, Apartment, \
+    PersonalAccount
 from main.models import MainPage, Block, AboutPage, Photo, Document, ServicePage, AboutService, ContactPage
 from users.models import UserProfile, Role
 from .forms import RoleFormSet, ItemForm, RequisiteForm, ServiceFormSet, UnitFormSet, ServiceForTariffFormSet, \
     TariffForm, ServiceForTariffForm, MainPageForm, SeoForm, BlockFormSet, AboutPageForm, PhotoForm, DocumentFormSet, \
     ServicePageForm, AboutServiceFormSet, ContactPageForm, SectionFormSet, FloorFormSet, UserFormSet, HouseForm, \
-    OwnerCreateForm, OwnerUpdateForm, InviteForm
+    OwnerCreateForm, OwnerUpdateForm, InviteForm, ApartmentForm, PersonalAccountForm
 from users.forms import UserCreateForm, ChangeUserInfoForm
 
 
@@ -40,19 +44,126 @@ class ApartmentsListView(StaffRequiredMixin, SuccessMessageMixin, ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['houses'] = House.objects.prefetch_related('sections__apartment_set').all()
+        houses = House.objects.prefetch_related('sections__apartment_set').all()
+        if self.request.GET.get('input_house'):
+            for house in houses:
+                if house.id == int(self.request.GET.get('input_house')):
+                    context['sections'] = house.sections.all()
+                    context['floors'] = house.floors.all()
+        context['houses'] = houses
         context['owners'] = UserProfile.objects.filter(is_staff=False)
-        # h = House.objects.get(pk=1)
-        # sections = h.sections.all()
-        # floors = h.floors.all()
-        context['sections'] = None
-        context['floors'] = None
         return context
 
     def get_queryset(self):
-        queryset = Apartment.objects.all()
+        queryset = Apartment.objects.select_related('section', 'floor', 'owner').all()
+        if self.request.GET.get('filter-number') == '1':
+            queryset = queryset.order_by('-number')
+        if self.request.GET.get('filter-number') == '0':
+            queryset = queryset.order_by('number')
+        if self.request.GET.get('filter-house') == '1':
+            queryset = queryset.order_by('-id')
+        if self.request.GET.get('filter-house') == '0':
+            queryset = queryset.order_by('id')
+        if self.request.GET.get('filter-section') == '1':
+            queryset = queryset.order_by('-section')
+        if self.request.GET.get('filter-section') == '0':
+            queryset = queryset.order_by('section')
+        if self.request.GET.get('filter-floor') == '1':
+            queryset = queryset.order_by('-floor')
+        if self.request.GET.get('filter-floor') == '0':
+            queryset = queryset.order_by('floor')
+        if self.request.GET.get('filter-owner') == '1':
+            queryset = queryset.order_by('-owner__last_name')
+        if self.request.GET.get('filter-owner') == '0':
+            queryset = queryset.order_by('owner__last_name')
+        if self.request.GET.get('input_number'):
+            queryset = queryset.filter(number__icontains=self.request.GET.get('input_number'))
+        if self.request.GET.get('input_house'):
+            house = get_object_or_404(House, pk=self.request.GET.get('input_house'))
+            idx = [x.id for x in house.sections.all()]
+            queryset = queryset.filter(section__in=idx)
+        if self.request.GET.get('input_section'):
+            queryset = queryset.filter(section__name=self.request.GET.get('input_section'))
+        if self.request.GET.get('input_floor'):
+            queryset = queryset.filter(floor__name=self.request.GET.get('input_floor'))
+        if self.request.GET.get('input_owner'):
+            queryset = queryset.filter(owner=self.request.GET.get('input_owner'))
         return queryset
 
+
+class ApartmentDetailView(StaffRequiredMixin, DetailView):
+    queryset = Apartment.objects.select_related('section', 'floor', 'owner')
+    template_name = 'crm/pages/apartments/apartment_detail.html'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['houses'] = House.objects.prefetch_related('sections__apartment_set').all()
+        context['owners'] = UserProfile.objects.filter(is_staff=False)
+        return context
+
+
+class ApartmentCreateView(StaffRequiredMixin, SuccessMessageMixin, CreateView):
+    template_name = 'crm/pages/apartments/apartment_create.html'
+    success_message = 'Квартира успешно добавлена!'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['personal_account_form'] = PersonalAccountForm(self.request.POST or None)
+        context['personal_accounts'] = PersonalAccount.objects.filter(status='active', apartment=None)
+        return context
+
+    def get_form(self, form_class=None):
+        if form_class is None:
+            form_class = ApartmentForm(self.request.POST or None)
+        return form_class
+
+    def form_valid(self, form):
+        personal_account_form = self.get_context_data()['personal_account_form']
+        apartment = form.save()
+        if personal_account_form.is_valid():
+            if personal_account_form.cleaned_data['personal_number']:
+                current_p_a = get_object_or_404(PersonalAccount,
+                                                personal_number=personal_account_form.cleaned_data['personal_number'])
+                if current_p_a:
+                    current_p_a.apartment = apartment
+                    current_p_a.save()
+                else:
+                    personal_account = personal_account_form.save(commit=False)
+                    personal_account.apartment = apartment
+                    personal_account.save()
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse('apartments_list')
+
+
+class ApartmentDeleteView(SuccessMessageMixin, DeleteView):
+    model = Apartment
+    success_url = reverse_lazy('apartments_list')
+    success_message = 'Квартира успешно удалёна!'
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        success_url = self.get_success_url()
+
+        self.object.delete()
+        return HttpResponseRedirect(success_url)
+
+
+def get_section_and_floor(request):
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        if request.method == 'GET':
+            if request.GET.get('house_id'):
+                house = get_object_or_404(House, pk=request.GET.get('house_id'))
+                sections = house.sections.all().values('id', 'name')
+                floors = house.floors.all().values('id', 'name')
+                json_sections = json.loads(json.dumps(list(sections), cls=DjangoJSONEncoder))
+                json_floors = json.loads(json.dumps(list(floors), cls=DjangoJSONEncoder))
+                response = {'sections': json_sections,
+                            'floors': json_floors}
+            else:
+                response = {}
+            return JsonResponse(response, status=200)
 # endregion Apartments
 
 

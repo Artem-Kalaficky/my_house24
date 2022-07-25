@@ -6,7 +6,8 @@ from .views import (
     ServiceCreateView, TariffsListView, TariffDetailView, TariffCreateView, TariffDeleteView, TariffUpdateView,
     MainUpdateView, AboutUpdateView, PhotoDeleteView, ServicePageUpdateView, ContactPageUpdateView, get_units,
     HousesListView, HouseDetailView, HouseCreateView, HouseDeleteView, get_role, HouseUpdateView, OwnersListView,
-    OwnerDetailView, OwnerCreateView, OwnerDeleteView, OwnerUpdateView, OwnerInviteView, ApartmentsListView
+    OwnerDetailView, OwnerCreateView, OwnerDeleteView, OwnerUpdateView, OwnerInviteView, ApartmentsListView,
+    ApartmentDetailView, ApartmentCreateView, ApartmentDeleteView, get_section_and_floor
 )
 
 
@@ -15,7 +16,11 @@ urlpatterns = [
     path('', StatisticsTemplateView.as_view(), name='home'),
 
     # apartments
+    path('apartments/delete/<int:pk>/', ApartmentDeleteView.as_view(), name='apartment_delete'),
+    path('apartments/<int:pk>/', ApartmentDetailView.as_view(), name='apartment_detail'),
+    path('apartments/create/', ApartmentCreateView.as_view(), name='apartment_create'),
     path('apartments/', ApartmentsListView.as_view(), name='apartments_list'),
+    path('get-section-and-floor/', get_section_and_floor, name='get_section_and_floor'),
 
     # owners
     path('owners/delete/<int:pk>/', OwnerDeleteView.as_view(), name='owner_delete'),
