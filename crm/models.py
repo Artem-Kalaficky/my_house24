@@ -12,6 +12,9 @@ class Section(models.Model):
         verbose_name = 'Секция'
         verbose_name_plural = 'Секции'
 
+    def __str__(self):
+        return self.name
+
 
 class Floor(models.Model):
     name = models.CharField(max_length=16, verbose_name='Название')
@@ -19,6 +22,9 @@ class Floor(models.Model):
     class Meta:
         verbose_name = 'Этаж'
         verbose_name_plural = 'Этажи'
+
+    def __str__(self):
+        return self.name
 
 
 class House(models.Model):
@@ -37,6 +43,9 @@ class House(models.Model):
         verbose_name = 'Дом'
         verbose_name_plural = 'Дома'
 
+    def __str__(self):
+        return self.name
+
 
 class Apartment(models.Model):
     section = models.ForeignKey(Section, on_delete=models.CASCADE, verbose_name='Секция')
@@ -49,7 +58,7 @@ class Apartment(models.Model):
     class Meta:
         verbose_name = 'Квартира'
         verbose_name_plural = 'Квартиры'
-        unique_together = ['floor', 'number']
+        unique_together = ['section', 'floor', 'number']
 
 
 class Application(models.Model):
@@ -204,10 +213,10 @@ def invoice_number():
 
 
 def personal_account_number():
-    largest = PersonalAccount.objects.all().order_by('number').last()
+    largest = PersonalAccount.objects.all().order_by('personal_number').last()
     if not largest:
         return '1'.zfill(10)
-    number = int(largest.number) + 1
+    number = int(largest.personal_number) + 1
     return str(number).zfill(10)
 
 
@@ -234,16 +243,20 @@ class Invoice(models.Model):
 
 
 class PersonalAccount(models.Model):
-    number = models.BigIntegerField(default=personal_account_number, unique=True, verbose_name='Номер лицевого счета')
+    personal_number = models.BigIntegerField(default=personal_account_number, unique=True, blank=True,
+                                             verbose_name='Номер лицевого счета')
     CHOICES = (('active', 'Активный'),
                ('inactive', 'Неактивный'))
     status = models.CharField(choices=CHOICES, max_length=16, default='active', verbose_name='Статус')
-    apartment = models.OneToOneField(Apartment, on_delete=models.PROTECT, null=True, blank=True, verbose_name='Квартира')
+    apartment = models.OneToOneField(Apartment, on_delete=models.CASCADE, null=True, blank=True, verbose_name='Квартира')
     balance = models.DecimalField(max_digits=8, decimal_places=2, default=0, verbose_name='Остаток (грн.)')
 
     class Meta:
         verbose_name = 'Лицевой счет'
         verbose_name_plural = 'Лицевые счета'
+
+    def __str__(self):
+        return str(self.personal_number).zfill(10)
 
 
 class Transaction(models.Model):

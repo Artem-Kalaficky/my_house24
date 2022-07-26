@@ -99,8 +99,37 @@
                                 <td data-href="{% url 'owner_detail' owner.id %}" class="tr-link">{{ owner.last_name }} {{ owner.first_name }} {{ owner.patronymic }}</td>
                                 <td data-href="{% url 'owner_detail' owner.id %}" class="tr-link">{% if owner.telephone %}{{ owner.telephone }}{% else %}(не указан){% endif %}</td>
                                 <td data-href="{% url 'owner_detail' owner.id %}" class="tr-link">{{ owner.email }}</td>
-                                <td data-href="{% url 'owner_detail' owner.id %}" class="tr-link"><a href="#" style="text-decoration: none">Позже</a></td>
-                                <td data-href="{% url 'owner_detail' owner.id %}" class="tr-link"><a href="#" style="text-decoration: none">Позже</a></td>
+                                <td data-href="{% url 'owner_detail' owner.id %}" class="tr-link">
+                                    {% for house in houses %}
+                                        {% for section in house.sections.all %}
+                                            {% for apartment in apartments %}
+                                                {% if apartment.owner == owner %}
+                                                    {% if section.id == apartment.section.id %}
+                                                        <a href="{% url 'house_detail' house.id %}" style="text-decoration: none"><p style="margin: 0">{{ house.name }}</p></a>
+                                                    {% endif %}
+                                                {% endif %}
+                                            {% endfor %}
+                                        {% endfor %}
+                                    {% endfor %}
+                                </td>
+                                <td data-href="{% url 'owner_detail' owner.id %}" class="tr-link">
+                                    {% for house in houses %}
+                                        {% for section in house.sections.all %}
+                                            {% for apartment in apartments %}
+                                                {% if apartment.owner == owner %}
+                                                    {% if section.id == apartment.section.id %}
+                                                        <p style="margin: 0">
+                                                            <a href="{% url 'apartment_detail' apartment.id %}" style="text-decoration: none">
+                                                                №{{ apartment.number }},
+                                                                {{ house.name }}
+                                                            </a>
+                                                        </p>
+                                                    {% endif %}
+                                                {% endif %}
+                                            {% endfor %}
+                                        {% endfor %}
+                                    {% endfor %}
+                                </td>
                                 <td data-href="{% url 'owner_detail' owner.id %}" class="tr-link">{{ owner.date_joined|date:"d.m.Y" }}</td>
                                 <td data-href="{% url 'owner_detail' owner.id %}" class="tr-link">
                                     {% if owner.status == 'is_active' %}
@@ -111,8 +140,23 @@
                                     <small class="btn btn-sm btn-danger status">Отключен</small>
                                     {% endif %}
                                 </td>
-                                <td data-href="{% url 'owner_detail' owner.id %}" class="tr-link">Позже</td>
-                                <td style="padding: 6px 5px 7px 4px; float: right">
+                                <td data-href="{% url 'owner_detail' owner.id %}" class="tr-link debt">
+                                    {% for personal_account in personal_accounts %}
+                                        {% if personal_account.balance >= 0 %}
+                                            {% if personal_account.apartment.owner == owner %}
+                                                Нет
+                                            {% endif %}
+                                        {% endif %}
+                                    {% endfor %}
+                                    {% for personal_account in personal_accounts %}
+                                        {% if personal_account.balance < 0 %}
+                                            {% if personal_account.apartment.owner == owner %}
+                                                Да
+                                            {% endif %}
+                                        {% endif %}
+                                    {% endfor %}
+                                </td>
+                                <td style="padding: 6px 5px 7px 4px; ">
                                     <div class="btn-group pull-right">
                                         <button type="button" class="btn btn-default btn-sm" title="Отправить сообщение" data-toggle="tooltip"><i class="fa fa-envelope"></i></button>
                                         <a class="btn btn-default btn-sm" href="{% url 'owner_update' owner.id %}" title="Редактировать" data-toggle="tooltip"><i class="fa fa-pencil-alt"></i></a>

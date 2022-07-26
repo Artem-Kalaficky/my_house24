@@ -9,7 +9,9 @@ from django.forms import ModelForm, modelformset_factory, TextInput, Select, Tex
 from main.models import MainPage, Seo, Block, AboutPage, Photo, Document, ServicePage, AboutService, ContactPage
 from users.models import Role, UserProfile
 from users.tasks import send_change_password_notification
-from .models import Item, Requisites, Service, Unit, Tariff, ServiceForTariff, House, Section, Floor
+from .models import (
+    Item, Requisites, Service, Unit, Tariff, ServiceForTariff, House, Section, Floor, Apartment, PersonalAccount
+)
 
 
 class DateInputWidget(forms.DateInput):
@@ -17,6 +19,50 @@ class DateInputWidget(forms.DateInput):
 
     def format_value(self, value):
         return value
+
+
+# region Apartments
+class PersonalAccountForm(ModelForm):
+    class Meta:
+        model = PersonalAccount
+        fields = ('personal_number',)
+        widgets = {'personal_number': NumberInput(attrs={'class': 'form-control'})}
+# endregion Apartments
+
+
+# region Apartments
+class ApartmentCreateForm(ModelForm):
+    personal_number = forms.IntegerField(required=False, label='Номер лицевого счета',
+                                         widget=NumberInput(attrs={'class': 'form-control'}))
+    houses = forms.ModelChoiceField(label='Дом', widget=Select(attrs={'class': 'form-select'}),
+                                    queryset=House.objects.prefetch_related('sections__apartment_set').all(),
+                                    empty_label="Выберите...")
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['owner'].queryset = UserProfile.objects.filter(is_staff=False)
+        self.fields['tariff'].empty_label = 'Выберите...'
+        if kwargs.get('instance'):
+            self.fields['personal_number'].initial = str(PersonalAccount.objects.select_related('apartment').get(
+                apartment=kwargs.get('instance')).personal_number
+                                                         ).zfill(10)
+            house = House.objects.get(sections__apartment=kwargs.get('instance'))
+            self.fields['houses'].initial = house.id
+            self.fields['section'].empty_label = 'Выберите...'
+            self.fields['section'].queryset = house.sections.all()
+            self.fields['floor'].empty_label = 'Выберите...'
+            self.fields['floor'].queryset = house.floors.all()
+
+    class Meta:
+        model = Apartment
+        fields = ('number', 'area', 'section', 'floor', 'owner', 'tariff')
+        widgets = {'number': NumberInput(attrs={'class': 'form-control'}),
+                   'area': NumberInput(attrs={'class': 'form-control'}),
+                   'section': Select(attrs={'class': 'form-select'}),
+                   'floor': Select(attrs={'class': 'form-select'}),
+                   'owner': Select(attrs={'class': 'form-select js-example-basic-single'}),
+                   'tariff': Select(attrs={'class': 'form-select'})}
+# endregion Apartments
 
 
 # region Owners
@@ -43,7 +89,7 @@ class OwnerCreateForm(UserCreationForm):
                    'viber': TextInput(attrs={'class': 'form-control'}),
                    'telegram': TextInput(attrs={'class': 'form-control'}),
                    'status': Select(attrs={'class': 'form-select'}),
-                   'user_id': TextInput(attrs={'class': 'form-control'}),
+                   'user_id': NumberInput(attrs={'class': 'form-control'}),
                    'notes': Textarea(attrs={'rows': 10,
                                             'class': 'form-control'})}
 
@@ -88,7 +134,7 @@ class OwnerUpdateForm(UserChangeForm):
                    'viber': TextInput(attrs={'class': 'form-control'}),
                    'telegram': TextInput(attrs={'class': 'form-control'}),
                    'status': Select(attrs={'class': 'form-select'}),
-                   'user_id': TextInput(attrs={'class': 'form-control'}),
+                   'user_id': NumberInput(attrs={'class': 'form-control'}),
                    'notes': Textarea(attrs={'rows': 10,
                                             'class': 'form-control'})}
 

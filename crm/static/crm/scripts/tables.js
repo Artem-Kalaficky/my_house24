@@ -20,5 +20,17 @@ function clear() {
     delete localStorage.id
     delete localStorage.date
     delete localStorage.sort_date
+    delete localStorage.number
+    delete localStorage.input_number
+    delete localStorage.apartment
+    delete localStorage.house
+    delete localStorage.input_house
+    delete localStorage.section
+    delete localStorage.input_section
+    delete localStorage.floor
+    delete localStorage.input_floor
+    delete localStorage.owner
+    delete localStorage.input_owner
+    delete localStorage.debt
 }
 

@@ -117,7 +117,10 @@
     <script>
         $("#form").validate({
           rules: {
-            user_id: "required",
+            user_id: {
+                required: true,
+                minlength: 5,
+            },
             first_name: "required",
             last_name: "required",
             email: {
@@ -126,7 +129,11 @@
             },
           },
           messages: {
-            user_id: "* Обязательное поле",
+            user_id: {
+                required: "* Обязательное поле",
+                minlength: "* Минимальная длина ID 5 цифр",
+                maxlength: "* Максимальная длина ID 5 цифр"
+            },
             birth_date: "* Выберите корректный год рождения",
             first_name: "* Обязательное поле",
             last_name: "* Обязательное поле",
