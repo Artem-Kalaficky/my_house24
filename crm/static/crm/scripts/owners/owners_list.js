@@ -7,6 +7,8 @@ function init_data() {
     $('#apartment').attr('value', localStorage.apartment)
     $('#date').attr('value', localStorage.date)
     $('#status option[value="' + localStorage.status + '"]').prop('selected', true)
+    $('#house option[value="' + localStorage.house + '"]').prop('selected', true)
+    $('#debt option[value="' + localStorage.debt + '"]').prop('selected', true)
     if (localStorage.sort_date == 1) {
         $('#sort-date-span').html('Добавлен <i class="fa fa-sort-alpha-up"></i>')
     }
@@ -42,6 +44,11 @@ $('#email').blur(function () {
     $('#form').submit()
 })
 
+$('#house').change(function () {
+    localStorage.house = $(this).val()
+    $('#form').submit()
+})
+
 $('#apartment').blur(function () {
     localStorage.apartment = $(this).val()
     $('#form').submit()
@@ -54,6 +61,11 @@ $('#date').blur(function () {
 
 $('#status').change(function () {
     localStorage.status = $(this).val()
+    $('#form').submit()
+})
+
+$('#debt').change(function () {
+    localStorage.debt = $(this).val()
     $('#form').submit()
 })
 
@@ -85,6 +97,16 @@ $('.sort-date').click(function () {
         $('#filter-date').attr('value', 1)
         $('#form').submit()
     }
+})
+
+
+// if debt YES or NO - get YES
+$(function (){
+    $('.debt').each(function (index, element){
+        if ($(element).text().indexOf('Да') >= 0) {
+            $(element).text('Да')
+        }
+    })
 })
 
 

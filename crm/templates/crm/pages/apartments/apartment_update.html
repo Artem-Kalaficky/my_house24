@@ -54,10 +54,10 @@
 
 {% block apartments %}class="nav-link active-link" style="color: black; background-color: #e1f1ea"{% endblock %}
 
-{% block title %}Новая квартира{% endblock %}
-{% block name_page %}Новая квартира{% endblock %}
-{% block previos_link %}<a href="{% url 'apartments_list' %}" style="color: #494949">/ Квартиры</a>{% endblock %}
-{% block nav %}Новая квартира{% endblock %}
+{% block title %}Квартира №{{ apartment.number }}, {% for house in houses %}{% for section in house.sections.all %}{% if section.id == apartment.section.id %}{{ house.name }}{% endif %}{% endfor %}{% endfor %}{% endblock %}
+{% block name_page %}Квартира №{{ apartment.number }}, {% for house in houses %}{% for section in house.sections.all %}{% if section.id == apartment.section.id %}{{ house.name }}{% endif %}{% endfor %}{% endfor %}{% endblock %}
+{% block previos_link %}<a href="{% url 'apartments_list' %}" style="color: #494949">/ Квартиры</a> <a href="{% url 'apartment_detail' apartment.id %}" style="color: #494949"> / Квартира №{{ apartment.number }}, {% for house in houses %}{% for section in house.sections.all %}{% if section.id == apartment.section.id %}{{ house.name }}{% endif %}{% endfor %}{% endfor %}</a>{% endblock %}
+{% block nav %}Редактирование{% endblock %}
 
 {% block content %}
     <div class="my-box" style="min-height: 0">
@@ -77,13 +77,9 @@
                         <p style="font-weight: bold; margin: 0; padding-top: 10px">{{ form.houses.label }}</p>
                         {{ form.houses }}
                         <p style="font-weight: bold; margin: 0; padding-top: 10px">{{ form.section.label }}</p>
-                        <select name="section" class="form-select" required="" id="id_section">
-                          <option value="">Выберите дом...</option>
-                        </select>
+                        {{ form.section }}
                         <p style="font-weight: bold; margin: 0; padding-top: 10px">{{ form.floor.label }}</p>
-                        <select name="floor" class="form-select" required="" id="id_floor">
-                          <option value="" selected>Выберите дом...</option>
-                        </select>
+                        {{ form.floor }}
                         <p style="font-weight: bold; margin: 0; padding-top: 10px">{{ form.owner.label }}</p>
                         {{ form.owner }}
                         <p style="font-weight: bold; margin: 0; padding-top: 10px">{{ form.tariff.label }}</p>
@@ -181,7 +177,6 @@
           return str.length < max ? zfill("0" + str, max) : str;
         }
 
-        $('#id_personal_number').attr('value', '')
         $('.select-personal_account').change(function () {
             $('#id_personal_number').attr('value', zfill($(this).val(), 10))
             $(this).val('')
@@ -207,19 +202,5 @@
               error.insertAfter(element);
           }
         });
-
-        // Messages
-        {% if messages %}
-        Swal.fire({
-          backdrop: false,
-          position: 'top-end',
-          padding: 0,
-          icon: 'success',
-          width: 300,
-          html: '{% for message in messages %}{% if message.tags == 'success' %}{{ message }}{% endif %}{% endfor %}',
-          showConfirmButton: false,
-          timer: 1500,
-        })
-        {% endif %}
     </script>
 {% endblock %}

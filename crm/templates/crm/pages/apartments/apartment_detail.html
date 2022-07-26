@@ -15,14 +15,23 @@
             <div style="float: right; margin-bottom: 5px; padding-top: 5px; display: inline-block">
                 <a href="#" class="btn btn-default" style="font-size: 14px; max-height: 34px"><i class="fa fa-dollar-sign"></i> Принять платёж</a>
                 <a href="#" class="btn btn-default" style="font-size: 14px; max-height: 34px"><i class="fa fa-copy"></i> Оформить квитанцию</a>
-                <a href="#" class="btn btn-primary" style="font-size: 14px; max-height: 34px">Редактировать квартиру</a>
+                <a href="{% url 'apartment_update' apartment.id %}" class="btn btn-primary" style="font-size: 14px; max-height: 34px">Редактировать квартиру</a>
             </div>
             <div class="dropdown-divider" style="border-color:lightgrey; margin-top: 15px"></div>
             <table class="table table-hover table-striped table-responsive no-padding" style="color: #333333; font-size: 14px">
                 <tbody>
                     <tr>
                         <td style="width: 50%"><span style="font-weight: bold">Лицевой счет</span></td>
-                        <td style="width: 50%">(нет счета)</td>
+                        <td style="width: 50%">
+                            {% for personal_account in personal_accounts %}
+                                {% if personal_account.apartment == apartment %}
+                                    <a href="#">{{ personal_account }}</a>
+                                {% endif %}
+                            {% endfor %}
+                            {% if apartment.id not in idx %}
+                                (нет счета)
+                            {% endif %}
+                        </td>
                         <td style="width: 0%"></td>
                     </tr>
                     <tr>

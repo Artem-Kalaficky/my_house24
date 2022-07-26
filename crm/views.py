@@ -3,11 +3,12 @@ import json
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.messages.views import SuccessMessageMixin
+from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db import IntegrityError
 from django.db.models import Q
 from django.forms import modelformset_factory
-from django.http import JsonResponse, HttpResponseRedirect
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.template.loader import render_to_string
 from django.urls import reverse_lazy, reverse
@@ -22,7 +23,7 @@ from users.models import UserProfile, Role
 from .forms import RoleFormSet, ItemForm, RequisiteForm, ServiceFormSet, UnitFormSet, ServiceForTariffFormSet, \
     TariffForm, ServiceForTariffForm, MainPageForm, SeoForm, BlockFormSet, AboutPageForm, PhotoForm, DocumentFormSet, \
     ServicePageForm, AboutServiceFormSet, ContactPageForm, SectionFormSet, FloorFormSet, UserFormSet, HouseForm, \
-    OwnerCreateForm, OwnerUpdateForm, InviteForm, ApartmentForm, PersonalAccountForm
+    OwnerCreateForm, OwnerUpdateForm, InviteForm, ApartmentCreateForm
 from users.forms import UserCreateForm, ChangeUserInfoForm
 
 
@@ -52,6 +53,9 @@ class ApartmentsListView(StaffRequiredMixin, SuccessMessageMixin, ListView):
                     context['floors'] = house.floors.all()
         context['houses'] = houses
         context['owners'] = UserProfile.objects.filter(is_staff=False)
+        personal_accounts = PersonalAccount.objects.select_related('apartment').all()
+        context['personal_accounts'] = personal_accounts
+        context['idx'] = [x.apartment.id for x in personal_accounts if x.apartment]
         return context
 
     def get_queryset(self):
@@ -72,9 +76,9 @@ class ApartmentsListView(StaffRequiredMixin, SuccessMessageMixin, ListView):
             queryset = queryset.order_by('-floor')
         if self.request.GET.get('filter-floor') == '0':
             queryset = queryset.order_by('floor')
-        if self.request.GET.get('filter-owner') == '1':
-            queryset = queryset.order_by('-owner__last_name')
         if self.request.GET.get('filter-owner') == '0':
+            queryset = queryset.order_by('-owner__last_name')
+        if self.request.GET.get('filter-owner') == '1':
             queryset = queryset.order_by('owner__last_name')
         if self.request.GET.get('input_number'):
             queryset = queryset.filter(number__icontains=self.request.GET.get('input_number'))
@@ -88,6 +92,14 @@ class ApartmentsListView(StaffRequiredMixin, SuccessMessageMixin, ListView):
             queryset = queryset.filter(floor__name=self.request.GET.get('input_floor'))
         if self.request.GET.get('input_owner'):
             queryset = queryset.filter(owner=self.request.GET.get('input_owner'))
+        if self.request.GET.get('debt'):
+            if self.request.GET.get('debt') == 'yes':
+                p_a = PersonalAccount.objects.select_related('apartment').filter(balance__lt=0)
+                idx = [x.apartment.id for x in p_a if x.apartment]
+            else:
+                p_a = PersonalAccount.objects.select_related('apartment').filter(balance__gte=0)
+                idx = [x.apartment.id for x in p_a if x.apartment]
+            queryset = queryset.filter(pk__in=idx)
         return queryset
 
 
@@ -99,6 +111,9 @@ class ApartmentDetailView(StaffRequiredMixin, DetailView):
         context = super().get_context_data(**kwargs)
         context['houses'] = House.objects.prefetch_related('sections__apartment_set').all()
         context['owners'] = UserProfile.objects.filter(is_staff=False)
+        personal_accounts = PersonalAccount.objects.select_related('apartment').all()
+        context['personal_accounts'] = personal_accounts
+        context['idx'] = [x.apartment.id for x in personal_accounts if x.apartment]
         return context
 
 
@@ -108,46 +123,74 @@ class ApartmentCreateView(StaffRequiredMixin, SuccessMessageMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['personal_account_form'] = PersonalAccountForm(self.request.POST or None)
         context['personal_accounts'] = PersonalAccount.objects.filter(status='active', apartment=None)
         return context
 
     def get_form(self, form_class=None):
         if form_class is None:
-            form_class = ApartmentForm(self.request.POST or None)
+            form_class = ApartmentCreateForm(self.request.POST or None)
         return form_class
 
     def form_valid(self, form):
-        personal_account_form = self.get_context_data()['personal_account_form']
+        personal_number = form.cleaned_data['personal_number'] if form.cleaned_data['personal_number'] else None
         apartment = form.save()
-        if personal_account_form.is_valid():
-            if personal_account_form.cleaned_data['personal_number']:
-                current_p_a = get_object_or_404(PersonalAccount,
-                                                personal_number=personal_account_form.cleaned_data['personal_number'])
-                if current_p_a:
-                    current_p_a.apartment = apartment
-                    current_p_a.save()
+        if personal_number:
+            try:
+                personal_account = PersonalAccount.objects.get(personal_number=personal_number)
+                if personal_account.apartment:
+                    raise ValidationError('Введенный лицевой счет занят')
                 else:
-                    personal_account = personal_account_form.save(commit=False)
                     personal_account.apartment = apartment
                     personal_account.save()
+            except ObjectDoesNotExist:
+                PersonalAccount.objects.create(personal_number=personal_number, apartment=apartment)
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse('apartments_list')
+        success_url = reverse('apartments_list')
+        try:
+            if self.request.POST['save_and_add']:
+                success_url = reverse('apartment_create')
+        except:
+            pass
+        return success_url
+
+
+class ApartmentUpdateView(StaffRequiredMixin, SuccessMessageMixin, UpdateView):
+    queryset = Apartment.objects.select_related('section', 'floor', 'owner')
+    template_name = 'crm/pages/apartments/apartment_update.html'
+    success_message = 'Данные о квартире обновлены!'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['houses'] = House.objects.prefetch_related('sections__apartment_set').all()
+        context['personal_accounts'] = PersonalAccount.objects.select_related('apartment').filter(status='active',
+                                                                                                  apartment=None)
+        return context
+
+    def get_form(self, form_class=None):
+        if form_class is None:
+            form_class = ApartmentCreateForm(self.request.POST or None, instance=self.object)
+        return form_class
+
+    def form_valid(self, form):
+        form.save()
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        success_url = reverse('apartments_list')
+        try:
+            if self.request.POST['save_and_add']:
+                success_url = reverse('apartment_create')
+        except:
+            pass
+        return success_url
 
 
 class ApartmentDeleteView(SuccessMessageMixin, DeleteView):
     model = Apartment
     success_url = reverse_lazy('apartments_list')
-    success_message = 'Квартира успешно удалёна!'
-
-    def delete(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        success_url = self.get_success_url()
-
-        self.object.delete()
-        return HttpResponseRedirect(success_url)
+    success_message = 'Квартира успешно удалена!'
 
 
 def get_section_and_floor(request):
@@ -174,7 +217,9 @@ class OwnersListView(StaffRequiredMixin, SuccessMessageMixin, ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['houses'] = House.objects.all()
+        context['apartments'] = Apartment.objects.select_related('section', 'owner')
+        context['houses'] = House.objects.prefetch_related('sections__apartment_set').all()
+        context['personal_accounts'] = PersonalAccount.objects.select_related('apartment', 'apartment__owner').all()
         return context
 
     def get_queryset(self):
@@ -201,6 +246,28 @@ class OwnersListView(StaffRequiredMixin, SuccessMessageMixin, ListView):
             queryset = queryset.filter(date_joined=self.request.GET.get('date'))
         if self.request.GET.get('status'):
             queryset = queryset.filter(status=self.request.GET.get('status'))
+        if self.request.GET.get('house'):
+            sections_idx = get_object_or_404(House, pk=self.request.GET.get('house')).sections.all()
+            apartments = Apartment.objects.select_related('section', 'owner').filter(section__in=sections_idx)
+            owners_idx = [x.owner.id for x in apartments if x.owner]
+            queryset = queryset.filter(pk__in=owners_idx)
+        if self.request.GET.get('apartment'):
+            apartments = Apartment.objects.select_related('owner').filter(
+                number__icontains=self.request.GET.get('apartment')
+            )
+            owners_idx = [x.owner.id for x in apartments if x.owner]
+            queryset = queryset.filter(pk__in=owners_idx)
+        if self.request.GET.get('debt'):
+            if self.request.GET.get('debt') == 'yes':
+                personal_accounts = PersonalAccount.objects.select_related('apartment',
+                                                                           'apartment__owner').filter(balance__lt=0)
+                owners_idx = [x.apartment.owner.id for x in personal_accounts if x.apartment and x.apartment.owner]
+                queryset = queryset.filter(pk__in=owners_idx)
+            else:
+                personal_accounts = PersonalAccount.objects.select_related('apartment',
+                                                                           'apartment__owner').filter(balance__gte=0)
+                owners_idx = [x.apartment.owner.id for x in personal_accounts if x.apartment and x.apartment.owner]
+                queryset = queryset.filter(pk__in=owners_idx)
         return queryset
 
 
@@ -354,7 +421,6 @@ class HouseUpdateView(StaffRequiredMixin, SuccessMessageMixin, UpdateView):
                 floor = obj.save()
                 house.floors.add(floor)
         floor_formset.save()
-
         for obj in user_formset:
             if obj.is_valid() and obj.cleaned_data and not obj.cleaned_data['DELETE']:
                 user = obj.cleaned_data['user']

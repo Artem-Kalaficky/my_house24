@@ -12,6 +12,9 @@ class Section(models.Model):
         verbose_name = 'Секция'
         verbose_name_plural = 'Секции'
 
+    def __str__(self):
+        return self.name
+
 
 class Floor(models.Model):
     name = models.CharField(max_length=16, verbose_name='Название')
@@ -19,6 +22,9 @@ class Floor(models.Model):
     class Meta:
         verbose_name = 'Этаж'
         verbose_name_plural = 'Этажи'
+
+    def __str__(self):
+        return self.name
 
 
 class House(models.Model):
@@ -242,7 +248,7 @@ class PersonalAccount(models.Model):
     CHOICES = (('active', 'Активный'),
                ('inactive', 'Неактивный'))
     status = models.CharField(choices=CHOICES, max_length=16, default='active', verbose_name='Статус')
-    apartment = models.OneToOneField(Apartment, on_delete=models.PROTECT, null=True, blank=True, verbose_name='Квартира')
+    apartment = models.OneToOneField(Apartment, on_delete=models.CASCADE, null=True, blank=True, verbose_name='Квартира')
     balance = models.DecimalField(max_digits=8, decimal_places=2, default=0, verbose_name='Остаток (грн.)')
 
     class Meta:

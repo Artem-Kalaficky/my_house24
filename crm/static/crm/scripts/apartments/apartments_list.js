@@ -5,6 +5,7 @@ function init_data() {
     $('#input_section option[value="' + localStorage.input_section + '"]').prop('selected', true)
     $('#input_floor option[value="' + localStorage.input_floor + '"]').prop('selected', true)
     $('#input_owner option[value="' + localStorage.input_owner + '"]').prop('selected', true)
+    $('#debt option[value="' + localStorage.debt + '"]').prop('selected', true)
     if (localStorage.number == 1) {
         $('#sort-number-span').html('№квартиры <i class="fa fa-sort-alpha-up"></i>')
     }
@@ -61,6 +62,11 @@ $('#input_floor').change(function () {
 
 $('#input_owner').change(function () {
     localStorage.input_owner = $(this).val()
+    $('#form').submit()
+})
+
+$('#debt').change(function () {
+    localStorage.debt = $(this).val()
     $('#form').submit()
 })
 

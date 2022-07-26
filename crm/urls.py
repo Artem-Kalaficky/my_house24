@@ -7,7 +7,7 @@ from .views import (
     MainUpdateView, AboutUpdateView, PhotoDeleteView, ServicePageUpdateView, ContactPageUpdateView, get_units,
     HousesListView, HouseDetailView, HouseCreateView, HouseDeleteView, get_role, HouseUpdateView, OwnersListView,
     OwnerDetailView, OwnerCreateView, OwnerDeleteView, OwnerUpdateView, OwnerInviteView, ApartmentsListView,
-    ApartmentDetailView, ApartmentCreateView, ApartmentDeleteView, get_section_and_floor
+    ApartmentDetailView, ApartmentCreateView, ApartmentUpdateView, ApartmentDeleteView, get_section_and_floor
 )
 
 
@@ -17,6 +17,7 @@ urlpatterns = [
 
     # apartments
     path('apartments/delete/<int:pk>/', ApartmentDeleteView.as_view(), name='apartment_delete'),
+    path('apartments/update/<int:pk>/', ApartmentUpdateView.as_view(), name='apartment_update'),
     path('apartments/<int:pk>/', ApartmentDetailView.as_view(), name='apartment_detail'),
     path('apartments/create/', ApartmentCreateView.as_view(), name='apartment_create'),
     path('apartments/', ApartmentsListView.as_view(), name='apartments_list'),

@@ -22,6 +22,7 @@ function clear() {
     delete localStorage.sort_date
     delete localStorage.number
     delete localStorage.input_number
+    delete localStorage.apartment
     delete localStorage.house
     delete localStorage.input_house
     delete localStorage.section
@@ -30,5 +31,6 @@ function clear() {
     delete localStorage.input_floor
     delete localStorage.owner
     delete localStorage.input_owner
+    delete localStorage.debt
 }
 
