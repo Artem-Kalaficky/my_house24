@@ -21,17 +21,39 @@ class DateInputWidget(forms.DateInput):
         return value
 
 
-# region Apartments
+# region PersonalAccounts
 class PersonalAccountForm(ModelForm):
+    house = forms.ModelChoiceField(required=False, label='Дом', widget=Select(attrs={'class': 'form-select'}),
+                                   queryset=House.objects.prefetch_related('sections__apartment_set').all(),
+                                   empty_label="Выберите...")
+    section = forms.ModelChoiceField(required=False, label='Секция', widget=Select(attrs={'class': 'form-select'}),
+                                     queryset=Section.objects.all(), empty_label="Выберите...")
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if kwargs.get('instance'):
+            self.fields['apartment'].empty_label = 'Выберите...'
+            if kwargs.get('instance').apartment:
+                houses = House.objects.prefetch_related('sections__apartment_set').all()
+                current_house = None
+                for house in houses:
+                    for section in house.sections.all():
+                        if section.id == kwargs.get('instance').apartment.section_id:
+                            current_house = house
+                self.fields['section'].initial = kwargs.get('instance').apartment.section_id
+                self.fields['house'].initial = current_house.id
+
     class Meta:
         model = PersonalAccount
-        fields = ('personal_number',)
-        widgets = {'personal_number': NumberInput(attrs={'class': 'form-control'})}
-# endregion Apartments
+        fields = ('personal_number', 'status', 'apartment')
+        widgets = {'personal_number': NumberInput(attrs={'class': 'form-control'}),
+                   'status': Select(attrs={'class': 'form-select'}),
+                   'apartment': Select(attrs={'class': 'form-select'})}
+# endregion PersonalAccounts
 
 
 # region Apartments
-class ApartmentCreateForm(ModelForm):
+class ApartmentForm(ModelForm):
     personal_number = forms.IntegerField(required=False, label='Номер лицевого счета',
                                          widget=NumberInput(attrs={'class': 'form-control'}))
     houses = forms.ModelChoiceField(label='Дом', widget=Select(attrs={'class': 'form-select'}),
@@ -43,9 +65,12 @@ class ApartmentCreateForm(ModelForm):
         self.fields['owner'].queryset = UserProfile.objects.filter(is_staff=False)
         self.fields['tariff'].empty_label = 'Выберите...'
         if kwargs.get('instance'):
-            self.fields['personal_number'].initial = str(PersonalAccount.objects.select_related('apartment').get(
-                apartment=kwargs.get('instance')).personal_number
-                                                         ).zfill(10)
+            try:
+                personal_number = str(PersonalAccount.objects.select_related('apartment').get(
+                    apartment=kwargs.get('instance')).personal_number).zfill(10)
+            except:
+                personal_number = None
+            self.fields['personal_number'].initial = personal_number
             house = House.objects.get(sections__apartment=kwargs.get('instance'))
             self.fields['houses'].initial = house.id
             self.fields['section'].empty_label = 'Выберите...'

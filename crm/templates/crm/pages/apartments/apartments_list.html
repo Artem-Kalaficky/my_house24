@@ -108,7 +108,7 @@
                         {% for apartment in apartments %}
                             <tr>
                                 <td data-href="{% url 'apartment_detail' apartment.id %}" class="tr-link">{{ apartment.number }}</td>
-                                <td data-href="{% url 'apartment_detail' apartment.id %}" class="tr-link">{% for house in houses %}{% for section in house.sections.all %}{% if section.id == apartment.section.id %}{{ house.name }}{% endif %}{% endfor %}{% endfor %}
+                                <td data-href="{% url 'apartment_detail' apartment.id %}" class="tr-link">{% for house in houses %}{% for section in house.sections.all %}{% if section.id == apartment.section.id %}{{ house.name }}{% endif %}{% endfor %}{% endfor %}</td>
                                 <td data-href="{% url 'apartment_detail' apartment.id %}" class="tr-link">{{ apartment.section.name }}</td>
                                 <td data-href="{% url 'apartment_detail' apartment.id %}" class="tr-link">{{ apartment.floor.name }}</td>
                                 <td data-href="{% url 'apartment_detail' apartment.id %}" class="tr-link">{% if apartment.owner %}{{ apartment.owner.last_name }} {{ apartment.owner.first_name }} {{ apartment.owner.patronymic }}{% else %}(нет владельца){% endif %}</td>
@@ -170,6 +170,7 @@
             </div>
         </div>
     </div>
+    <div style="height: 30px"></div>
 {% endblock %}
 
 {% block script %}

@@ -1,0 +1,145 @@
+{% extends 'crm/layout/base.html' %}
+{% load static %}
+
+{% block style %}
+    <style>
+        .sort-number:hover {
+            cursor: pointer;
+        }
+        .sort-house:hover {
+            cursor: pointer;
+        }
+        .sort-section:hover {
+            cursor: pointer;
+        }
+        .sort-floor:hover {
+            cursor: pointer;
+        }
+        .sort-owner:hover {
+            cursor: pointer;
+        }
+        .hover-li:hover {
+            background-color: lightgrey;
+        }
+    </style>
+{% endblock %}
+
+{% block meter-readings %}class="nav-link active-link" style="color: black; background-color: #e1f1ea"{% endblock %}
+
+{% block title %}Счетчики{% endblock %}
+{% block name_page %}Счетчики{% endblock %}
+{% block nav %}Счетчики{% endblock %}
+
+{% block content %}
+    <div style="text-align: right; padding-right: 10px; padding-bottom: 10px">
+        <a href="" class="btn btn-success">Добавить показание</a>
+    </div>
+    <div class="my-box" style="min-height: 0">
+        <div class="container-fluid">
+            <div style="text-align: right; padding-right: 2px; padding-top: 5px; margin-bottom: 5px">
+                <a id="clear" href="{% url 'meter_readings_list' %}" class="btn btn-default" style="font-size: 14px; max-height: 34px">Очистить</a>
+            </div>
+            <form method="get" id="form">
+                <table class="table table-hover table-striped table-responsive no-padding" style="color: #333333; font-size: 14px; padding-bottom: 10px">
+                    <thead>
+                        <tr>
+                            <th style="width: 28%; min-width: 150px">Дом</th>
+                            <th style="width: 20%; min-width: 150px">Секция</th>
+                            <th style="width: 8%; min-width: 10px" class="sort-number"><span style="color: #72afd2" id="sort-number-span">№квартиры</span></th>
+                            <th style="width: 20%; min-width: 150px">Счетчик</th>
+                            <th style="width: 8%">Текущие показания</th>
+                            <th style="width: 8%">Ед. изм.</th>
+                            <th style="width: 0%"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="padding: 5px">
+                                <select class="form-select" name="house" id="house">
+                                    <option hidden disabled selected value></option>
+                                    {% for house in houses %}
+                                        <option value="{{ house.id }}">{{ house.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                            <td style="padding: 5px">
+                                <select class="form-select" name="section" id="section" {% if not sections %}style="font-size: 15px; height: 38px; color: grey"{% endif %}>
+                                    <option hidden disabled selected value></option>
+                                    {% if sections %}
+                                        {% for section in sections %}
+                                            <option value="{{ section.name }}">{{ section.name }}</option>
+                                        {% endfor %}
+                                        {% else %}
+                                            <option value="" disabled selected hidden >Выберите дом</option>
+                                    {% endif %}
+                                </select>
+                            </td>
+                            <td style="padding: 5px"><input type="text" class="form-control" name="input_number" id="input_number"></td>
+                            <td style="padding: 5px">
+                                <select class="form-select" name="meter" id="meter">
+                                    <option hidden disabled selected value></option>
+                                    {% for meter in meters %}
+                                        <option value="{{ meter.id }}">{{ meter.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        {% for meter_reading in meter_readings %}
+                            <tr>
+                                <td data-href="#" class="tr-link">
+                                    {% for house in houses %}
+                                        {% for section in house.sections.all %}
+                                            {% if section.id == meter_reading.apartment.section.id %}
+                                                {{ house.name }}
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endfor %}
+                                </td>
+                                <td data-href="#" class="tr-link">{{ meter_reading.apartment.section }}</td>
+                                <td data-href="#" class="tr-link">{{ meter_reading.apartment.number }}</td>
+                                <td data-href="#" class="tr-link">{{ meter_reading.meter }}</td>
+                                <td data-href="#" class="tr-link">{{ meter_reading.expense }}</td>
+                                <td data-href="#" class="tr-link">{{ meter_reading.meter.unit }}</td>
+                                <td>
+                                    <div class="btn-group pull-right">
+                                        <a class="btn btn-default btn-sm" href="#" title="Снять новое показание счетчика" data-toggle="tooltip"><i class="fa fa-tachometer-alt"></i></a>
+                                        <a class="btn btn-default btn-sm" href="#" title="Открыть историю показаний для счетчика" data-toggle="tooltip"><i class="fa fa-eye"></i></a>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <input type="hidden" name="filter-number" value="" id="filter-number">
+            </form>
+        </div>
+    </div>
+    <div style="height: 30px"></div>
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'crm/scripts/apartments/apartments_list.js' %}"></script>
+    <script>
+        // Filters
+        init_data()
+        $('#clear').click(clear)
+
+
+        // Messages
+        {% if messages %}
+        Swal.fire({
+          backdrop: false,
+          position: 'top-end',
+          padding: 0,
+          icon: 'success',
+          width: 300,
+          html: '{% for message in messages %}{% if message.tags == 'success' %}{{ message }}{% endif %}{% endfor %}',
+          showConfirmButton: false,
+          timer: 1500,
+        })
+        {% endif %}
+    </script>
+{% endblock %}

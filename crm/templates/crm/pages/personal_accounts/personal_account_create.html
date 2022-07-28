@@ -1,0 +1,186 @@
+{% extends 'crm/layout/base.html' %}
+{% load static %}
+
+{% block style %}
+    <style>
+        input.error {
+            border: red 1px solid;
+            position: relative;
+            box-shadow: 0 0 4px 0 firebrick;
+        }
+
+        select.error {
+            border: red 1px solid;
+            position: relative;
+            box-shadow: 0 0 4px 0 firebrick;
+        }
+
+        .container-fluid {
+            font-size: 14px;
+        }
+    </style>
+{% endblock %}
+
+{% block personal-accounts %}class="nav-link active-link" style="color: black; background-color: #e1f1ea"{% endblock %}
+
+{% block title %}Новый лицевой счет{% endblock %}
+{% block name_page %}Новый лицевой счет{% endblock %}
+{% block previos_link %}<a href="{% url 'personal_accounts_list' %}" style="color: #494949">/ Лицевые счета</a>{% endblock %}
+{% block nav %}Новый лицевой счет{% endblock %}
+
+{% block content %}
+<form method="post" enctype="multipart/form-data" id="form">
+    {% csrf_token %}
+    <div class="row" style="padding-bottom: 10px; margin: 0">
+        <div class="col-xl-4">
+            <div class="input-group">
+                <div class="form-control" style="max-width: 40px">№</div>
+                <div class="input-group-append">
+                    {{ form.personal_number }}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% if form.errors %}
+        <p style="color: red; margin: 0; font-size: 14px; padding-left: 10px">* Лицевой счет с таким номером уже существует</p>
+    {% endif %}
+    <div class="my-box" style="min-height: 0">
+        <div class="container-fluid">
+            <p style="font-weight: bold; margin: 0; padding-top: 10px">{{ form.status.label }}</p>
+            {{ form.status }}
+            <p style="font-weight: bold; margin: 0; padding-top: 10px">{{ form.house.label }}</p>
+            {{ form.house }}
+            <p style="font-weight: bold; margin: 0; padding-top: 10px">Секция</p>
+            <select name="section" class="form-select" required="" id="id_section">
+              <option value="" selected="">Выберите...</option>
+            </select>
+            <p style="font-weight: bold; margin: 0; padding-top: 10px">{{ form.apartment.label }}</p>
+            <select name="apartment" class="form-select" id="id_apartment">
+              <option value="" selected="">Выберите...</option>
+            </select>
+            <div style="padding-top: 15px; padding-left: 1px">
+                <p style="font-weight: bold; margin: 0">Владелец: <span id="owner" style="color: #4f94d2"></span></p>
+                <p style="font-weight: bold; margin: 0; padding-top: 8px">Телефон: <span id="telephone" style="color: #4f94d2"></span></p>
+            </div>
+            <div style="text-align: right; padding: 15px 16px 15px 0">
+                <a href="{% url 'personal_accounts_list' %}" class="btn btn-default">Отменить</a>
+                <input type="submit" class="btn btn-success" name="save" value="Сохранить">
+            </div>
+        </div>
+    </div>
+    <div style="height: 30px"></div>
+</form>
+{% endblock %}
+
+{% block script %}
+    <script>
+        $('#id_house').change(function (){
+            $('#owner').html('')
+            $('#telephone').html('')
+            let house_id = $('#id_house').val()
+            $.ajax({
+                url: '{% url "get_apartment_in_p_a" %}',
+                type: 'GET',
+                data: {'house_id': house_id},
+                success: (data) => {
+                    // sections select
+                    $('#id_section option').remove()
+                    $('#id_apartment option').remove()
+                    if (data.sections) {
+                        let data_sections = data.sections
+                        let sections = ''
+                        $(data_sections).each(function(index, value) {
+                            sections += "<option value=" + value.id + ">" + value.name + "</option>"
+                        })
+                        $("#id_section").append("<option value selected>Выберите...</option>")
+                        $("#id_apartment").append("<option value selected>Выберите...</option>")
+                        $("#id_section").append(sections)
+                    } else {
+                        $("#id_section").append("<option value selected>Выберите...</option>")
+                        $("#id_apartment").append("<option value selected>Выберите...</option>")
+                        $('#owner').html('')
+                        $('#telephone').html('')
+                    }
+                },
+                error: (data) => {
+                    console.log('no')
+                }
+            })
+        })
+
+
+        $('#id_section').change(function (){
+            let section_id = $('#id_section').val()
+            $.ajax({
+                url: '{% url "get_apartment_in_p_a" %}',
+                type: 'GET',
+                data: {'section_id': section_id},
+                success: (data) => {
+                    // apartments select
+                    $('#id_apartment option').remove()
+                    if (data.apartments) {
+                        let data_apartments = data.apartments
+                        let apartments = ''
+                        $(data_apartments).each(function (index, value) {
+                            apartments += "<option value=" + value.id + ">" + value.number + "</option>"
+                        })
+                        $("#id_apartment").append("<option value selected>Выберите...</option>")
+                        $("#id_apartment").append(apartments)
+                    } else {
+                        $("#id_apartment").append("<option value selected>Выберите...</option>")
+                        $('#owner').html('')
+                        $('#telephone').html('')
+                    }
+                },
+                error: (data) => {
+                    console.log('no')
+                }
+            })
+        })
+
+        $('#id_apartment').change(function (){
+            let apartment_id = $('#id_apartment').val()
+            $.ajax({
+                url: '{% url "get_apartment_in_p_a" %}',
+                type: 'GET',
+                data: {'apartment_id': apartment_id},
+                success: (data) => {
+                    if (data.owner) {
+                        $('#owner').html(data.owner)
+                    } else {
+                        $('#owner').html('')
+                    }
+                    if (data.telephone) {
+                        $('#telephone').html(data.telephone)
+                    } else {
+                        $('#telephone').html('')
+                    }
+                },
+                error: (data) => {
+                    console.log('no')
+                }
+            })
+        })
+
+
+        $("#form").validate({
+          rules: {
+              personal_number: {
+                  maxlength: 10,
+              },
+              section: {required: false}
+          },
+          messages: {
+              personal_number: {
+                  required: '* Обязательное поле',
+                  maxlength: '* Номер лицевого счета не может содержать более 10 цифр'
+              },
+          },
+          wrapper: 'p',
+          errorPlacement: function (error, element) {
+              error.css({'text-align': 'left', 'font-size': '14px', 'color': 'red', 'width': '100%'});
+              error.insertAfter(element);
+          }
+        });
+    </script>
+{% endblock %}

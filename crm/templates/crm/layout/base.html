@@ -130,7 +130,7 @@
           {% endif %}
           {% if user.role.has_personal_account %}
           <li class="nav-item">
-            <a href="#" class="nav-link {% block personal_accounts %}{% endblock %}">
+            <a id="personal-accounts" href="{% url 'personal_accounts_list' %}" {% block personal-accounts %}class="nav-link"{% endblock %}>
               <i class="fas fa-credit-card" style="width: 23px"></i>
               <p style="color: #494949; font-size: 14px; font-weight: 600">
                 Лицевые счета
@@ -190,7 +190,7 @@
           {% endif %}
           {% if user.role.has_meter %}
           <li class="nav-item">
-            <a href="#" class="nav-link {% block meters %}{% endblock %}">
+            <a id="meter-readings" href="{% url 'meter_readings_list' %}" {% block meter-readings %}class="nav-link"{% endblock %}>
               <i class="fa fa-tachometer-alt" style="width: 23px"></i>
               <p style="color: #494949; font-size: 14px; font-weight: 600">
                 Показания счетчиков
@@ -352,7 +352,7 @@
 <!-- My -->
 <script src="{% static 'crm/scripts/tables.js' %}"></script>
 <script>
-    $('#users, #items, #tariffs, #houses, #owners, #apartments').click(clear)
+    $('#users, #items, #tariffs, #houses, #owners, #apartments, #personal-accounts, #meter-readings').click(clear)
 </script>
 {% block script %}{% endblock %}
 </body>
