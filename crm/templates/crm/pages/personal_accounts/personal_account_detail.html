@@ -1,0 +1,103 @@
+{% extends 'crm/layout/base.html' %}
+{% load static %}
+
+{% block personal-accounts %}class="nav-link active-link" style="color: black; background-color: #e1f1ea"{% endblock %}
+
+{% block title %}Лицевой счет{% endblock %}
+{% block name_page %}Лицевой счет{% endblock %}
+{% block previos_link %}<a href="{% url 'personal_accounts_list' %}" style="color: #494949">/ Лицевые счета</a>{% endblock %}
+{% block nav %}Лицевой счет №{{ object }}{% endblock %}
+
+{% block content %}
+    <div class="row" style="padding-bottom: 10px; margin: 0">
+        <div class="col-xl-4">
+            <div class="input-group">
+                <div class="form-control" style="max-width: 40px">№</div>
+                <div class="input-group-append">
+                    <input type="number" readonly class="form-control" value="{{ object }}">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="my-box" style="min-height: 0">
+        <div class="container-fluid">
+            <span style="font-size: 20px" class="text-muted">Просмотр лицевого счета</span>
+            <div style="float: right; margin-bottom: 5px; padding-top: 5px; display: inline-block">
+                <a href="#" class="btn btn-default" style="font-size: 14px; max-height: 34px"><i class="fa fa-dollar-sign"></i> Принять платёж</a>
+                <a href="#" class="btn btn-default" style="font-size: 14px; max-height: 34px"><i class="fa fa-copy"></i> Оформить квитанцию</a>
+                <a href="{% url 'personal_account_update' object.id %}" class="btn btn-primary" style="font-size: 14px; max-height: 34px">Редактировать счет</a>
+            </div>
+            <div class="dropdown-divider" style="border-color:lightgrey; margin-top: 15px"></div>
+            <table class="table table-hover table-striped table-responsive no-padding" style="color: #333333; font-size: 14px">
+                <tr>
+                    <td style="width: 30%"><span style="font-weight: bold">Статус</span></td>
+                    <td style="width: 70%">
+                        {% if object.status == 'active' %}
+                            <small class="btn btn-sm btn-success status">Активен</small>
+                        {% elif object.status == 'inactive' %}
+                            <small class="btn btn-sm btn-danger status">Неактивен</small>
+                        {% endif %}
+                    </td>
+                    <td style="width: 0%"></td>
+                </tr>
+                <tr>
+                    <td style="width: 30%"><span style="font-weight: bold">Дом</span></td>
+                    <td>
+                        {% if object.apartment %}
+                            {% for house in houses %}
+                                {% for section in house.sections.all %}
+                                    {% if section.id == object.apartment.section.id %}
+                                        <a href="{% url 'house_detail' house.id %}">{{ house.name }}</a>
+                                    {% endif %}
+                                {% endfor %}
+                            {% endfor %}
+                        {% else %}
+                            (Нет)
+                        {% endif %}
+                    </td>
+                    <td style="width: 0%"></td>
+                </tr>
+                <tr>
+                    <td style="width: 30%"><span style="font-weight: bold">Секция</span></td>
+                    <td>{% if object.apartment %}{{ object.apartment.section }}{% else %}(Нет){% endif %}</td>
+                    <td style="width: 0%"></td>
+                </tr>
+                <tr>
+                    <td style="width: 30%"><span style="font-weight: bold">Квартира</span></td>
+                    <td>{% if object.apartment %}<a href="{% url 'apartment_detail' object.apartment.id %}">{{ object.apartment.number }}</a>{% else %}(Нет){% endif %}</td>
+                    <td style="width: 0%"></td>
+                </tr>
+                <tr>
+                    <td style="width: 30%"><span style="font-weight: bold">Владелец</span></td>
+                    <td>
+                        {% if object.apartment %}
+                            {% if object.apartment.owner %}
+                                <a href="{% url 'owner_detail' object.apartment.owner.id %}">{{ object.apartment.owner.last_name }} {{ object.apartment.owner.first_name }} {{ object.apartment.owner.patronymic }}</a>
+                            {% endif %}
+                        {% else %}
+                            (Нет)
+                        {% endif %}
+                    </td>
+                    <td style="width: 0%"></td>
+                </tr>
+                <tr>
+                    <td style="width: 30%"><span style="font-weight: bold">Остаток, грн.</span></td>
+                    <td>
+                        {% if object.balance > 0 %}
+                            <span style="color: #00a65a">{{ object.balance }}</span>
+                        {% elif object.balance < 0 %}
+                            <span style="color: red">{{ object.balance }}</span>
+                        {% else %}
+                            {{ object.balance }}
+                        {% endif %}
+                    </td>
+                    <td style="width: 0%"></td>
+                </tr>
+            </table>
+            <p style="margin: 0; font-size: 15px"><a href="#">Посмотреть показания счетчиков</a></p>
+            <p style="margin: 0; font-size: 15px"><a href="#">Посмотреть приходы</a></p>
+            <p style="margin: 0; font-size: 15px; padding-bottom: 15px"><a href="#">Посмотреть квитанции</a></p>
+        </div>
+    </div>
+    <div style="height: 30px"></div>
+{% endblock %}

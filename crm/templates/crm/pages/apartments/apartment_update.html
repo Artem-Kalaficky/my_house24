@@ -70,6 +70,7 @@
                         <p style="font-weight: bold; margin: 0; padding-top: 10px">{{ form.number.label }}</p>
                         {{ form.number }}
                         {% if form.errors %}
+                            {{ form.errors }}
                             <span style="font-size: 14px; color: red">* Квартира с таким номером уже существует</span>
                         {% endif %}
                         <p style="font-weight: bold; margin: 0; padding-top: 10px">{{ form.area.label }}</p>
@@ -120,7 +121,7 @@
                 data: {'house_id': house_id},
                 success: (data) => {
                     // sections select
-                    $('#id_section option').css('display', 'none')
+                    $('#id_section option').remove()
                     if (data.sections) {
                         let data_sections = data.sections
                         let sections = ''
@@ -185,12 +186,16 @@
         $("#form").validate({
           rules: {
               houses: { required: true},
-              number: {maxlength: 5}
+              number: {maxlength: 5},
+              personal_number: {maxlength: 10}
           },
           messages: {
               number: {
                   required: '* Обязательное поле',
                   maxlength: '* Номер квартиры не может содержать более 5 цифр'
+              },
+              personal_number: {
+                  maxlength: '* Номер лицевого счета не может содержать более 10 цифр'
               },
               houses: "* Выберите дом",
               section: '* Выберите секцию',

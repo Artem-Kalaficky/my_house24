@@ -60,6 +60,9 @@ class Apartment(models.Model):
         verbose_name_plural = 'Квартиры'
         unique_together = ['section', 'floor', 'number']
 
+    def __str__(self):
+        return f'{self.number}'
+
 
 class Application(models.Model):
     date = models.DateField(default=timezone.now, verbose_name='Дата')
@@ -154,6 +157,9 @@ class MeterReading(models.Model):
         verbose_name = 'Показание счетчика'
         verbose_name_plural = 'Показания счетчика'
 
+    def __str__(self):
+        return str(self.number).zfill(10)
+
 
 class Tariff(models.Model):
     name = models.CharField(max_length=32, unique=True, verbose_name='Название тарифа')
@@ -243,7 +249,7 @@ class Invoice(models.Model):
 
 
 class PersonalAccount(models.Model):
-    personal_number = models.BigIntegerField(default=personal_account_number, unique=True, blank=True,
+    personal_number = models.BigIntegerField(default=personal_account_number, unique=True,
                                              verbose_name='Номер лицевого счета')
     CHOICES = (('active', 'Активный'),
                ('inactive', 'Неактивный'))

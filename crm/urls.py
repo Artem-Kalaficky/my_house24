@@ -7,13 +7,23 @@ from .views import (
     MainUpdateView, AboutUpdateView, PhotoDeleteView, ServicePageUpdateView, ContactPageUpdateView, get_units,
     HousesListView, HouseDetailView, HouseCreateView, HouseDeleteView, get_role, HouseUpdateView, OwnersListView,
     OwnerDetailView, OwnerCreateView, OwnerDeleteView, OwnerUpdateView, OwnerInviteView, ApartmentsListView,
-    ApartmentDetailView, ApartmentCreateView, ApartmentUpdateView, ApartmentDeleteView, get_section_and_floor
+    ApartmentDetailView, ApartmentCreateView, ApartmentUpdateView, ApartmentDeleteView, get_section_and_floor,
+    PersonalAccountsListView, PersonalAccountDetailView, PersonalAccountCreateView, PersonalAccountDeleteView,
+    get_apartment_in_p_a, PersonalAccountUpdateView, MeterReadingListView
 )
 
 
 urlpatterns = [
     # statistics page
     path('', StatisticsTemplateView.as_view(), name='home'),
+
+    # personal_accounts
+    path('personal-accounts/delete/<int:pk>/', PersonalAccountDeleteView.as_view(), name='personal_account_delete'),
+    path('personal-accounts/update/<int:pk>/', PersonalAccountUpdateView.as_view(), name='personal_account_update'),
+    path('personal-accounts/<int:pk>/', PersonalAccountDetailView.as_view(), name='personal_account_detail'),
+    path('personal-accounts/create/', PersonalAccountCreateView.as_view(), name='personal_account_create'),
+    path('personal-accounts/', PersonalAccountsListView.as_view(), name='personal_accounts_list'),
+    path('get-apartment-in-p_a/', get_apartment_in_p_a, name='get_apartment_in_p_a'),
 
     # apartments
     path('apartments/delete/<int:pk>/', ApartmentDeleteView.as_view(), name='apartment_delete'),
@@ -38,6 +48,9 @@ urlpatterns = [
     path('houses/create/', HouseCreateView.as_view(), name='house_create'),
     path('houses/', HousesListView.as_view(), name='houses_list'),
     path('get-role/', get_role, name='get_role'),
+
+    # meter-readings
+    path('meter-readings/', MeterReadingListView.as_view(), name='meter_readings_list'),
 
     # SITE-MANAGEMENT pages
     path('site-management/main/', MainUpdateView.as_view(), name='main'),

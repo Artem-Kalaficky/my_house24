@@ -6,7 +6,7 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db import IntegrityError
-from django.db.models import Q
+from django.db.models import Q, Sum
 from django.forms import modelformset_factory
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
@@ -17,13 +17,13 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormVi
 
 from users.tasks import send_invite_letter
 from .models import Item, Requisites, Service, Unit, Tariff, ServiceForTariff, House, Section, Floor, Apartment, \
-    PersonalAccount
+    PersonalAccount, MeterReading
 from main.models import MainPage, Block, AboutPage, Photo, Document, ServicePage, AboutService, ContactPage
 from users.models import UserProfile, Role
 from .forms import RoleFormSet, ItemForm, RequisiteForm, ServiceFormSet, UnitFormSet, ServiceForTariffFormSet, \
     TariffForm, ServiceForTariffForm, MainPageForm, SeoForm, BlockFormSet, AboutPageForm, PhotoForm, DocumentFormSet, \
     ServicePageForm, AboutServiceFormSet, ContactPageForm, SectionFormSet, FloorFormSet, UserFormSet, HouseForm, \
-    OwnerCreateForm, OwnerUpdateForm, InviteForm, ApartmentCreateForm
+    OwnerCreateForm, OwnerUpdateForm, InviteForm, ApartmentForm, PersonalAccountForm
 from users.forms import UserCreateForm, ChangeUserInfoForm
 
 
@@ -36,6 +36,108 @@ class StaffRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
 
 class StatisticsTemplateView(StaffRequiredMixin, TemplateView):
     template_name = 'crm/pages/statistics.html'
+
+
+# region PersonalAccounts
+class PersonalAccountsListView(StaffRequiredMixin, SuccessMessageMixin, ListView):
+    template_name = 'crm/pages/personal_accounts/personal_accounts_list.html'
+    context_object_name = 'personal_accounts'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['houses'] = House.objects.prefetch_related('sections__apartment_set').all()
+        if self.request.GET.get('house'):
+            for house in context['houses']:
+                if house.id == int(self.request.GET.get('house')):
+                    context['sections'] = house.sections.all()
+        context['owners'] = UserProfile.objects.filter(is_staff=False)
+        context['balance'] = PersonalAccount.objects.aggregate(sum=Sum('balance', filter=Q(status='active',
+                                                                                           balance__gte=0)))['sum']
+        context['debt_balance'] = abs(PersonalAccount.objects.aggregate(sum=Sum('balance',
+                                                                                filter=Q(status='active',
+                                                                                         balance__lt=0)))['sum'])
+        return context
+
+    def get_queryset(self):
+        queryset = PersonalAccount.objects.select_related('apartment', 'apartment__owner', 'apartment__section').all()
+        if self.request.GET.get('number'):
+            queryset = queryset.filter(personal_number__contains=self.request.GET.get('number'))
+        if self.request.GET.get('status'):
+            queryset = queryset.filter(status=self.request.GET.get('status'))
+        if self.request.GET.get('apartment'):
+            queryset = queryset.filter(apartment__number__contains=self.request.GET.get('apartment'))
+        if self.request.GET.get('house'):
+            sections = get_object_or_404(House, pk=self.request.GET.get('house')).sections.all()
+            queryset = queryset.filter(apartment__section__in=sections)
+        if self.request.GET.get('section'):
+            queryset = queryset.filter(apartment__section__name=self.request.GET.get('section'))
+        if self.request.GET.get('owner'):
+            queryset = queryset.filter(apartment__owner_id=self.request.GET.get('owner'))
+        if self.request.GET.get('debt'):
+            if self.request.GET.get('debt') == 'yes':
+                queryset = queryset.filter(balance__lt=0)
+            else:
+                queryset = queryset.filter(balance__gte=0)
+        return queryset
+
+
+class PersonalAccountDetailView(StaffRequiredMixin, DetailView):
+    queryset = PersonalAccount.objects.select_related('apartment', 'apartment__owner', 'apartment__section')
+    template_name = 'crm/pages/personal_accounts/personal_account_detail.html'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['houses'] = House.objects.prefetch_related('sections__apartment_set').all()
+        return context
+
+
+class PersonalAccountCreateView(StaffRequiredMixin, SuccessMessageMixin, CreateView):
+    form_class = PersonalAccountForm
+    template_name = 'crm/pages/personal_accounts/personal_account_create.html'
+    success_url = reverse_lazy('personal_accounts_list')
+    success_message = 'Лицевой счет успешно добавлен!'
+
+
+class PersonalAccountUpdateView(StaffRequiredMixin, SuccessMessageMixin, UpdateView):
+    model = PersonalAccount
+    form_class = PersonalAccountForm
+    template_name = 'crm/pages/personal_accounts/personal_account_update.html'
+    success_url = reverse_lazy('personal_accounts_list')
+    success_message = 'Данные о лицевом счете обновлены!'
+
+
+class PersonalAccountDeleteView(SuccessMessageMixin, DeleteView):
+    model = PersonalAccount
+    success_url = reverse_lazy('personal_accounts_list')
+    success_message = 'Лицевой счет успешно удален!'
+
+
+def get_apartment_in_p_a(request):
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        if request.method == 'GET':
+            response = {}
+            if request.GET.get('house_id'):
+                house = get_object_or_404(House, pk=request.GET.get('house_id'))
+                sections = house.sections.all().values('id', 'name')
+                json_sections = json.loads(json.dumps(list(sections), cls=DjangoJSONEncoder))
+                response = {'sections': json_sections}
+            if request.GET.get('section_id'):
+                personal_accounts = PersonalAccount.objects.select_related('apartment').all()
+                apartment_idx = [x.apartment.id for x in personal_accounts if x.apartment]
+                free_apartments = Apartment.objects.exclude(pk__in=apartment_idx)
+                apartments = free_apartments.filter(section__id=request.GET.get('section_id')).values('id', 'number')
+                json_apartments = json.loads(json.dumps(list(apartments), cls=DjangoJSONEncoder))
+                response = {'apartments': json_apartments}
+            if request.GET.get('apartment_id'):
+                print(request.GET.get('apartment_id'))
+                apartment = get_object_or_404(Apartment, pk=request.GET.get('apartment_id'))
+                if apartment.owner:
+                    response = {'owner': f'{apartment.owner.last_name} '
+                                         f'{apartment.owner.first_name} '
+                                         f'{apartment.owner.patronymic} ',
+                                'telephone': apartment.owner.telephone}
+            return JsonResponse(response, status=200)
+# endregion PersonalAccounts
 
 
 # region Apartments
@@ -120,6 +222,7 @@ class ApartmentDetailView(StaffRequiredMixin, DetailView):
 class ApartmentCreateView(StaffRequiredMixin, SuccessMessageMixin, CreateView):
     template_name = 'crm/pages/apartments/apartment_create.html'
     success_message = 'Квартира успешно добавлена!'
+    apartment_id = None
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -128,12 +231,17 @@ class ApartmentCreateView(StaffRequiredMixin, SuccessMessageMixin, CreateView):
 
     def get_form(self, form_class=None):
         if form_class is None:
-            form_class = ApartmentCreateForm(self.request.POST or None)
+            if self.request.GET.get('id'):
+                apartment = get_object_or_404(Apartment, pk=self.request.GET.get('id'))
+                form_class = ApartmentForm(self.request.POST or None, initial={'number': apartment.number + 1})
+            else:
+                form_class = ApartmentForm(self.request.POST or None)
         return form_class
 
     def form_valid(self, form):
         personal_number = form.cleaned_data['personal_number'] if form.cleaned_data['personal_number'] else None
         apartment = form.save()
+        self.apartment_id = apartment.id
         if personal_number:
             try:
                 personal_account = PersonalAccount.objects.get(personal_number=personal_number)
@@ -150,7 +258,7 @@ class ApartmentCreateView(StaffRequiredMixin, SuccessMessageMixin, CreateView):
         success_url = reverse('apartments_list')
         try:
             if self.request.POST['save_and_add']:
-                success_url = reverse('apartment_create')
+                success_url = reverse('apartment_create') + f'?id={self.apartment_id}'
         except:
             pass
         return success_url
@@ -160,6 +268,7 @@ class ApartmentUpdateView(StaffRequiredMixin, SuccessMessageMixin, UpdateView):
     queryset = Apartment.objects.select_related('section', 'floor', 'owner')
     template_name = 'crm/pages/apartments/apartment_update.html'
     success_message = 'Данные о квартире обновлены!'
+    apartment_id = None
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -170,18 +279,53 @@ class ApartmentUpdateView(StaffRequiredMixin, SuccessMessageMixin, UpdateView):
 
     def get_form(self, form_class=None):
         if form_class is None:
-            form_class = ApartmentCreateForm(self.request.POST or None, instance=self.object)
+            form_class = ApartmentForm(self.request.POST or None, instance=self.object)
         return form_class
 
     def form_valid(self, form):
-        form.save()
+        personal_number = form.cleaned_data['personal_number'] if form.cleaned_data['personal_number'] else None
+        apartment = form.save()
+        self.apartment_id = apartment.id
+        try:
+            personal_account = PersonalAccount.objects.get(apartment=apartment)
+        except ObjectDoesNotExist:
+            personal_account = None
+        if personal_account:
+            if personal_number:
+                if personal_account.personal_number == personal_number:
+                    pass
+                else:
+                    try:
+                        personal_account = PersonalAccount.objects.get(personal_number=personal_number)
+                        if personal_account.apartment:
+                            raise ValidationError('Введенный лицевой счет занят')
+                        else:
+                            PersonalAccount.objects.filter(apartment=apartment).update(apartment=None)
+                            personal_account.apartment = apartment
+                            personal_account.save()
+                    except ObjectDoesNotExist:
+                        PersonalAccount.objects.filter(apartment=apartment).update(apartment=None)
+                        PersonalAccount.objects.create(personal_number=personal_number, apartment=apartment)
+            else:
+                PersonalAccount.objects.filter(apartment=apartment).update(apartment=None)
+        else:
+            if personal_number:
+                try:
+                    personal_account = PersonalAccount.objects.get(personal_number=personal_number)
+                    if personal_account.apartment:
+                        raise ValidationError('Введенный лицевой счет занят')
+                    else:
+                        personal_account.apartment = apartment
+                        personal_account.save()
+                except ObjectDoesNotExist:
+                    PersonalAccount.objects.create(personal_number=personal_number, apartment=apartment)
         return super().form_valid(form)
 
     def get_success_url(self):
         success_url = reverse('apartments_list')
         try:
             if self.request.POST['save_and_add']:
-                success_url = reverse('apartment_create')
+                success_url = reverse('apartment_create') + f'?id={self.apartment_id}'
         except:
             pass
         return success_url
@@ -445,6 +589,27 @@ def get_role(request):
                 response = {'role': None}
             return JsonResponse(response, status=200)
 # endregion Houses
+
+
+# region MeterReading
+class MeterReadingListView(StaffRequiredMixin, SuccessMessageMixin, ListView):
+    template_name = 'crm/pages/meter_readings/meter_readings_list.html'
+    context_object_name = 'meter_readings'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['houses'] = House.objects.prefetch_related('sections__apartment_set').all()
+        if self.request.GET.get('house'):
+            for house in context['houses']:
+                if house.id == int(self.request.GET.get('house')):
+                    context['sections'] = house.sections.all()
+        context['meters'] = Service.objects.select_related('unit').all()
+        return context
+
+    def get_queryset(self):
+        queryset = MeterReading.objects.select_related('apartment', 'apartment__section', 'meter', 'meter__unit').all()
+        return queryset
+# endregion MeterReading
 
 
 # region SITE-MANAGEMENT
