@@ -32,7 +32,7 @@
 
 {% block content %}
     <div style="text-align: right; padding-right: 10px; padding-bottom: 10px">
-        <a href="" class="btn btn-success">Добавить показание</a>
+        <a href="{% url 'meter_reading_create' %}" class="btn btn-success">Добавить показание</a>
     </div>
     <div class="my-box" style="min-height: 0">
         <div class="container-fluid">
@@ -89,7 +89,7 @@
                         </tr>
                         {% for meter_reading in meter_readings %}
                             <tr>
-                                <td data-href="#" class="tr-link">
+                                <td data-href="{% url 'meter_readings_by_apartment_list' %}?apartment_id={{ meter_reading.apartment.id }}" class="tr-link">
                                     {% for house in houses %}
                                         {% for section in house.sections.all %}
                                             {% if section.id == meter_reading.apartment.section.id %}
@@ -98,12 +98,12 @@
                                         {% endfor %}
                                     {% endfor %}
                                 </td>
-                                <td data-href="#" class="tr-link">{{ meter_reading.apartment.section }}</td>
-                                <td data-href="#" class="tr-link">{{ meter_reading.apartment.number }}</td>
-                                <td data-href="#" class="tr-link">{{ meter_reading.meter }}</td>
-                                <td data-href="#" class="tr-link">{{ meter_reading.expense }}</td>
-                                <td data-href="#" class="tr-link">{{ meter_reading.meter.unit }}</td>
-                                <td>
+                                <td data-href="{% url 'meter_readings_by_apartment_list' %}?apartment_id={{ meter_reading.apartment.id }}" class="tr-link">{{ meter_reading.apartment.section }}</td>
+                                <td data-href="{% url 'meter_readings_by_apartment_list' %}?apartment_id={{ meter_reading.apartment.id }}" class="tr-link">{{ meter_reading.apartment.number }}</td>
+                                <td data-href="{% url 'meter_readings_by_apartment_list' %}?apartment_id={{ meter_reading.apartment.id }}" class="tr-link">{{ meter_reading.meter }}</td>
+                                <td data-href="{% url 'meter_readings_by_apartment_list' %}?apartment_id={{ meter_reading.apartment.id }}" class="tr-link">{{ meter_reading.expense }}</td>
+                                <td data-href="{% url 'meter_readings_by_apartment_list' %}?apartment_id={{ meter_reading.apartment.id }}" class="tr-link">{{ meter_reading.meter.unit }}</td>
+                                <td style="padding: 6px 5px 7px 4px">
                                     <div class="btn-group pull-right">
                                         <a class="btn btn-default btn-sm" href="#" title="Снять новое показание счетчика" data-toggle="tooltip"><i class="fa fa-tachometer-alt"></i></a>
                                         <a class="btn btn-default btn-sm" href="#" title="Открыть историю показаний для счетчика" data-toggle="tooltip"><i class="fa fa-eye"></i></a>
@@ -121,7 +121,7 @@
 {% endblock %}
 
 {% block script %}
-    <script src="{% static 'crm/scripts/apartments/apartments_list.js' %}"></script>
+    <script src="{% static 'crm/scripts/meter_readings/meter_readings_list.js' %}"></script>
     <script>
         // Filters
         init_data()

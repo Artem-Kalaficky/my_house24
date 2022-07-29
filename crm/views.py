@@ -1,3 +1,4 @@
+import datetime
 import json
 
 from django.contrib import messages
@@ -23,7 +24,7 @@ from users.models import UserProfile, Role
 from .forms import RoleFormSet, ItemForm, RequisiteForm, ServiceFormSet, UnitFormSet, ServiceForTariffFormSet, \
     TariffForm, ServiceForTariffForm, MainPageForm, SeoForm, BlockFormSet, AboutPageForm, PhotoForm, DocumentFormSet, \
     ServicePageForm, AboutServiceFormSet, ContactPageForm, SectionFormSet, FloorFormSet, UserFormSet, HouseForm, \
-    OwnerCreateForm, OwnerUpdateForm, InviteForm, ApartmentForm, PersonalAccountForm
+    OwnerCreateForm, OwnerUpdateForm, InviteForm, ApartmentForm, PersonalAccountForm, MeterReadingForm
 from users.forms import UserCreateForm, ChangeUserInfoForm
 
 
@@ -592,7 +593,7 @@ def get_role(request):
 
 
 # region MeterReading
-class MeterReadingListView(StaffRequiredMixin, SuccessMessageMixin, ListView):
+class MeterReadingsListView(StaffRequiredMixin, SuccessMessageMixin, ListView):
     template_name = 'crm/pages/meter_readings/meter_readings_list.html'
     context_object_name = 'meter_readings'
 
@@ -608,7 +609,84 @@ class MeterReadingListView(StaffRequiredMixin, SuccessMessageMixin, ListView):
 
     def get_queryset(self):
         queryset = MeterReading.objects.select_related('apartment', 'apartment__section', 'meter', 'meter__unit').all()
+        if self.request.GET.get('house'):
+            sections = get_object_or_404(House, pk=self.request.GET.get('house')).sections.all()
+            queryset = queryset.filter(apartment__section__in=sections)
+        if self.request.GET.get('section'):
+            queryset = queryset.filter(apartment__section__name=self.request.GET.get('section'))
+        if self.request.GET.get('input_number'):
+            queryset = queryset.filter(apartment__number__contains=self.request.GET.get('input_number'))
+        if self.request.GET.get('filter-number') == '1':
+            queryset = queryset.order_by('-apartment__number')
+        if self.request.GET.get('filter-number') == '0':
+            queryset = queryset.order_by('apartment__number')
+        if self.request.GET.get('meter'):
+            queryset = queryset.filter(meter__id=self.request.GET.get('meter'))
         return queryset
+
+
+class MeterReadingsByApartmentListView(StaffRequiredMixin, SuccessMessageMixin, ListView):
+    template_name = 'crm/pages/meter_readings/meter_readings_by_apartment_list.html'
+    context_object_name = 'meter_readings'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['apartment'] = get_object_or_404(Apartment, pk=self.request.GET.get('apartment_id'))
+        context['meters'] = Service.objects.select_related('unit').all()
+        context['houses'] = House.objects.prefetch_related('sections__apartment_set').all()
+        return context
+
+    def get_queryset(self):
+        queryset = MeterReading.objects.select_related(
+            'apartment', 'meter', 'meter__unit'
+        ).filter(apartment=self.request.GET.get('apartment_id'))
+        if self.request.GET.get('number'):
+            queryset = queryset.filter(number__contains=self.request.GET.get('number'))
+        if self.request.GET.get('status'):
+            queryset = queryset.filter(status=self.request.GET.get('status'))
+        if self.request.GET.get('input_date'):
+            input_date = self.request.GET.get('input_date').split(' - ')
+            date_range = [datetime.datetime.strptime(x, '%d.%m.%Y').strftime('%Y-%m-%d') for x in input_date]
+            queryset = queryset.filter(date__range=date_range)
+        if self.request.GET.get('filter-date') == '0':
+            queryset = queryset.order_by('date')
+        if self.request.GET.get('filter-date') == '1':
+            queryset = queryset.order_by('-date')
+        if self.request.GET.get('meter'):
+            queryset = queryset.filter(meter__id=self.request.GET.get('meter'))
+        return queryset
+
+
+class MeterReadingDetailView(StaffRequiredMixin, DetailView):
+    queryset = MeterReading.objects.select_related(
+        'apartment', 'apartment__section', 'meter', 'meter__unit', 'apartment__owner'
+    ).all()
+    template_name = 'crm/pages/meter_readings/meter_reading_detail.html'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['houses'] = House.objects.prefetch_related('sections__apartment_set').all()
+        return context
+
+
+class MeterReadingCreateView(StaffRequiredMixin, SuccessMessageMixin, CreateView):
+    template_name = 'crm/pages/meter_readings/meter_reading_create.html'
+    success_message = 'Показания счетчика успешно добавлены!'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
+
+    def get_form(self, form_class=None):
+        if form_class is None:
+            if self.request.GET.get('apartment_id'):
+                pass
+            else:
+                form_class = MeterReadingForm(self.request.POST or None)
+        return form_class
+
+    def get_success_url(self):
+        return reverse('tariffs_list')
 # endregion MeterReading
 
 

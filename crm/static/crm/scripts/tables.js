@@ -32,5 +32,7 @@ function clear() {
     delete localStorage.owner
     delete localStorage.input_owner
     delete localStorage.debt
+    delete localStorage.meter
+    delete localStorage.input_date
 }
 

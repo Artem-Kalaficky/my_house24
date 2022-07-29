@@ -9,7 +9,8 @@ from .views import (
     OwnerDetailView, OwnerCreateView, OwnerDeleteView, OwnerUpdateView, OwnerInviteView, ApartmentsListView,
     ApartmentDetailView, ApartmentCreateView, ApartmentUpdateView, ApartmentDeleteView, get_section_and_floor,
     PersonalAccountsListView, PersonalAccountDetailView, PersonalAccountCreateView, PersonalAccountDeleteView,
-    get_apartment_in_p_a, PersonalAccountUpdateView, MeterReadingListView
+    get_apartment_in_p_a, PersonalAccountUpdateView, MeterReadingsListView, MeterReadingsByApartmentListView,
+    MeterReadingDetailView, MeterReadingCreateView
 )
 
 
@@ -50,7 +51,10 @@ urlpatterns = [
     path('get-role/', get_role, name='get_role'),
 
     # meter-readings
-    path('meter-readings/', MeterReadingListView.as_view(), name='meter_readings_list'),
+    path('meter-readings/<int:pk>/', MeterReadingDetailView.as_view(), name='meter_reading_detail'),
+    path('meter-readings/create/', MeterReadingCreateView.as_view(), name='meter_reading_create'),
+    path('meter-readings/by/', MeterReadingsByApartmentListView.as_view(), name='meter_readings_by_apartment_list'),
+    path('meter-readings/', MeterReadingsListView.as_view(), name='meter_readings_list'),
 
     # SITE-MANAGEMENT pages
     path('site-management/main/', MainUpdateView.as_view(), name='main'),
