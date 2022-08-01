@@ -1,16 +1,20 @@
+import datetime
+
 from django import forms
 from django.contrib.auth import password_validation
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.core.exceptions import ValidationError
 from django.core.files.images import get_image_dimensions
 from django.forms import ModelForm, modelformset_factory, TextInput, Select, Textarea, NumberInput, URLInput, \
-    EmailInput, formset_factory, PasswordInput
+    EmailInput, formset_factory, PasswordInput, TimeInput
+from django.shortcuts import get_object_or_404
 
 from main.models import MainPage, Seo, Block, AboutPage, Photo, Document, ServicePage, AboutService, ContactPage
 from users.models import Role, UserProfile
 from users.tasks import send_change_password_notification
 from .models import (
-    Item, Requisites, Service, Unit, Tariff, ServiceForTariff, House, Section, Floor, Apartment, PersonalAccount
+    Item, Requisites, Service, Unit, Tariff, ServiceForTariff, House, Section, Floor, Apartment, PersonalAccount,
+    MeterReading, Application
 )
 
 
@@ -281,6 +285,88 @@ SectionFormSet = modelformset_factory(Section, form=SectionForm, extra=0, can_de
 FloorFormSet = modelformset_factory(Floor, form=FloorForm, extra=0, can_delete=True)
 UserFormSet = formset_factory(form=UserForm, extra=0, can_delete=True)
 # endregion Houses
+
+
+# region Applications
+class ApplicationForm(ModelForm):
+    owner = forms.ModelChoiceField(required=False, label='Владелец квартиры',
+                                   widget=Select(attrs={'class': 'form-select select-owner'}),
+                                   queryset=UserProfile.objects.filter(is_staff=False))
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['date'].initial = datetime.datetime.today().strftime('%d.%m.%Y')
+        self.fields['time'].initial = datetime.datetime.today().strftime('%H:%MM')
+
+    class Meta:
+        model = Application
+        fields = ('date', 'time', 'description', 'comment', 'apartment', 'type_master', 'status', 'master')
+        widgets = {'date': DateInputWidget(attrs={'class': 'form-control',
+                                                  'type': 'text'}),
+                   'time': TimeInput(attrs={'class': 'form-control',
+                                            'type': 'text'}),
+                   'description': Textarea(attrs={'rows': 5,
+                                                  'class': 'form-control'}),
+                   'comment': Textarea(attrs={'rows': 5,
+                                              'class': 'form-control'}),
+                   'apartment': Select(attrs={'class': 'form-select select-apartment'}),
+                   'type_master': Select(attrs={'class': 'form-select'}),
+                   'status': Select(attrs={'class': 'form-select'}),
+                   'master': Select(attrs={'class': 'form-select'})}
+# endregion Applications
+
+
+# region Meter Readings
+class MeterReadingForm(ModelForm):
+    house = forms.ModelChoiceField(required=False, label='Дом', widget=Select(attrs={'class': 'form-select'}),
+                                   queryset=House.objects.prefetch_related('sections__apartment_set').all(),
+                                   empty_label="Выберите...")
+    section = forms.ModelChoiceField(required=False, label='Секция', widget=Select(attrs={'class': 'form-select'}),
+                                     queryset=Section.objects.all(), empty_label="Выберите...")
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['meter'].empty_label = 'Выберите...'
+        self.fields['apartment'].empty_label = 'Выберите...'
+        self.fields['date'].initial = datetime.datetime.today().strftime('%d.%m.%Y')
+
+    class Meta:
+        model = MeterReading
+        fields = ('number', 'date', 'apartment', 'meter', 'status', 'expense')
+        widgets = {'number': NumberInput(attrs={'class': 'form-control'}),
+                   'date': DateInputWidget(attrs={'class': 'form-control',
+                                                  'type': 'text'}),
+                   'apartment': Select(attrs={'class': 'form-select'}),
+                   'meter': Select(attrs={'class': 'form-select'}),
+                   'status': Select(attrs={'class': 'form-select'}),
+                   'expense': NumberInput(attrs={'class': 'form-control'})}
+
+
+class MeterReadingUpdateForm(ModelForm):
+    house = forms.ModelChoiceField(required=False, label='Дом', widget=Select(attrs={'class': 'form-select'}),
+                                   queryset=House.objects.prefetch_related('sections__apartment_set').all(),
+                                   empty_label="Выберите...")
+    section = forms.ModelChoiceField(required=False, label='Секция', widget=Select(attrs={'class': 'form-select'}),
+                                     queryset=Section.objects.all(), empty_label="Выберите...")
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['meter'].empty_label = 'Выберите...'
+        self.fields['apartment'].empty_label = 'Выберите...'
+        self.fields['house'].initial = get_object_or_404(House,
+                                                         sections__id=kwargs.get('instance').apartment.section_id)
+        self.fields['section'].initial = kwargs.get('instance').apartment.section_id
+
+    class Meta:
+        model = MeterReading
+        fields = ('number', 'date', 'apartment', 'meter', 'status', 'expense')
+        widgets = {'number': NumberInput(attrs={'class': 'form-control'}),
+                   'date': DateInputWidget(attrs={'class': 'form-control'}),
+                   'apartment': Select(attrs={'class': 'form-select'}),
+                   'meter': Select(attrs={'class': 'form-select'}),
+                   'status': Select(attrs={'class': 'form-select'}),
+                   'expense': NumberInput(attrs={'class': 'form-control'})}
+# endregion Meter Readings
 
 
 # region SITE-MANAGEMENT

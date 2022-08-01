@@ -181,7 +181,7 @@
                                         {{ personal_account.balance }}
                                     {% endif %}
                                 </td>
-                                <td>
+                                <td style="padding: 6px 5px 7px 4px">
                                     <div class="btn-group pull-right">
                                         <a class="btn btn-default btn-sm" href="{% url 'personal_account_update' personal_account.id %}" title="Редактировать" data-toggle="tooltip"><i class="fa fa-pencil-alt"></i></a>
                                         <button type="button" class="btn btn-default btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ forloop.counter }}"><i class="fa fa-trash-alt"></i></button>

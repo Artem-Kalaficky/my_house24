@@ -25,7 +25,7 @@
 
 {% block title %}Лицевой счет{% endblock %}
 {% block name_page %}Лицевой счет{% endblock %}
-{% block previos_link %}<a href="{% url 'personal_accounts_list' %}" style="color: #494949">/ Лицевые счета</a><a href="{% url 'personal_account_detail' object.id %}">/ Лицевой счет №{{ object }}</a> {% endblock %}
+{% block previos_link %}<a href="{% url 'personal_accounts_list' %}" style="color: #494949">/ Лицевые счета</a><a href="{% url 'personal_account_detail' object.id %}" style="color: #494949">/ Лицевой счет №{{ object }}</a> {% endblock %}
 {% block nav %}Редактирование{% endblock %}
 
 {% block content %}

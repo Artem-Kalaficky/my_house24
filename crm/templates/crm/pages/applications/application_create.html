@@ -1,0 +1,157 @@
+{% extends 'crm/layout/base.html' %}
+{% load static %}
+
+{% block style %}
+    <link rel = "stylesheet" href = "https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/css/bootstrap-datetimepicker.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+    <style>
+        input.error {
+            border: red 1px solid;
+            position: relative;
+            box-shadow: 0 0 4px 0 firebrick;
+        }
+
+        select.error {
+            border: red 1px solid;
+            position: relative;
+            box-shadow: 0 0 4px 0 firebrick;
+        }
+
+        .container-fluid {
+            font-size: 14px;
+        }
+
+        .select2-dropdown {
+          background-color: white;
+          border: 1px solid #aaa;
+          border-radius: 4px;
+          box-sizing: border-box;
+          display: block;
+          position: absolute;
+          left: -100000px;
+          width: 100%;
+          z-index: 1051;
+        }
+        .select2-container .select2-selection--single {
+          height: 38px !important;
+        }
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+          line-height: 28px !important;
+          font-size: 16px !important;
+          margin-left: -7px !important;
+        }
+        .select2-container--default .select2-selection--single .select2-selection__arrow {
+          height: 38px !important;
+          margin-right: 10px !important;
+        }
+        .select2-results__option:hover{
+            color: white !important;
+            background-color: #01a65a !important;
+        }
+        .select2-container--default .select2-results__option[aria-selected=true] {
+          background: #01a65a;
+        }
+    </style>
+{% endblock %}
+
+{% block applications %}class="nav-link active-link" style="color: black; background-color: #e1f1ea"{% endblock %}
+
+{% block title %}Новая заявка{% endblock %}
+{% block name_page %}Новая заявка{% endblock %}
+{% block previos_link %}<a href="{% url 'applications_list' %}" style="color: #494949">/ Заявки вызова мастера</a>{% endblock %}
+{% block nav %}Новая заявка{% endblock %}
+
+{% block content %}
+<form method="post" enctype="multipart/form-data" id="form">
+    {% csrf_token %}
+    <div class="row" style="padding-bottom: 10px; margin: 0">
+        <div class="col-xl-6">
+            <div class="row">
+                <div class="input-group col-xl-6" style="padding-bottom: 10px">
+                    <div class="form-control" style="max-width: 40px"><i class="fa fa-calendar-alt"></i></div>
+                    <div class="input-group-append">
+                        {{ form.date }}
+                    </div>
+                </div>
+                <div class="input-group col-xl-6">
+                    <span style="padding-top: 4px; padding-right: 10px">от</span>
+                    <div class="form-control glyphicon glyphicon-time" style="max-width: 40px"><i class="fa fa-clock"></i></div>
+                    <div class="input-group-append">
+                        {{ form.time }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="my-box" style="min-height: 0">
+        <div class="container-fluid">
+            <div class="row" style="padding: 8px 3px 0 3px">
+                <div class="col-xl-6">
+                    <p style="font-weight: bold; margin: 0">{{ form.owner.label }}</p>
+                    {{ form.owner }}
+                </div>
+                <div class="col-xl-6">
+
+                </div>
+            </div>
+            <div class="row" style="padding: 10px 3px 10px 3px">
+                <div class="col-xl-6">
+                    <p style="font-weight: bold; margin: 0; padding-top: 10px">{{ form.description.label }}</p>
+                    {{ form.description }}
+                </div>
+                <div class="col-xl-6">
+                    <p style="font-weight: bold; margin: 0; padding-top: 10px">{{ form.apartment.label }}</p>
+                    {{ form.apartment }}
+                </div>
+            </div>
+
+            <div style="text-align: right; padding: 15px 16px 15px 0">
+                <a href="{% url 'personal_accounts_list' %}" class="btn btn-default">Отменить</a>
+                <input type="submit" class="btn btn-success" name="save" value="Сохранить">
+            </div>
+        </div>
+    </div>
+    <div style="height: 30px"></div>
+</form>
+{% endblock %}
+
+{% block script %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.maskedinput/1.4.1/jquery.maskedinput.min.js"></script>
+    <script src="{% static 'crm/scripts/applications/application_create.js' %}"></script>
+    <script>
+        $(document).ready(function() {
+            $('.select-owner, .select-apartment').select2({
+                placeholder: 'Выберите...',
+                width: '100%',
+                allowClear: true,
+                language: {
+                    "noResults": function () {
+                        return 'Ничего не найдено.'
+                    }
+                }
+            });
+        });
+
+        $("#form").validate({
+          rules: {
+
+          },
+          messages: {
+              date: {required: '* Обязательное поле'},
+              time: {required: '* Обязательное поле'}
+          },
+          wrapper: 'p',
+          errorPlacement: function (error, element) {
+              error.css({'text-align': 'left', 'font-size': '14px', 'color': 'red', 'width': '100%'});
+              error.insertAfter(element);
+          }
+        });
+        $('input[name="date"]').mask('99.99.9999');
+        $('input[name="time"]').datetimepicker({
+            format: 'HH:mm'
+        });
+    </script>
+{% endblock %}

@@ -162,7 +162,12 @@
             $('.js-example-basic-single').select2({
                 placeholder: 'Выберите...',
                 width: '100%',
-                allowClear: true
+                allowClear: true,
+                language: {
+                    "noResults": function () {
+                        return 'Ничего не найдено.'
+                    }
+                }
             });
 
             $('.select-personal_account').select2({
