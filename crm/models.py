@@ -78,8 +78,7 @@ class Application(models.Model):
                 ('in_progress', 'В работе'),
                 ('complete', 'Выполнена'))
     status = models.CharField(max_length=16, choices=STATUSES, default='new', verbose_name='Статус')
-    master = models.ForeignKey(UserProfile, on_delete=models.PROTECT, verbose_name='Мастер')
-    date_created = models.DateField(auto_now_add=True, verbose_name='Дата создания')
+    master = models.ForeignKey(UserProfile, on_delete=models.PROTECT, blank=True, null=True, verbose_name='Мастер')
 
     class Meta:
         verbose_name = 'Заявка'

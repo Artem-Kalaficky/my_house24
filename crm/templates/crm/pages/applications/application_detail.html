@@ -1,0 +1,107 @@
+{% extends 'crm/layout/base.html' %}
+{% load static %}
+
+{% block applications %}class="nav-link active-link" style="color: black; background-color: #e1f1ea"{% endblock %}
+
+{% block title %}Заявка №{{ application.id }}{% endblock %}
+{% block name_page %}Заявка №{{ application.id }}{% endblock %}
+{% block previos_link %}<a href="{% url 'applications_list' %}" style="color: #494949">/ Заявки вызова мастера </a>{% endblock %}
+{% block nav %}Заявка №{{ application.id }}{% endblock %}
+
+{% block content %}
+    <div class="row" style="padding-bottom: 10px; margin: 0">
+        <div class="col-xl-6">
+            <div class="row">
+                <div class="input-group col-xl-6" style="padding-bottom: 10px">
+                    <div class="form-control" style="max-width: 40px"><i class="fa fa-calendar-alt"></i></div>
+                    <div class="input-group-append">
+                        <input type="text" class="form-control" value="{{ application.date|date:"d.m.Y" }}" readonly>
+                    </div>
+                </div>
+
+                <div class="input-group col-xl-6">
+                    <span style="padding-top: 4px; padding-right: 10px">от</span>
+                    <div class="form-control" style="max-width: 40px"><i class="fa fa-clock"></i></div>
+                    <div class="input-group-append">
+                        <input type="text" class="form-control" value="{{ application.time|date:"H:i" }}" readonly>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="my-box" style="min-height: 0">
+        <div class="container-fluid">
+            <div style="text-align: right; margin-bottom: 5px; padding-top: 5px">
+                <a href="#" class="btn btn-primary" style="font-size: 14px; max-height: 34px">Редактировать заявку</a>
+            </div>
+            <div class="dropdown-divider" style="border-color:lightgrey"></div>
+            <table class="table table-hover table-striped table-responsive no-padding" style="color: #333333; font-size: 14px; padding-bottom: 5px">
+                <tr>
+                    <td style="width: 35%"><span style="font-weight: bold">Статус</span></td>
+                    <td style="width: 65%">
+                        {% if application.status == 'new' %}
+                            <small class="btn btn-sm btn-warning status">Новое</small>
+                        {% elif application.status == 'complete' %}
+                            <small class="btn btn-sm btn-success status">Выполнено</small>
+                        {% elif application.status == 'in_progress' %}
+                            <small class="btn btn-sm btn-primary status">В работе</small>
+                        {% endif %}
+                    </td>
+                    <td style="width: 0%"></td>
+                </tr>
+                <tr>
+                    <td style="width: 30%"><span style="font-weight: bold">Владелец</span></td>
+                    <td>{% if application.apartment.owner %}<a href="{% url 'owner_detail' application.apartment.owner.id %}">{{ application.apartment.owner.last_name }} {{ application.apartment.owner.first_name }} {{ application.apartment.owner.patronymic }}</a>{% else %}(Нет владельца){% endif %}</td>
+                    <td style="width: 0%"></td>
+                </tr>
+                <tr>
+                    <td style="width: 30%"><span style="font-weight: bold">Телефон</span></td>
+                    <td>{% if application.apartment.owner.telephone %}{{ application.apartment.owner.telephone }}{% else %}(Не указан){% endif %}</td>
+                    <td style="width: 0%"></td>
+                </tr>
+                <tr>
+                    <td style="width: 30%"><span style="font-weight: bold">Квартира</span></td>
+                    <td>
+                        <a href="{% url 'apartment_detail' application.apartment.id %}">кв. {{ application.apartment.number }},
+                        {% for house in houses %}
+                            {% for section in house.sections.all %}
+                                {% if section == application.apartment.section %}
+                                    {{ house.name }}
+                                {% endif %}
+                            {% endfor %}
+                        {% endfor %}
+                        </a>
+                    </td>
+                    <td style="width: 0%"></td>
+                </tr>
+                <tr>
+                    <td style="width: 30%"><span style="font-weight: bold">Тип мастера</span></td>
+                    <td>{{ application.get_type_master_display }}</td>
+                    <td style="width: 0%"></td>
+                </tr>
+                <tr>
+                    <td style="width: 30%"><span style="font-weight: bold">Мастер</span></td>
+                    <td>{% if application.master %}<a href="{% url 'user_detail' application.master.id %}">{{ application.master.first_name }} {{ application.master.last_name }} ({{ application.master.role.get_role_display }})</a>{% else %}(Не назначен){% endif %}</td>
+                    <td style="width: 0%"></td>
+                </tr>
+                <tr>
+                    <td style="width: 30%"><span style="font-weight: bold">Описание</span></td>
+                    <td>{{ application.description }}</td>
+                    <td style="width: 0%"></td>
+                </tr>
+                <tr>
+                    <td style="width: 30%"><span style="font-weight: bold">Добавлено</span></td>
+                    <td>{{ application.date|date:"d.m.Y" }} - {{ application.time|date:"H:i" }}</td>
+                    <td style="width: 0%"></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div style="height: 30px"></div>
+{% endblock %}
+
+{% block script %}
+    <script>
+        $(':input[readonly]').css({'background-color': 'white'});
+    </script>
+{% endblock %}

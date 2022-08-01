@@ -22,10 +22,10 @@
 
 {% block meter-readings %}class="nav-link active-link" style="color: black; background-color: #e1f1ea"{% endblock %}
 
-{% block title %}Новое показание{% endblock %}
-{% block name_page %}Новое показание{% endblock %}
-{% block previos_link %}<a href="{% url 'meter_readings_list' %}" style="color: #494949">/  Счетчики</a>{% endblock %}
-{% block nav %}Новое показание{% endblock %}
+{% block title %}Показание счетчика{% endblock %}
+{% block name_page %}Показание счетчика{% endblock %}
+{% block previos_link %}<a href="{% url 'meter_readings_list' %}" style="color: #494949">/ Счетчики </a> <a href="{% url 'meter_readings_list' %}" style="color: #494949">/ Показания счетчика №{{ object }}</a>{% endblock %}
+{% block nav %}Редактирование{% endblock %}
 
 {% block content %}
 <form method="post" id="form">
@@ -89,7 +89,6 @@
     <script src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.maskedinput/1.4.1/jquery.maskedinput.min.js"></script>
-    <script type="text/javascript" src="{% static 'crm/scripts/meter_readings/meter_reading_create.js' %}"></script>
     <script>
         $(function (){
             $('#id_section option:not(:selected)').css('display', 'none')
