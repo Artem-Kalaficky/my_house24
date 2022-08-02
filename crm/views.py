@@ -20,7 +20,7 @@ from users.tasks import send_invite_letter
 from .models import Item, Requisites, Service, Unit, Tariff, ServiceForTariff, House, Section, Floor, Apartment, \
     PersonalAccount, MeterReading, Application
 from main.models import MainPage, Block, AboutPage, Photo, Document, ServicePage, AboutService, ContactPage
-from users.models import UserProfile, Role
+from users.models import UserProfile, Role, Message
 from .forms import RoleFormSet, ItemForm, RequisiteForm, ServiceFormSet, UnitFormSet, ServiceForTariffFormSet, \
     TariffForm, ServiceForTariffForm, MainPageForm, SeoForm, BlockFormSet, AboutPageForm, PhotoForm, DocumentFormSet, \
     ServicePageForm, AboutServiceFormSet, ContactPageForm, SectionFormSet, FloorFormSet, UserFormSet, HouseForm, \
@@ -592,6 +592,17 @@ def get_role(request):
 # endregion Houses
 
 
+# region Messages
+class MessagesListView(StaffRequiredMixin, SuccessMessageMixin, ListView):
+    template_name = 'crm/pages/messages/messages_list.html'
+    context_object_name = 'messages'
+
+    def get_queryset(self):
+        queryset = Message.objects.select_related('').all()
+        return queryset
+# endregion Messages
+
+
 # region Application
 class ApplicationsListView(StaffRequiredMixin, SuccessMessageMixin, ListView):
     template_name = 'crm/pages/applications/applications_list.html'
@@ -659,7 +670,67 @@ class ApplicationCreateView(StaffRequiredMixin, SuccessMessageMixin, CreateView)
     success_url = reverse_lazy('applications_list')
     success_message = 'Новая заявка успешно добавленa!'
 
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['houses'] = House.objects.prefetch_related('sections__apartment_set').all()
+        context['apartments'] = Apartment.objects.select_related('section').all()
+        context['masters'] = UserProfile.objects.select_related('role').filter(Q(role__role='plumber') |
+                                                                               Q(role__role='electric'))
+        return context
 
+
+class ApplicationUpdateView(StaffRequiredMixin, SuccessMessageMixin, UpdateView):
+    queryset = Application.objects.select_related('apartment', 'apartment__owner', 'master', 'apartment__section')
+    template_name = 'crm/pages/applications/application_update.html'
+    success_url = reverse_lazy('applications_list')
+    success_message = 'Заявка вызова мастера успешно обновлена!'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['houses'] = House.objects.prefetch_related('sections').all()
+        return context
+
+    def get_form(self, form_class=None):
+        if form_class is None:
+            form_class = ApplicationForm(self.request.POST or None, instance=self.object,
+                                         initial={'date': self.object.date.strftime('%d.%m.%Y')})
+        return form_class
+
+
+class ApplicationDeleteView(SuccessMessageMixin, DeleteView):
+    model = Application
+    success_url = reverse_lazy('applications_list')
+    success_message = 'Заявка вызова мастера успешно удалена!'
+
+
+def get_apartment_by_owner(request):
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        if request.method == 'GET':
+            if request.GET.get('owner_id'):
+                apartments = Apartment.objects.filter(owner_id=request.GET.get('owner_id')).values('id', 'number',
+                                                                                                   'section')
+                response = {'apartments': json.loads(json.dumps(list(apartments), cls=DjangoJSONEncoder))}
+            else:
+                apartments = Apartment.objects.all().values('id', 'number', 'section')
+                response = {'apartments': json.loads(json.dumps(list(apartments), cls=DjangoJSONEncoder))}
+            houses = House.objects.prefetch_related('sections__apartment_set').all()
+            for d in response['apartments']:
+                for house in houses:
+                    for section in house.sections.all():
+                        try:
+                            if d['section'] == section.id:
+                                d['house'] = house.name
+                        except:
+                            pass
+            if request.GET.get('apartment_id'):
+                apartment = get_object_or_404(Apartment, pk=request.GET.get('apartment_id'))
+                response = {'telephone': apartment.owner.telephone if apartment.owner else None,
+                            'house': str([house.name for house in houses if apartment.section in
+                                          house.sections.all()][0]),
+                            'section_name': str(apartment.section),
+                            'floor': str(apartment.floor),
+                            'owner_id': apartment.owner.id if apartment.owner else None}
+            return JsonResponse(response, status=200)
 # endregion Application
 
 

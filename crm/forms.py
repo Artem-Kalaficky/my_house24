@@ -5,6 +5,7 @@ from django.contrib.auth import password_validation
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.core.exceptions import ValidationError
 from django.core.files.images import get_image_dimensions
+from django.db.models import Q
 from django.forms import ModelForm, modelformset_factory, TextInput, Select, Textarea, NumberInput, URLInput, \
     EmailInput, formset_factory, PasswordInput, TimeInput
 from django.shortcuts import get_object_or_404
@@ -297,6 +298,26 @@ class ApplicationForm(ModelForm):
         super().__init__(*args, **kwargs)
         self.fields['date'].initial = datetime.datetime.today().strftime('%d.%m.%Y')
         self.fields['time'].initial = datetime.datetime.today().strftime('%H:%MM')
+        if kwargs.get('instance'):
+            houses = House.objects.prefetch_related('sections').all()
+            self.fields['apartment'].choices = [(apartment.id, (str(apartment.number) + ', ' +
+                                                                [house.name for house in houses if apartment.section in
+                                                                 house.sections.all()][0])) for apartment in
+                                                Apartment.objects.select_related('section').all()]
+            self.fields['master'].queryset = UserProfile.objects.select_related('role').filter(Q(role__role='plumber') |
+                                                                                               Q(role__role='electric'))
+            self.fields['master'].empty_label = 'Выберите...'
+            self.fields['master'].choices = [(None, 'Выберите...')] + \
+                                            [(master.id, (master.role.get_role_display() + " - " +
+                                                          master.first_name + " " + master.last_name))
+                                             for master in self.fields['master'].queryset]
+            if kwargs.get('instance').apartment.owner:
+                self.fields['owner'].initial = kwargs.get('instance').apartment.owner.id
+            if kwargs.get('instance').master:
+                self.fields['master'].choices = [(None, 'Выберите...')] + \
+                                                [(master.id, (master.role.get_role_display() + " - " +
+                                                              master.first_name + " " + master.last_name))
+                                                 for master in self.fields['master'].queryset]
 
     class Meta:
         model = Application
@@ -309,7 +330,7 @@ class ApplicationForm(ModelForm):
                                                   'class': 'form-control'}),
                    'comment': Textarea(attrs={'rows': 5,
                                               'class': 'form-control'}),
-                   'apartment': Select(attrs={'class': 'form-select select-apartment'}),
+                   'apartment': Select(attrs={'class': 'form-select'}),
                    'type_master': Select(attrs={'class': 'form-select'}),
                    'status': Select(attrs={'class': 'form-select'}),
                    'master': Select(attrs={'class': 'form-select'})}
@@ -326,6 +347,7 @@ class MeterReadingForm(ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields['meter'].queryset = Service.objects.filter(show=True)
         self.fields['meter'].empty_label = 'Выберите...'
         self.fields['apartment'].empty_label = 'Выберите...'
         self.fields['date'].initial = datetime.datetime.today().strftime('%d.%m.%Y')
@@ -351,6 +373,7 @@ class MeterReadingUpdateForm(ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields['meter'].queryset = Service.objects.filter(show=True)
         self.fields['meter'].empty_label = 'Выберите...'
         self.fields['apartment'].empty_label = 'Выберите...'
         self.fields['house'].initial = get_object_or_404(House,

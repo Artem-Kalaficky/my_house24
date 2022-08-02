@@ -32,7 +32,7 @@
     <div class="my-box" style="min-height: 0">
         <div class="container-fluid">
             <div style="text-align: right; margin-bottom: 5px; padding-top: 5px">
-                <a href="#" class="btn btn-primary" style="font-size: 14px; max-height: 34px">Редактировать заявку</a>
+                <a href="{% url 'application_update' application.id %}" class="btn btn-primary" style="font-size: 14px; max-height: 34px">Редактировать заявку</a>
             </div>
             <div class="dropdown-divider" style="border-color:lightgrey"></div>
             <table class="table table-hover table-striped table-responsive no-padding" style="color: #333333; font-size: 14px; padding-bottom: 5px">

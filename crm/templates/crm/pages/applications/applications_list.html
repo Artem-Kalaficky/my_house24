@@ -122,11 +122,32 @@
                                 </td>
                                 <td style="padding: 6px 5px 7px 4px">
                                     <div class="btn-group pull-right">
-                                        <a class="btn btn-default btn-sm" href="#" title="Редактировать" data-toggle="tooltip"><i class="fa fa-pencil-alt"></i></a>
+                                        <a class="btn btn-default btn-sm" href="{% url 'application_update' application.id %}" title="Редактировать" data-toggle="tooltip"><i class="fa fa-pencil-alt"></i></a>
                                         <button type="button" class="btn btn-default btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ forloop.counter }}"><i class="fa fa-trash-alt"></i></button>
                                     </div>
                                 </td>
                             </tr>
+                            <!-- Modal -->
+                            <div class="modal fade" id="deleteModal-{{ forloop.counter }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="deleteModalLabel-{{ forloop.counter }}" aria-hidden="true">
+                              <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                  <div class="modal-header bg-danger">
+                                    <h5 class="modal-title" id="deleteModal1Label-{{ forloop.counter }}">Подтверждение удаления</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                  </div>
+                                  <form method="post" action="{% url 'application_delete' application.id %}">
+                                      {% csrf_token %}
+                                      <div class="modal-body">
+                                          Вы действительно хотите удалить заявку <b>№ {{ application.id }}</b>?
+                                      </div>
+                                      <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                                        <button type="submit" class="btn btn-danger">Удалить</button>
+                                      </div>
+                                  </form>
+                                </div>
+                              </div>
+                            </div>
                         {% endfor %}
                     </tbody>
                 </table>

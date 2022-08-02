@@ -11,7 +11,8 @@ from .views import (
     PersonalAccountsListView, PersonalAccountDetailView, PersonalAccountCreateView, PersonalAccountDeleteView,
     get_apartment_in_p_a, PersonalAccountUpdateView, MeterReadingsListView, MeterReadingsByApartmentListView,
     MeterReadingDetailView, MeterReadingCreateView, get_apartment_in_m_r, MeterReadingDeleteView,
-    MeterReadingUpdateView, ApplicationsListView, ApplicationDetailView, ApplicationCreateView
+    MeterReadingUpdateView, ApplicationsListView, ApplicationDetailView, ApplicationCreateView, ApplicationDeleteView,
+    get_apartment_by_owner, ApplicationUpdateView
 )
 
 
@@ -52,9 +53,12 @@ urlpatterns = [
     path('get-role/', get_role, name='get_role'),
 
     # applications
+    path('applications/delete/<int:pk>/', ApplicationDeleteView.as_view(), name='application_delete'),
+    path('applications/update/<int:pk>/', ApplicationUpdateView.as_view(), name='application_update'),
     path('applications/<int:pk>/', ApplicationDetailView.as_view(), name='application_detail'),
     path('applications/create/', ApplicationCreateView.as_view(), name='application_create'),
     path('applications/', ApplicationsListView.as_view(), name='applications_list'),
+    path('get-apartment-by-owner/', get_apartment_by_owner, name='get_apartment_by_owner'),
 
     # meter-readings
     path('meter-readings/delete/<int:pk>/', MeterReadingDeleteView.as_view(), name='meter_reading_delete'),

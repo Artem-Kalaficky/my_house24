@@ -2,8 +2,8 @@
 {% load static %}
 
 {% block style %}
-    <link rel = "stylesheet" href = "https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/css/bootstrap-datetimepicker.min.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="{% static 'crm/dist/css/bootstrap3-wysihtml5.min.css' %}">
     <style>
         iframe {
@@ -65,10 +65,10 @@
 
 {% block applications %}class="nav-link active-link" style="color: black; background-color: #e1f1ea"{% endblock %}
 
-{% block title %}Новая заявка{% endblock %}
-{% block name_page %}Новая заявка{% endblock %}
-{% block previos_link %}<a href="{% url 'applications_list' %}" style="color: #494949">/ Заявки вызова мастера</a>{% endblock %}
-{% block nav %}Новая заявка{% endblock %}
+{% block title %}Заявка №{{ object.id }}{% endblock %}
+{% block name_page %}Заявка №{{ object.id }}{% endblock %}
+{% block previos_link %}<a href="{% url 'applications_list' %}" style="color: #494949">/ Заявки вызова мастера </a><a href="{% url 'application_detail' object.id %}" style="color: #494949">/ Заявка №{{ object.id }}</a>{% endblock %}
+{% block nav %}Редактирование{% endblock %}
 
 {% block content %}
 <form method="post" enctype="multipart/form-data" id="form">
@@ -96,11 +96,21 @@
         <div class="container-fluid">
             <div class="row" style="padding: 8px 3px 0 3px">
                 <div class="col-xl-6">
-                    <p style="font-weight: bold; margin: 0">{{ form.owner.label }}</p>
+                    <p style="font-weight: bold; margin: 0; padding-bottom: 3px">{{ form.owner.label }} {% if object.apartment.owner %}<a href="{% url 'owner_detail' object.apartment.owner.id %}"> <i class="fa fa-external-link-alt"></i></a>{% endif %}</p>
                     {{ form.owner }}
+                    <p style="font-weight: bold; margin: 0; padding-top: 10px">Телефон: <span id="telephone" style="color: #4f94d2">{% if object.apartment.owner and object.apartment.owner.telephone %}{{ object.apartment.owner.telephone }}{% else %}(Не указан){% endif %}</span></p>
                 </div>
                 <div class="col-xl-6">
-
+                    <p style="font-weight: bold; margin: 0">Дом: <span id="house" style="color: #4f94d2">
+                        {% for house in houses %}
+                            {% if object.apartment.section in house.sections.all %}
+                                {{ house.name }}
+                            {% endif %}
+                        {% endfor %}
+                    </span>
+                    </p>
+                    <p style="font-weight: bold; margin: 0; padding-top: 10px">Секция: <span id="section" style="font-weight: normal">{{ object.apartment.section }}</span></p>
+                    <p style="font-weight: bold; margin: 0; padding-top: 10px">Этаж: <span id="floor" style="font-weight: normal">{{ object.apartment.floor }}</span></p>
                 </div>
             </div>
             <div class="row" style="padding: 10px 3px 10px 3px">
@@ -110,31 +120,13 @@
                 </div>
                 <div class="col-xl-6">
                     <p style="font-weight: bold; margin: 0; padding-top: 10px">{{ form.apartment.label }}</p>
-                    <select name="apartment" class="form-select" required="" id="id_apartment">
-                            <option value=""></option>
-                        {% for apartment in apartments %}
-                            <option value="{{ apartment.id }}">{{ apartment.number }},
-                                {% for house in houses %}
-                                    {% for section in house.sections.all %}
-                                        {% if section == apartment.section %}
-                                            {{ house.name }}
-                                        {% endif %}
-                                    {% endfor %}
-                                {% endfor %}
-                            </option>
-                        {% endfor %}
-                    </select>
+                    {{ form.apartment }}
                     <p style="font-weight: bold; margin: 0; padding-top: 10px">{{ form.type_master.label }}</p>
                     {{ form.type_master }}
                     <p style="font-weight: bold; margin: 0; padding-top: 10px">{{ form.status.label }}</p>
                     {{ form.status }}
                     <p style="font-weight: bold; margin: 0; padding-top: 10px">{{ form.master.label }}</p>
-                    <select name="master" class="form-select" id="id_master">
-                      <option value="" selected="">Выберите...</option>
-                      {% for master in masters %}
-                          <option value="{{ master.id }}">{{ master.role.get_role_display }} - {{ master.first_name }} {{ master.last_name }}</option>
-                      {% endfor %}
-                    </select>
+                    {{ form.master }}
                 </div>
             </div>
 
@@ -158,12 +150,13 @@
     <script src="{% static 'crm/dist/js/bootstrap-wysihtml5.ru-RU.js' %}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/js/bootstrap-datetimepicker.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.maskedinput/1.4.1/jquery.maskedinput.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script>
     <script src="{% static 'crm/scripts/applications/application_create.js' %}"></script>
     <script>
         // AJAX
         $('#id_owner').change(function (){
+            $('#telephone, #house, #section, #floor').html('')
             let owner_id = $(this).val()
             $.ajax({
                 url: '{% url "get_apartment_by_owner" %}',
@@ -190,6 +183,7 @@
         })
 
         $('#id_apartment').change(function (){
+            $('#telephone, #house, #section, #floor').html('')
             let apartment_id = $(this).val()
             $.ajax({
                 url: '{% url "get_apartment_by_owner" %}',
@@ -201,12 +195,18 @@
                     } else {
                         $('#id_owner').val('').trigger('change.select2')
                     }
+
+                    $('#telephone').html(data.telephone)
+                    $('#house').html(data.house)
+                    $('#section').html(data.section_name)
+                    $('#floor').html(data.floor)
                 },
                 error: (data) => {
                     console.log('no')
                 }
             })
         })
+
 
         // wysihtml5 EDITOR
         $('#id_comment').wysihtml5({
@@ -228,7 +228,17 @@
 
         // SELECT 2
         $(document).ready(function() {
-            $('.select-owner, #id_apartment').select2({
+            $('.select-owner').select2({
+                placeholder: 'Выберите...',
+                width: '100%',
+                allowClear: true,
+                language: {
+                    "noResults": function () {
+                        return 'Ничего не найдено.'
+                    }
+                }
+            });
+            $('#id_apartment').select2({
                 placeholder: 'Выберите...',
                 width: '100%',
                 allowClear: true,
@@ -260,7 +270,7 @@
         });
         $('input[name="date"]').mask('99.99.9999');
         $('input[name="time"]').datetimepicker({
-            format: 'HH:mm'
+            format: 'HH:mm',
         });
     </script>
 {% endblock %}
