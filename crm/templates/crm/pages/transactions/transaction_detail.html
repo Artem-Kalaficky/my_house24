@@ -1,0 +1,84 @@
+{% extends 'crm/layout/base.html' %}
+{% load static %}
+
+{% block transactions %}class="nav-link active-link" style="color: black; background-color: #e1f1ea"{% endblock %}
+
+{% block title %}{% if object.is_income %}Приходная ведомость{% else %}Расходная ведомость{% endif %}{% endblock %}
+{% block name_page %}{% if object.is_income %}Приходная ведомость{% else %}Расходная ведомость{% endif %}{% endblock %}
+{% block previos_link %}<a href="{% url 'transactions_list' %}" style="color: #494949">/ Касса</a>{% endblock %}
+{% block nav %}{% if object.is_income %}Приходная ведомость{% else %}Расходная ведомость{% endif %} №{{ object }}{% endblock %}
+
+{% block content %}
+    <div class="row" style="padding-bottom: 10px; margin: 0">
+        <div class="col-xl-6">
+            <div class="row">
+                <div class="input-group col-xl-6" style="padding-bottom: 10px">
+                    <div class="form-control" style="max-width: 40px">№</div>
+                    <div class="input-group-append">
+                        <input type="text" class="form-control" value="{{ object }}" readonly>
+                    </div>
+                </div>
+
+                <div class="input-group col-xl-6">
+                    <span style="padding-top: 4px; padding-right: 10px">от</span>
+                    <div class="form-control" style="max-width: 40px"><i class="fa fa-calendar-alt"></i></div>
+                    <div class="input-group-append">
+                        <input type="text" class="form-control" value="{{ object.date|date:"d.m.Y" }}" readonly>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="my-box" style="min-height: 0">
+        <div class="container-fluid">
+            <span style="font-size: 20px" class="text-muted">{% if object.is_income %}Приходная ведомость{% else %}Расходная ведомость{% endif %}</span>
+            <div style="float: right; margin-bottom: 5px; padding-top: 5px; display: inline-block">
+                <a href="#" class="btn btn-default" style="font-size: 14px; max-height: 34px">Копировать</a>
+                <a href="#" class="btn btn-default" style="font-size: 14px; max-height: 34px">Удалить</a>
+                <a href="" class="btn btn-primary" style="font-size: 14px; max-height: 34px">Редактировать ведомость</a>
+                <button type="button" onclick="tableToExcel('my-table')" class="btn btn-default" style="font-size: 14px; max-height: 34px">Выгрузить в Excel</button>
+            </div>
+            <div class="dropdown-divider" style="border-color:lightgrey; margin-top: 15px"></div>
+            <table id="my-table" class="table table-hover table-striped table-responsive no-padding" style="color: #333333; font-size: 14px; padding-bottom: 10px">
+                <tr>
+                    <td style="width: 40%"><span style="font-weight: bold">Владелец</span></td>
+                    <td style="width: 60%">{% if object.owner %}<a href="{% url 'owner_detail' object.owner.id %}">{{ object.owner.last_name }} {{ object.owner.first_name }} {{ object.owner.patronymic }}</a>{% else %}(не задано){% endif %}</td>
+                    <td style="width: 0%"></td>
+                </tr>
+                <tr>
+                    <td style="width: 40%"><span style="font-weight: bold">Лицевой счет</span></td>
+                    <td style="width: 60%">{% if object.personal_account %}<a href="{% url 'personal_account_detail' object.personal_account.id %}">{{ object.personal_account }}</a>{% else %}(не задано){% endif %}</td>
+                    <td style="width: 0%"></td>
+                </tr>
+                <tr>
+                    <td style="width: 40%"><span style="font-weight: bold">Статья</span></td>
+                    <td style="width: 60%">{{ object.item.name }}</td>
+                    <td style="width: 0%"></td>
+                </tr>
+                <tr>
+                    <td style="width: 40%"><span style="font-weight: bold">Менеджер</span></td>
+                    <td style="width: 60%">{% if object.manager %}<a href="{% url 'user_detail' object.manager.id %}">{{ object.manager.last_name }} {{ object.manager.first_name }} {{ object.manager.patronymic }}</a>{% else %}(не задано){% endif %}</td>
+                    <td style="width: 0%"></td>
+                </tr>
+                <tr>
+                    <td style="width: 40%"><span style="font-weight: bold">Сумма</span></td>
+                    <td style="width: 60%">{% if object.amount > 0 %}<span style="color: green">{{ object.amount }}</span>{% else %}<span style="color: red">{{ object.amount }}</span>{% endif %}</td>
+                    <td style="width: 0%"></td>
+                </tr>
+                <tr>
+                    <td style="width: 40%"><span style="font-weight: bold">Комментарий</span></td>
+                    <td style="width: 60%">{{ object.comment }}</td>
+                    <td style="width: 0%"></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div style="height: 30px"></div>
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'crm/scripts/transactions/transactions_list.js' %}"></script>
+    <script>
+        $(':input[readonly]').css({'background-color': 'white'});
+    </script>
+{% endblock %}

@@ -38,5 +38,7 @@ function clear() {
     delete localStorage.input_type
     delete localStorage.description
     delete localStorage.master
+    delete localStorage.personal_account
+    delete localStorage.income
 }
 

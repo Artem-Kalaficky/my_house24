@@ -1,7 +1,6 @@
 from random import randint
 
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
-from django.core.mail import send_mail
 from django.db import models
 from django.utils import timezone
 
@@ -76,16 +75,7 @@ class Role(models.Model):
         verbose_name_plural = 'Роли'
 
 
-class Message(models.Model):
-    users = models.ManyToManyField(UserProfile, verbose_name='Получатели')
-    topic = models.CharField(max_length=128, verbose_name='Тема сообщения')
-    text = models.TextField(verbose_name='Текст сообщения')
-    sender = models.CharField(max_length=128, verbose_name='Отправитель')
-    date = models.DateField(auto_now_add=True, verbose_name='Дата')
 
-    class Meta:
-        verbose_name = 'Сообщение'
-        verbose_name_plural = 'Сообщения'
 
 
 

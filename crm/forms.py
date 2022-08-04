@@ -7,7 +7,7 @@ from django.core.exceptions import ValidationError
 from django.core.files.images import get_image_dimensions
 from django.db.models import Q
 from django.forms import ModelForm, modelformset_factory, TextInput, Select, Textarea, NumberInput, URLInput, \
-    EmailInput, formset_factory, PasswordInput, TimeInput
+    EmailInput, formset_factory, PasswordInput, TimeInput, CheckboxInput
 from django.shortcuts import get_object_or_404
 
 from main.models import MainPage, Seo, Block, AboutPage, Photo, Document, ServicePage, AboutService, ContactPage
@@ -15,7 +15,7 @@ from users.models import Role, UserProfile
 from users.tasks import send_change_password_notification
 from .models import (
     Item, Requisites, Service, Unit, Tariff, ServiceForTariff, House, Section, Floor, Apartment, PersonalAccount,
-    MeterReading, Application
+    MeterReading, Application, Message, Transaction
 )
 
 
@@ -24,6 +24,40 @@ class DateInputWidget(forms.DateInput):
 
     def format_value(self, value):
         return value
+
+
+# region Transactions
+class TransactionForm(ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['date'].initial = datetime.datetime.today().strftime('%d.%m.%Y')
+        self.fields['owner'].queryset = UserProfile.objects.filter(is_staff=False)
+        managers = UserProfile.objects.select_related('role').filter(Q(is_staff=True) & (Q(role__role='director') |
+                                                                                         Q(role__role='accountant') |
+                                                                                         Q(role__role='manager')))
+        self.fields['manager'].choices = [(None, 'Выберите...')] + [(manager.id, (
+                manager.role.get_role_display() + " - " + manager.first_name + " " + manager.last_name
+        )) for manager in managers]
+        self.fields['manager'].initial = 1
+
+
+    class Meta:
+        model = Transaction
+        fields = ('number', 'date', 'owner', 'personal_account', 'item', 'amount', 'comment', 'completed', 'manager',
+                  'is_income')
+        widgets = {'number': NumberInput(attrs={'class': 'form-control'}),
+                   'date': DateInputWidget(attrs={'class': 'form-control',
+                                                  'type': 'text'}),
+                   'comment': Textarea(attrs={'rows': 5,
+                                              'class': 'form-control'}),
+                   'owner': Select(attrs={'class': 'form-select'}),
+                   'personal_account': Select(attrs={'class': 'form-select'}),
+                   'item': Select(attrs={'class': 'form-select'}),
+                   'amount': NumberInput(attrs={'class': 'form-control'}),
+                   'manager': Select(attrs={'class': 'form-select'}),
+                   'is_income': CheckboxInput(attrs={'hidden': 'true'})}
+# endregion Transactions
 
 
 # region PersonalAccounts
@@ -286,6 +320,30 @@ SectionFormSet = modelformset_factory(Section, form=SectionForm, extra=0, can_de
 FloorFormSet = modelformset_factory(Floor, form=FloorForm, extra=0, can_delete=True)
 UserFormSet = formset_factory(form=UserForm, extra=0, can_delete=True)
 # endregion Houses
+
+
+# region Messages
+class MessageForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['house'].empty_label = 'Всем...'
+        self.fields['message_for_owner'].queryset = UserProfile.objects.filter(is_staff=False)
+        self.fields['message_for_owner'].empty_label = 'Всем...'
+
+    class Meta:
+        model = Message
+        fields = ('topic', 'text', 'message_for_owner', 'is_debt', 'house', 'section', 'floor', 'apartment')
+        widgets = {'topic': TextInput(attrs={'class': 'form-control',
+                                             'placeholder': 'Тема сообщения:'}),
+                   'text': Textarea(attrs={'rows': 5,
+                                           'class': 'form-control',
+                                           'placeholder': 'Текст сообщения:'}),
+                   'message_for_owner': Select(attrs={'class': 'form-select'}),
+                   'house': Select(attrs={'class': 'form-select'}),
+                   'section': Select(attrs={'class': 'form-select'}),
+                   'floor': Select(attrs={'class': 'form-select'}),
+                   'apartment': Select(attrs={'class': 'form-select'})}
+# endregion Messages
 
 
 # region Applications
