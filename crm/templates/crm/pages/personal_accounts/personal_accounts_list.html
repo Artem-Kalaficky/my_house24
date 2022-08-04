@@ -29,7 +29,7 @@
                 <div class="col-xl-4">
                     <div class="small-box bg-green overflow-hidden">
                         <div class="inner">
-                            <h3>0.00 грн</h3>
+                            <h3>{% if cashbox %}{{ cashbox }}{% else %}0,00{% endif %} грн</h3>
                             <p>Состояние кассы</p>
                         </div>
                         <div class="icon">
@@ -40,7 +40,7 @@
                 <div class="col-xl-4">
                     <div class="small-box bg-blue overflow-hidden">
                         <div class="inner">
-                            <h3>{{ balance }} грн</h3>
+                            <h3>{% if balance %}{{ balance }}{% else %}0,00{% endif %} грн</h3>
                             <p>Баланс по счетам</p>
                         </div>
                         <div class="icon">
@@ -51,7 +51,7 @@
                 <div class="col-xl-4">
                     <div class="small-box bg-red overflow-hidden">
                         <div class="inner">
-                            <h3>{{ debt_balance }} грн</h3>
+                            <h3>{% if debt_balance %}{{ debt_balance }}{% else %}0,00{% endif %} грн</h3>
                             <p>Задолженность по счетам</p>
                         </div>
                         <div class="icon">

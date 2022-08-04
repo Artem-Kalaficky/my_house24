@@ -101,7 +101,7 @@
           {% if user.role.has_statistics %}
           <li class="nav-item">
             <a href="{% url 'home' %}" class="nav-link" {% block statistics %}{% endblock %}>
-              <i class="fa fa-chart-line" style="width: 23px"></i>
+              <i class="fas fa-chart-line" style="width: 23px"></i>
               <p style="color: #494949; font-size: 14px; font-weight: 600">
                 Статистика
               </p>
@@ -110,7 +110,7 @@
           {% endif %}
           {% if user.role.has_cashbox %}
           <li class="nav-item">
-            <a href="#" class="nav-link {% block cashbox %}{% endblock %}">
+            <a id="transactions" href="{% url 'transactions_list' %}" {% block transactions %}class="nav-link"{% endblock %}>
               <i class="fas fa-dollar-sign" style="width: 23px"></i>
               <p style="color: #494949; font-size: 14px; font-weight: 600">
                 Касса
@@ -170,7 +170,7 @@
           {% endif %}
           {% if user.role.has_message %}
           <li class="nav-item">
-            <a href="#" class="nav-link {% block messages %}{% endblock %}">
+            <a href="{% url 'messages_list' %}" {% block messages %}class="nav-link"{% endblock %}>
               <i class="fas fa-envelope" style="width: 23px"></i>
               <p style="color: #494949; font-size: 14px; font-weight: 600">
                 Сообщения
@@ -352,7 +352,7 @@
 <!-- My -->
 <script src="{% static 'crm/scripts/tables.js' %}"></script>
 <script>
-    $('#users, #items, #tariffs, #houses, #owners, #apartments, #personal-accounts, #meter-readings').click(clear)
+    $('#users, #items, #tariffs, #houses, #owners, #apartments, #personal-accounts, #meter-readings, #transactions').click(clear)
 </script>
 {% block script %}{% endblock %}
 </body>

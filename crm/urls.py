@@ -11,13 +11,22 @@ from .views import (
     PersonalAccountsListView, PersonalAccountDetailView, PersonalAccountCreateView, PersonalAccountDeleteView,
     get_apartment_in_p_a, PersonalAccountUpdateView, MeterReadingsListView, MeterReadingsByApartmentListView,
     MeterReadingDetailView, MeterReadingCreateView, get_apartment_in_m_r, MeterReadingDeleteView,
-    MeterReadingUpdateView, ApplicationsListView, ApplicationDetailView, ApplicationCreateView
+    MeterReadingUpdateView, ApplicationsListView, ApplicationDetailView, ApplicationCreateView, ApplicationDeleteView,
+    get_apartment_by_owner, ApplicationUpdateView, MessagesListView, MessageDetailView, MessageCreateView,
+    MessageDeleteView, select_recipients_for_send_message, delete_selected_messages, TransactionsListView,
+    TransactionDetailView, TransactionCreateView, create_transaction
 )
 
 
 urlpatterns = [
     # statistics page
     path('', StatisticsTemplateView.as_view(), name='home'),
+
+    # transactions
+    path('transactions/<int:pk>/', TransactionDetailView.as_view(), name='transaction_detail'),
+    path('transactions/create/', TransactionCreateView.as_view(), name='transaction_create'),
+    path('transactions/', TransactionsListView.as_view(), name='transactions_list'),
+    path('create-transaction-ajax/', create_transaction, name='create_transaction'),
 
     # personal_accounts
     path('personal-accounts/delete/<int:pk>/', PersonalAccountDeleteView.as_view(), name='personal_account_delete'),
@@ -51,10 +60,21 @@ urlpatterns = [
     path('houses/', HousesListView.as_view(), name='houses_list'),
     path('get-role/', get_role, name='get_role'),
 
+    # messages
+    path('messages/delete/<int:pk>/', MessageDeleteView.as_view(), name='message_delete'),
+    path('messages/create/', MessageCreateView.as_view(), name='message_create'),
+    path('messages/<int:pk>/', MessageDetailView.as_view(), name='message_detail'),
+    path('messages/', MessagesListView.as_view(), name='messages_list'),
+    path('send-messages-ajax/', select_recipients_for_send_message, name='select_recipients_for_send_message'),
+    path('delete-messages-ajax/', delete_selected_messages, name='delete_selected_messages'),
+
     # applications
+    path('applications/delete/<int:pk>/', ApplicationDeleteView.as_view(), name='application_delete'),
+    path('applications/update/<int:pk>/', ApplicationUpdateView.as_view(), name='application_update'),
     path('applications/<int:pk>/', ApplicationDetailView.as_view(), name='application_detail'),
     path('applications/create/', ApplicationCreateView.as_view(), name='application_create'),
     path('applications/', ApplicationsListView.as_view(), name='applications_list'),
+    path('get-apartment-by-owner/', get_apartment_by_owner, name='get_apartment_by_owner'),
 
     # meter-readings
     path('meter-readings/delete/<int:pk>/', MeterReadingDeleteView.as_view(), name='meter_reading_delete'),

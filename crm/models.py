@@ -83,6 +83,27 @@ class Application(models.Model):
     class Meta:
         verbose_name = 'Заявка'
         verbose_name_plural = 'Заявки'
+
+
+class Message(models.Model):
+    message_for_owner = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='message_for_owner',
+                                          null=True, blank=True, verbose_name='Владелец квартиры')
+    topic = models.CharField(max_length=128, verbose_name='Тема сообщения')
+    text = models.TextField(verbose_name='Текст сообщения')
+    sender = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='sender', verbose_name='Отправитель')
+    house = models.ForeignKey(House, on_delete=models.CASCADE, null=True, blank=True, verbose_name='ЖК')
+    section = models.ForeignKey(Section, on_delete=models.CASCADE, null=True, blank=True, verbose_name='Секция')
+    floor = models.ForeignKey(Floor, on_delete=models.CASCADE, null=True, blank=True, verbose_name='Этаж')
+    apartment = models.ForeignKey(Apartment, on_delete=models.CASCADE, null=True, blank=True, verbose_name='Квартира')
+    is_debt = models.BooleanField(default=False, verbose_name='Владельцам с задолженностями')
+    date = models.DateTimeField(auto_now_add=True, verbose_name='Дата')
+
+    class Meta:
+        verbose_name = 'Сообщение'
+        verbose_name_plural = 'Сообщения'
+
+    def __str__(self):
+        return self.topic
 # endregion Houses
 
 
@@ -113,6 +134,9 @@ class Item(models.Model):
     class Meta:
         verbose_name = 'Статья'
         verbose_name_plural = 'Статьи'
+
+    def __str__(self):
+        return self.name
 
 
 class Unit(models.Model):
@@ -276,10 +300,13 @@ class Transaction(models.Model):
     completed = models.BooleanField(default=True, verbose_name='Проведен')
     manager = models.ForeignKey(UserProfile, on_delete=models.PROTECT, null=True, blank=True, related_name='manager',
                                 verbose_name='Менеджер')
-    comment = models.TextField(verbose_name='Комментарий')
+    comment = models.TextField(blank=True, verbose_name='Комментарий')
     is_income = models.BooleanField(default=True, verbose_name='Приходная ведомость')
 
     class Meta:
         verbose_name = 'Приход/Расход'
         verbose_name_plural = 'Приходные/Расходные ведомости'
+
+    def __str__(self):
+        return str(self.number).zfill(10)
 # endregion CRM(Accounting)

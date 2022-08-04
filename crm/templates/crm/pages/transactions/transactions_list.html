@@ -1,0 +1,228 @@
+{% extends 'crm/layout/base.html' %}
+{% load static %}
+
+{% block style %}
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+    <style>
+        .sort-date:hover {
+            cursor: pointer;
+        }
+        .hover-li:hover {
+            background-color: lightgrey;
+        }
+    </style>
+{% endblock %}
+
+{% block transactions %}class="nav-link active-link" style="color: black; background-color: #e1f1ea"{% endblock %}
+
+{% block title %}Касса{% endblock %}
+{% block name_page %}Касса{% endblock %}
+{% block nav %}Касса{% endblock %}
+
+{% block content %}
+    <div class="row" style="padding: 0 10px 10px 10px">
+        <div class="col-xl-9">
+            <div class="row">
+                <div class="col-xl-4">
+                    <div class="small-box bg-green overflow-hidden">
+                        <div class="inner">
+                            <h3>{% if cashbox %}{{ cashbox }}{% else %}0,00{% endif %} грн</h3>
+                            <p>Состояние кассы</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fa fa-dollar-sign"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-4">
+                    <div class="small-box bg-blue overflow-hidden">
+                        <div class="inner">
+                            <h3>{% if balance %}{{ balance }}{% else %}0,00{% endif %} грн</h3>
+                            <p>Баланс по счетам</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fa fa-dollar-sign"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-4">
+                    <div class="small-box bg-red overflow-hidden">
+                        <div class="inner">
+                            <h3>{% if debt_balance %}{{ debt_balance }}{% else %}0,00{% endif %} грн</h3>
+                            <p>Задолженность по счетам</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fa fa-dollar-sign"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3" style="text-align: right">
+            <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Выберите действие <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+                <li class="hover-li"><a style="padding: 5px; color: #6c757d" href="{% url 'transaction_create' %}?type=income">Создать приход</a></li>
+                <li class="hover-li"><a style="padding: 5px; color: #6c757d" href="{% url 'transaction_create' %}?type=expense">Создать расход</a></li>
+                <li class="hover-li"><span style="padding: 5px; color: #6c757d; cursor: pointer" onclick="tableToExcel('my-table')">Выгрузить в Excel</span></li>
+            </ul>
+        </div>
+    </div>
+    <div class="my-box" style="min-height: 0">
+        <div class="container-fluid">
+            <div style="text-align: right; padding-right: 2px; padding-top: 5px; margin-bottom: 5px">
+                <a id="clear" href="{% url 'transactions_list' %}" class="btn btn-default" style="font-size: 14px; max-height: 34px">Очистить</a>
+            </div>
+            <form method="get" id="form">
+                <table id="my-table" class="table table-hover table-striped table-responsive no-padding" style="color: #333333; font-size: 14px">
+                    <thead>
+                        <tr>
+                            <th style="width: 7%">№</th>
+                            <th style="width: 7%" class="sort-date"><span style="color: #72afd2" id="sort-date-span">Дата</span></th>
+                            <th style="width: 7%">Статус</th>
+                            <th style="width: 12%">Тип платежа</th>
+                            <th style="width: 24%">Владелец</th>
+                            <th style="width: 24%">Лицевой счет</th>
+                            <th style="width: 12%">Приход/Расход</th>
+                            <th style="width: 7%">Сумма(грн)</th>
+                            <th style="width: 0%"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="padding: 5px; min-width: 90px"><input type="number" class="form-control" name="number" id="number"></td>
+                            <td style="padding: 5px"><input type="text" class="form-control" name="input_date" id="input_date"></td>
+                            <td style="padding: 5px">
+                                <select class="form-select" name="status" id="status">
+                                    <option hidden disabled selected value></option>
+                                    <option value="yes">Проведен</option>
+                                    <option value="no">Непроведен</option>
+                                </select>
+                            </td>
+                            <td style="padding: 5px">
+                                <select class="form-select" name="type" id="type">
+                                    <option hidden disabled selected value></option>
+                                    {% for item in items %}
+                                        <option value="{{ item.id }}">{{ item.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                            <td style="padding: 5px">
+                                <select class="form-select" name="owner" id="owner">
+                                    <option hidden disabled selected value></option>
+                                    {% for owner in owners %}
+                                        <option value="{{ owner.id }}">{{ owner.last_name }} {{ owner.first_name }} {{ owner.patronymic }}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                            <td style="padding: 5px"><input type="number" class="form-control" name="personal_account" id="personal_account"></td>
+                            <td style="padding: 5px">
+                                <select class="form-select" name="income" id="income">
+                                    <option hidden disabled selected value></option>
+                                    <option value="true">Приход</option>
+                                    <option value="false">Расход</option>
+                                </select>
+                            </td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        {% for transaction in transactions %}
+                            <tr>
+                                <td data-href="{% url 'transaction_detail' transaction.id %}" class="tr-link">{{ transaction }}</td>
+                                <td data-href="{% url 'transaction_detail' transaction.id %}" class="tr-link">{{ transaction.date|date:"d.m.Y" }}</td>
+                                <td data-href="{% url 'transaction_detail' transaction.id %}" class="tr-link">{% if transaction.completed %}Проведен{% else %}Непроведен{% endif %}</td>
+                                <td data-href="{% url 'transaction_detail' transaction.id %}" class="tr-link">{{ transaction.item }}</td>
+                                <td data-href="{% url 'transaction_detail' transaction.id %}" class="tr-link">{% if transaction.owner %}{{ transaction.owner.last_name }} {{ transaction.owner.first_name }} {{ transaction.owner.patronymic }}{% else %}(не задано){% endif %}</td>
+                                <td data-href="{% url 'transaction_detail' transaction.id %}" class="tr-link">{% if transaction.personal_account %}{{ transaction.personal_account }}{% else %}(не задано){% endif %}</td>
+                                <td data-href="{% url 'transaction_detail' transaction.id %}" class="tr-link">{% if transaction.is_income %}<span style="color: green">Приход</span>{% else %}<span style="color: red">Расход</span>{% endif %}</td>
+                                <td data-href="{% url 'transaction_detail' transaction.id %}" class="tr-link">{% if transaction.amount > 0 %}<span style="color: green">{{ transaction.amount }}</span>{% else %}<span style="color: red">{{ transaction.amount }}</span>{% endif %}</td>
+                                <td style="padding: 6px 5px 7px 4px">
+                                    <div class="btn-group pull-right">
+                                        <a class="btn btn-default btn-sm" href="" title="Редактировать" data-toggle="tooltip"><i class="fa fa-pencil-alt"></i></a>
+                                        <button type="button" class="btn btn-default btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ forloop.counter }}"><i class="fa fa-trash-alt"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </form>
+            <div style="padding-bottom: 15px">
+                <span>Проведен приход: <b>{% if income %}{{ income }}{% else %}0,00{% endif %}</b></span><br/>
+                <span>Проведен расход: <b>{% if expense %}{{ expense }}{% else %}0,00{% endif %}</b></span>
+            </div>
+        </div>
+    </div>
+    <div style="height: 30px"></div>
+{% endblock %}
+
+{% block script %}
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <script src="{% static 'crm/scripts/transactions/transactions_list.js' %}"></script>
+    <script>
+        // Filters
+        init_data()
+        $('#clear').click(clear)
+
+
+        $('input[name="input_date"]').daterangepicker({
+            opens: 'center',
+            autoUpdateInput: false,
+            locale: {
+                format: 'DD.MM.YYYY',
+                "applyLabel": "Ок",
+                "cancelLabel": "Отмена",
+                "fromLabel": "От",
+                "toLabel": "До",
+                "customRangeLabel": "Произвольный",
+                "daysOfWeek": [
+                    "Вс",
+                    "Пн",
+                    "Вт",
+                    "Ср",
+                    "Чт",
+                    "Пт",
+                    "Сб"
+                ],
+                "monthNames": [
+                    "Январь",
+                    "Февраль",
+                    "Март",
+                    "Апрель",
+                    "Май",
+                    "Июнь",
+                    "Июль",
+                    "Август",
+                    "Сентябрь",
+                    "Октябрь",
+                    "Ноябрь",
+                    "Декабрь"
+                ],
+                firstDay: 1
+            }
+        });
+        $('input[name="input_date"]').on('apply.daterangepicker', function(ev, picker) {
+            $(this).val(picker.startDate.format('DD.MM.YYYY') + ' - ' + picker.endDate.format('DD.MM.YYYY'));
+        });
+        $('input[name="input_date"]').on('cancel.daterangepicker', function(ev, picker) {
+            $(this).val('');
+        });
+
+
+        // Messages
+        {% if messages %}
+        Swal.fire({
+          backdrop: false,
+          position: 'top-end',
+          padding: 0,
+          icon: 'success',
+          width: 300,
+          html: '{% for message in messages %}{{ message }}{% endfor %}',
+          showConfirmButton: false,
+          timer: 1500,
+        })
+        {% endif %}
+    </script>
+{% endblock %}

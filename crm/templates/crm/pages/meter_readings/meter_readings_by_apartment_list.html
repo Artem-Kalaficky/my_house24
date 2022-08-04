@@ -167,6 +167,10 @@
     <script>
         // Filters
         init_data()
+        if (localStorage.counter) {
+            delete localStorage.counter
+            $('#form').submit()
+        }
         $('#clear').click(clear)
 
         $('input[name="input_date"]').daterangepicker({

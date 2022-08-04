@@ -3,7 +3,7 @@ from django.contrib import admin
 from users.models import Role
 from .models import (
     Item, Requisites, Unit, Service, Tariff, ServiceForTariff, House, Section, Floor, Apartment, PersonalAccount,
-    MeterReading, Application
+    MeterReading, Application, Message, Transaction
 )
 
 
@@ -20,7 +20,9 @@ admin.site.register(House)
 admin.site.register(Section)
 admin.site.register(Floor)
 admin.site.register(Apartment)
+admin.site.register(Transaction)
 admin.site.register(PersonalAccount)
+admin.site.register(Message)
 admin.site.register(Application)
 admin.site.register(MeterReading)
 

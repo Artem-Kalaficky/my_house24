@@ -18,14 +18,14 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormVi
 
 from users.tasks import send_invite_letter
 from .models import Item, Requisites, Service, Unit, Tariff, ServiceForTariff, House, Section, Floor, Apartment, \
-    PersonalAccount, MeterReading, Application
+    PersonalAccount, MeterReading, Application, Message, Transaction
 from main.models import MainPage, Block, AboutPage, Photo, Document, ServicePage, AboutService, ContactPage
 from users.models import UserProfile, Role
 from .forms import RoleFormSet, ItemForm, RequisiteForm, ServiceFormSet, UnitFormSet, ServiceForTariffFormSet, \
     TariffForm, ServiceForTariffForm, MainPageForm, SeoForm, BlockFormSet, AboutPageForm, PhotoForm, DocumentFormSet, \
     ServicePageForm, AboutServiceFormSet, ContactPageForm, SectionFormSet, FloorFormSet, UserFormSet, HouseForm, \
     OwnerCreateForm, OwnerUpdateForm, InviteForm, ApartmentForm, PersonalAccountForm, MeterReadingForm, \
-    MeterReadingUpdateForm, ApplicationForm
+    MeterReadingUpdateForm, ApplicationForm, MessageForm, TransactionForm
 from users.forms import UserCreateForm, ChangeUserInfoForm
 
 
@@ -38,6 +38,103 @@ class StaffRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
 
 class StatisticsTemplateView(StaffRequiredMixin, TemplateView):
     template_name = 'crm/pages/statistics.html'
+
+
+# region Transactions
+class TransactionsListView(StaffRequiredMixin, SuccessMessageMixin, ListView):
+    template_name = 'crm/pages/transactions/transactions_list.html'
+    context_object_name = 'transactions'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['items'] = Item.objects.all()
+        context['owners'] = UserProfile.objects.filter(is_staff=False)
+        context['personal_accounts'] = PersonalAccount.objects.filter(status='active')
+        context['income'] = self.get_queryset().aggregate(sum=Sum('amount', filter=Q(completed=True,
+                                                                                     amount__gte=0)))['sum']
+        expense = self.get_queryset().aggregate(sum=Sum('amount', filter=Q(completed=True, amount__lt=0)))['sum']
+        context['expense'] = abs(expense) if expense else None
+        context['balance'] = PersonalAccount.objects.aggregate(sum=Sum('balance', filter=Q(status='active',
+                                                                                           balance__gte=0)))['sum']
+        debt_balance = PersonalAccount.objects.aggregate(sum=Sum('balance', filter=Q(status='active',
+                                                                                     balance__lt=0)))['sum']
+        context['debt_balance'] = abs(debt_balance) if debt_balance else None
+        context['cashbox'] = Transaction.objects.aggregate(sum=Sum('amount', filter=Q(completed=True)))['sum']
+        return context
+
+    def get_queryset(self):
+        queryset = Transaction.objects.select_related('item', 'owner', 'personal_account').all()
+        if self.request.GET.get('number'):
+            queryset = queryset.filter(number__contains=self.request.GET.get('number'))
+        if self.request.GET.get('input_date'):
+            input_date = self.request.GET.get('input_date').split(' - ')
+            date_range = [datetime.datetime.strptime(x, '%d.%m.%Y').strftime('%Y-%m-%d') for x in input_date]
+            queryset = queryset.filter(date__range=date_range)
+        if self.request.GET.get('filter-date') == '1':
+            queryset = queryset.order_by('date')
+        if self.request.GET.get('filter-date') == '0':
+            queryset = queryset.order_by('-date')
+        if self.request.GET.get('status'):
+            queryset = queryset.filter(completed=(True if self.request.GET.get('status') == 'yes' else False))
+        if self.request.GET.get('type'):
+            queryset = queryset.filter(item=self.request.GET.get('type'))
+        if self.request.GET.get('owner'):
+            queryset = queryset.filter(owner=self.request.GET.get('owner'))
+        if self.request.GET.get('personal_account'):
+            queryset = queryset.filter(
+                personal_account__personal_number__contains=self.request.GET.get('personal_account'))
+        if self.request.GET.get('income'):
+            queryset = queryset.filter(is_income=(True if self.request.GET.get('income') == 'true' else False))
+        return queryset
+
+
+class TransactionDetailView(StaffRequiredMixin, DetailView):
+    queryset = Transaction.objects.select_related('item', 'owner', 'personal_account', 'manager')
+    template_name = 'crm/pages/transactions/transaction_detail.html'
+
+
+class TransactionCreateView(StaffRequiredMixin, SuccessMessageMixin, CreateView):
+    template_name = 'crm/pages/transactions/transaction_create.html'
+    success_url = reverse_lazy('transactions_list')
+    success_message = 'Ведомость успешно создана!'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['income_items'] = Item.objects.filter(income_expense='income')
+        context['expense_items'] = Item.objects.filter(income_expense='expense')
+        return context
+
+    def get_form(self, form_class=None):
+        if self.request.GET.get('type') == 'income':
+            form_class = TransactionForm(self.request.POST or None)
+        else:
+            form_class = TransactionForm(self.request.POST or None, initial={'is_income': False})
+        return form_class
+
+    def form_valid(self, form):
+        if self.request.GET.get('type') == 'expense':
+            transaction = form.save(commit=False)
+            transaction.amount = -transaction.amount
+            transaction.save()
+        else:
+            form.save()
+        return super().form_valid(form)
+
+
+def create_transaction(request):
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        if request.method == 'GET':
+            personal_accounts = PersonalAccount.objects.all().values('id', 'personal_number')
+            response = {'personal_accounts': json.loads(json.dumps(list(personal_accounts), cls=DjangoJSONEncoder))}
+            if request.GET.get('owner_id'):
+                personal_accounts = PersonalAccount.objects.filter(apartment__owner__id=request.GET.get('owner_id'))
+                p_a_json = json.loads(json.dumps(list(personal_accounts.values('id', 'personal_number')),
+                                                 cls=DjangoJSONEncoder))
+                response = {'personal_accounts': p_a_json}
+            for d in response['personal_accounts']:
+                d['personal_number'] = str(d['personal_number']).zfill(10)
+            return JsonResponse(response, status=200)
+# endregion Transactions
 
 
 # region PersonalAccounts
@@ -53,11 +150,12 @@ class PersonalAccountsListView(StaffRequiredMixin, SuccessMessageMixin, ListView
                 if house.id == int(self.request.GET.get('house')):
                     context['sections'] = house.sections.all()
         context['owners'] = UserProfile.objects.filter(is_staff=False)
+        context['cashbox'] = Transaction.objects.aggregate(sum=Sum('amount', filter=Q(completed=True)))['sum']
         context['balance'] = PersonalAccount.objects.aggregate(sum=Sum('balance', filter=Q(status='active',
                                                                                            balance__gte=0)))['sum']
-        context['debt_balance'] = abs(PersonalAccount.objects.aggregate(sum=Sum('balance',
-                                                                                filter=Q(status='active',
-                                                                                         balance__lt=0)))['sum'])
+        debt_balance = PersonalAccount.objects.aggregate(sum=Sum('balance', filter=Q(status='active',
+                                                                                     balance__lt=0)))['sum']
+        context['debt_balance'] = abs(debt_balance) if debt_balance else None
         return context
 
     def get_queryset(self):
@@ -592,6 +690,78 @@ def get_role(request):
 # endregion Houses
 
 
+# region Messages
+class MessagesListView(StaffRequiredMixin, SuccessMessageMixin, ListView):
+    template_name = 'crm/pages/messages/messages_list.html'
+    context_object_name = 'messagess'
+
+    def get_queryset(self):
+        queryset = Message.objects.select_related('message_for_owner').all()
+        return queryset
+
+
+class MessageDetailView(StaffRequiredMixin, DetailView):
+    queryset = Message.objects.select_related('sender')
+    template_name = 'crm/pages/messages/message_detail.html'
+
+
+class MessageCreateView(StaffRequiredMixin, SuccessMessageMixin, CreateView):
+    template_name = 'crm/pages/messages/message_create.html'
+    success_message = 'Сообщение успешно отправлено!'
+
+    def get_form(self, form_class=None):
+        form_class = MessageForm(self.request.POST or None)
+        if self.request.GET.get('owner_id'):
+            form_class = MessageForm(self.request.POST or None,
+                                     initial={'message_for_owner': self.request.GET.get('owner_id')})
+        return form_class
+
+    def form_valid(self, form):
+        sender = get_object_or_404(UserProfile, pk=self.request.user.id)
+        message = form.save(commit=False)
+        message.sender = sender
+        message.save()
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse('messages_list')
+
+
+class MessageDeleteView(SuccessMessageMixin, DeleteView):
+    model = Message
+    success_url = reverse_lazy('messages_list')
+    success_message = 'Сообщение успешно удалено!'
+
+
+def select_recipients_for_send_message(request):
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        if request.method == 'GET':
+            response = {}
+            if request.GET.get('house_id'):
+                house = get_object_or_404(House, pk=request.GET.get('house_id'))
+                sections = json.loads(json.dumps(list(house.sections.all().values('id', 'name')),
+                                                 cls=DjangoJSONEncoder))
+                floors = json.loads(json.dumps(list(house.floors.all().values('id', 'name')), cls=DjangoJSONEncoder))
+                response = {'sections': sections,
+                            'floors': floors}
+            if request.GET.get('section_id') and request.GET.get('floor_id'):
+                apartments = Apartment.objects.filter(section_id=request.GET.get('section_id'),
+                                                      floor_id=request.GET.get('floor_id')).values('id', 'number')
+                response = {'apartments': json.loads(json.dumps(list(apartments), cls=DjangoJSONEncoder))}
+            return JsonResponse(response, status=200)
+
+
+def delete_selected_messages(request):
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        if request.method == 'GET':
+            if request.GET.get('idx'):
+                idx = [int(x) for x in request.GET.get('idx').split(' ')[:-1]]
+                Message.objects.filter(pk__in=idx).delete()
+                messages.add_message(request, messages.SUCCESS, 'Выбранные сообщения успешно удалены!')
+            return JsonResponse({}, status=200)
+# endregion Messages
+
+
 # region Application
 class ApplicationsListView(StaffRequiredMixin, SuccessMessageMixin, ListView):
     template_name = 'crm/pages/applications/applications_list.html'
@@ -659,7 +829,67 @@ class ApplicationCreateView(StaffRequiredMixin, SuccessMessageMixin, CreateView)
     success_url = reverse_lazy('applications_list')
     success_message = 'Новая заявка успешно добавленa!'
 
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['houses'] = House.objects.prefetch_related('sections__apartment_set').all()
+        context['apartments'] = Apartment.objects.select_related('section').all()
+        context['masters'] = UserProfile.objects.select_related('role').filter(Q(role__role='plumber') |
+                                                                               Q(role__role='electric'))
+        return context
 
+
+class ApplicationUpdateView(StaffRequiredMixin, SuccessMessageMixin, UpdateView):
+    queryset = Application.objects.select_related('apartment', 'apartment__owner', 'master', 'apartment__section')
+    template_name = 'crm/pages/applications/application_update.html'
+    success_url = reverse_lazy('applications_list')
+    success_message = 'Заявка вызова мастера успешно обновлена!'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['houses'] = House.objects.prefetch_related('sections').all()
+        return context
+
+    def get_form(self, form_class=None):
+        if form_class is None:
+            form_class = ApplicationForm(self.request.POST or None, instance=self.object,
+                                         initial={'date': self.object.date.strftime('%d.%m.%Y')})
+        return form_class
+
+
+class ApplicationDeleteView(SuccessMessageMixin, DeleteView):
+    model = Application
+    success_url = reverse_lazy('applications_list')
+    success_message = 'Заявка вызова мастера успешно удалена!'
+
+
+def get_apartment_by_owner(request):
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        if request.method == 'GET':
+            if request.GET.get('owner_id'):
+                apartments = Apartment.objects.filter(owner_id=request.GET.get('owner_id')).values('id', 'number',
+                                                                                                   'section')
+                response = {'apartments': json.loads(json.dumps(list(apartments), cls=DjangoJSONEncoder))}
+            else:
+                apartments = Apartment.objects.all().values('id', 'number', 'section')
+                response = {'apartments': json.loads(json.dumps(list(apartments), cls=DjangoJSONEncoder))}
+            houses = House.objects.prefetch_related('sections__apartment_set').all()
+            for d in response['apartments']:
+                for house in houses:
+                    for section in house.sections.all():
+                        try:
+                            if d['section'] == section.id:
+                                d['house'] = house.name
+                        except:
+                            pass
+            if request.GET.get('apartment_id'):
+                apartment = get_object_or_404(Apartment, pk=request.GET.get('apartment_id'))
+                response = {'telephone': apartment.owner.telephone if apartment.owner else None,
+                            'house': str([house.name for house in houses if apartment.section in
+                                          house.sections.all()][0]),
+                            'section_name': str(apartment.section),
+                            'floor': str(apartment.floor),
+                            'owner_id': apartment.owner.id if apartment.owner else None}
+            return JsonResponse(response, status=200)
 # endregion Application
 
 
