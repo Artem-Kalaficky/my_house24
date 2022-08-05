@@ -9,7 +9,7 @@ from django.core.serializers.json import DjangoJSONEncoder
 from django.db import IntegrityError
 from django.db.models import Q, Sum
 from django.forms import modelformset_factory
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.template.loader import render_to_string
 from django.urls import reverse_lazy, reverse
@@ -18,7 +18,7 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormVi
 
 from users.tasks import send_invite_letter
 from .models import Item, Requisites, Service, Unit, Tariff, ServiceForTariff, House, Section, Floor, Apartment, \
-    PersonalAccount, MeterReading, Application, Message, Transaction
+    PersonalAccount, MeterReading, Application, Message, Transaction, Invoice, ServiceForInvoice
 from main.models import MainPage, Block, AboutPage, Photo, Document, ServicePage, AboutService, ContactPage
 from users.models import UserProfile, Role
 from .forms import RoleFormSet, ItemForm, RequisiteForm, ServiceFormSet, UnitFormSet, ServiceForTariffFormSet, \
@@ -102,13 +102,44 @@ class TransactionCreateView(StaffRequiredMixin, SuccessMessageMixin, CreateView)
         context = super().get_context_data(**kwargs)
         context['income_items'] = Item.objects.filter(income_expense='income')
         context['expense_items'] = Item.objects.filter(income_expense='expense')
+        context['cashbox'] = int(Transaction.objects.aggregate(sum=Sum('amount', filter=Q(completed=True)))['sum'])
         return context
 
     def get_form(self, form_class=None):
         if self.request.GET.get('type') == 'income':
             form_class = TransactionForm(self.request.POST or None)
-        else:
+            if self.request.GET.get('personal_account_id'):
+                personal_account = get_object_or_404(PersonalAccount, pk=self.request.GET.get('personal_account_id'))
+                owner = personal_account.apartment.owner.id if (personal_account.apartment and
+                                                                personal_account.apartment.owner) else None
+                form_class = TransactionForm(self.request.POST or None,
+                                             initial={'personal_account': personal_account.id,
+                                                      'owner': owner})
+            if self.request.GET.get('transaction_id'):
+                transaction = get_object_or_404(Transaction, pk=self.request.GET.get('transaction_id'))
+                owner_id = transaction.owner_id if transaction.owner else None
+                personal_account = transaction.personal_account_id if transaction.personal_account else None
+                manager_id = transaction.manager_id if transaction.manager else None
+                item_id = transaction.item_id if transaction.item else None
+                form_class = TransactionForm(self.request.POST or None, initial={'item': item_id,
+                                                                                 'completed': transaction.completed,
+                                                                                 'owner': owner_id,
+                                                                                 'personal_account': personal_account,
+                                                                                 'amount': transaction.amount,
+                                                                                 'manager': manager_id,
+                                                                                 'comment': transaction.comment})
+        if self.request.GET.get('type') == 'expense':
             form_class = TransactionForm(self.request.POST or None, initial={'is_income': False})
+            if self.request.GET.get('transaction_id'):
+                transaction = get_object_or_404(Transaction, pk=self.request.GET.get('transaction_id'))
+                manager_id = transaction.manager_id if transaction.manager else None
+                item_id = transaction.item_id if transaction.item else None
+                form_class = TransactionForm(self.request.POST or None, initial={'item': item_id,
+                                                                                 'completed': transaction.completed,
+                                                                                 'is_income': False,
+                                                                                 'amount': abs(transaction.amount),
+                                                                                 'manager': manager_id,
+                                                                                 'comment': transaction.comment})
         return form_class
 
     def form_valid(self, form):
@@ -117,24 +148,139 @@ class TransactionCreateView(StaffRequiredMixin, SuccessMessageMixin, CreateView)
             transaction.amount = -transaction.amount
             transaction.save()
         else:
-            form.save()
+            transaction = form.save(commit=False)
+            if transaction.personal_account:
+                personal_account = get_object_or_404(PersonalAccount, pk=transaction.personal_account.id)
+                personal_account.balance += transaction.amount
+                personal_account.save()
+                transaction.save()
         return super().form_valid(form)
+
+
+class TransactionUpdateView(StaffRequiredMixin, SuccessMessageMixin, UpdateView):
+    queryset = Transaction.objects.select_related('item', 'owner', 'manager', 'personal_account')
+    template_name = 'crm/pages/transactions/transaction_update.html'
+    success_url = reverse_lazy('transactions_list')
+    success_message = 'Данные о ведомости обновлены!'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['cashbox'] = int(Transaction.objects.aggregate(sum=Sum('amount', filter=Q(completed=True)))['sum'])
+        return context
+
+    def get_form(self, form_class=None):
+        if form_class is None:
+            form_class = TransactionForm(self.request.POST or None, instance=self.object,
+                                         initial={'date': self.object.date.strftime('%d.%m.%Y'),
+                                                  'number': str(self.object.number).zfill(10),
+                                                  'amount': abs(self.object.amount)})
+        return form_class
+
+    def form_valid(self, form):
+        if self.request.GET.get('type') == 'expense':
+            transaction = form.save(commit=False)
+            transaction.amount = -transaction.amount
+            transaction.save()
+        else:
+            transaction = form.save(commit=False)
+            old_amount = get_object_or_404(Transaction, pk=transaction.id).amount
+            if transaction.personal_account:
+                personal_account = get_object_or_404(PersonalAccount, pk=transaction.personal_account.id)
+                personal_account.balance = (personal_account.balance - old_amount) + transaction.amount
+                personal_account.save()
+                transaction.save()
+        return super().form_valid(form)
+
+
+class TransactionDeleteView(DeleteView):
+    model = Transaction
+    success_url = reverse_lazy('transactions_list')
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        success_url = self.get_success_url()
+        if self.object.personal_account:
+            personal_account = get_object_or_404(PersonalAccount, pk=self.object.personal_account.id)
+            personal_account.balance -= self.object.amount
+            personal_account.save()
+        self.object.delete()
+        return HttpResponseRedirect(success_url)
 
 
 def create_transaction(request):
     if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
         if request.method == 'GET':
-            personal_accounts = PersonalAccount.objects.all().values('id', 'personal_number')
+            personal_accounts = PersonalAccount.objects.filter(status='active').values('id', 'personal_number')
             response = {'personal_accounts': json.loads(json.dumps(list(personal_accounts), cls=DjangoJSONEncoder))}
             if request.GET.get('owner_id'):
-                personal_accounts = PersonalAccount.objects.filter(apartment__owner__id=request.GET.get('owner_id'))
+                personal_accounts = PersonalAccount.objects.filter(status='active',
+                                                                   apartment__owner__id=request.GET.get('owner_id'))
                 p_a_json = json.loads(json.dumps(list(personal_accounts.values('id', 'personal_number')),
                                                  cls=DjangoJSONEncoder))
                 response = {'personal_accounts': p_a_json}
             for d in response['personal_accounts']:
                 d['personal_number'] = str(d['personal_number']).zfill(10)
+            if request.GET.get('personal_account_id'):
+                personal_account = PersonalAccount.objects.get(pk=request.GET.get('personal_account_id'))
+                if personal_account.apartment and personal_account.apartment.owner:
+                    response = {'owner': personal_account.apartment.owner.id}
+                else:
+                    response = {'owner': None}
             return JsonResponse(response, status=200)
 # endregion Transactions
+
+
+# region Invoices
+class InvoicesListView(StaffRequiredMixin, SuccessMessageMixin, ListView):
+    template_name = 'crm/pages/invoices/invoices_list.html'
+    context_object_name = 'invoices'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['owners'] = UserProfile.objects.filter(is_staff=False)
+        context['apartments'] = Apartment.objects.select_related('section').all()
+        context['houses'] = House.objects.prefetch_related('sections__apartment_set').all()
+        context['cashbox'] = Transaction.objects.aggregate(sum=Sum('amount', filter=Q(completed=True)))['sum']
+        context['balance'] = PersonalAccount.objects.aggregate(sum=Sum('balance', filter=Q(status='active',
+                                                                                           balance__gte=0)))['sum']
+        debt_balance = PersonalAccount.objects.aggregate(sum=Sum('balance', filter=Q(status='active',
+                                                                                     balance__lt=0)))['sum']
+        context['debt_balance'] = abs(debt_balance) if debt_balance else None
+        return context
+
+    def get_queryset(self):
+        queryset = Invoice.objects.select_related('apartment', 'apartment__owner', 'apartment__section').all()
+        if self.request.GET.get('number'):
+            queryset = queryset.filter(number__contains=self.request.GET.get('number'))
+        if self.request.GET.get('status'):
+            queryset = queryset.filter(status=self.request.GET.get('status'))
+        if self.request.GET.get('input_date'):
+            input_date = self.request.GET.get('input_date').split(' - ')
+            date_range = [datetime.datetime.strptime(x, '%d.%m.%Y').strftime('%Y-%m-%d') for x in input_date]
+            queryset = queryset.filter(date__range=date_range)
+        if self.request.GET.get('filter-date') == '1':
+            queryset = queryset.order_by('date')
+        if self.request.GET.get('filter-date') == '0':
+            queryset = queryset.order_by('-date')
+        if self.request.GET.get('apartment'):
+            queryset = queryset.filter(apartment__id=self.request.GET.get('apartment'))
+        if self.request.GET.get('owner'):
+            queryset = queryset.filter(apartment__owner__id=self.request.GET.get('owner'))
+        if self.request.GET.get('is_held'):
+            queryset = queryset.filter(is_held=True if self.request.GET.get('is_held') == 'true' else False)
+        return queryset
+
+
+class InvoiceDetailView(StaffRequiredMixin, DetailView):
+    queryset = Invoice.objects.select_related('apartment', 'apartment__owner', 'apartment__section')
+    template_name = 'crm/pages/invoices/invoice_detail.html'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['houses'] = House.objects.prefetch_related('sections__apartment_set').all()
+        context['services'] = ServiceForInvoice.objects.select_related('service', 'service__unit').filter(invoice=self.object)
+        return context
+# endregion Invoices
 
 
 # region PersonalAccounts

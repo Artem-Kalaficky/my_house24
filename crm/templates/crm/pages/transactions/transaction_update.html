@@ -48,10 +48,10 @@
 
 {% block transactions %}class="nav-link active-link" style="color: black; background-color: #e1f1ea"{% endblock %}
 
-{% block title %}Новая {% if request.GET.type == 'income' %}приходная{% else %}расходная{% endif %} ведомость{% endblock %}
-{% block name_page %}Новая {% if request.GET.type == 'income' %}приходная{% else %}расходная{% endif %} ведомость{% endblock %}
-{% block previos_link %}<a href="{% url 'transactions_list' %}" style="color: #494949">/ Касса</a>{% endblock %}
-{% block nav %}Новая {% if request.GET.type == 'income' %}приходная{% else %}расходная{% endif %} ведомость{% endblock %}
+{% block title %}{% if request.GET.type == 'income' %}Приходная{% else %}Расходная{% endif %} ведомость{% endblock %}
+{% block name_page %}{% if request.GET.type == 'income' %}Приходная{% else %}Расходная{% endif %} ведомость{% endblock %}
+{% block previos_link %}<a href="{% url 'transactions_list' %}" style="color: #494949">/ Касса </a><a href="{% url 'transaction_detail' object.id %}" style="color: #494949">/ {% if request.GET.type == 'income' %}Приходная{% else %}Расходная{% endif %} ведомость № {{ object }}</a>{% endblock %}
+{% block nav %}Редактирование{% endblock %}
 
 {% block content %}
 <form method="post" enctype="multipart/form-data" id="form">
@@ -87,21 +87,7 @@
                         {{ form.personal_account }}
                     {% endif %}
                     <p style="font-weight: bold; margin: 0; padding-top: 10px">{{ form.item.label }}</p>
-                    {% if request.GET.type == 'income' %}
-                        <select name="item" class="form-select" id="id_item">
-                          <option value="" selected="">Выберите...</option>
-                          {% for item in income_items %}
-                              <option value="{{ item.id }}">{{ item.name }}</option>
-                          {% endfor %}
-                        </select>
-                    {% else %}
-                        <select name="item" class="form-select" id="id_item">
-                          <option value="" selected="">Выберите...</option>
-                          {% for item in expense_items %}
-                              <option value="{{ item.id }}">{{ item.name }}</option>
-                          {% endfor %}
-                        </select>
-                    {% endif %}
+                    {{ form.item }}
                     <p style="font-weight: bold; margin: 0; padding-top: 10px">{{ form.amount.label }}</p>
                     {{ form.amount }}
                 </div>

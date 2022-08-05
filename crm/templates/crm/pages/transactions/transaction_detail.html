@@ -33,9 +33,30 @@
         <div class="container-fluid">
             <span style="font-size: 20px" class="text-muted">{% if object.is_income %}Приходная ведомость{% else %}Расходная ведомость{% endif %}</span>
             <div style="float: right; margin-bottom: 5px; padding-top: 5px; display: inline-block">
-                <a href="#" class="btn btn-default" style="font-size: 14px; max-height: 34px">Копировать</a>
-                <a href="#" class="btn btn-default" style="font-size: 14px; max-height: 34px">Удалить</a>
-                <a href="" class="btn btn-primary" style="font-size: 14px; max-height: 34px">Редактировать ведомость</a>
+                <a href="{% url 'transaction_create' %}?type={% if object.is_income %}income{% else %}expense{% endif %}&transaction_id={{ object.id }}" class="btn btn-default" style="font-size: 14px; max-height: 34px">Копировать</a>
+                <span data-bs-toggle="modal" data-bs-target="#deleteModal" class="btn btn-default" style="font-size: 14px; max-height: 34px">Удалить</span>
+                <!-- Modal -->
+                <div class="modal fade" id="deleteModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                      <div class="modal-header bg-danger">
+                        <h5 class="modal-title" id="deleteModal1Label">Подтверждение удаления</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <form method="post" action="{% url 'transaction_delete' object.id %}">
+                          {% csrf_token %}
+                          <div class="modal-body">
+                              Вы действительно хотите удалить ведомость <b>№ {{ object }}</b>?
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                            <button type="submit" class="btn btn-danger">Удалить</button>
+                          </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+                <a href="{% url 'transaction_update' object.id %}?type={% if object.is_income %}income{% else %}expense{% endif %}" class="btn btn-primary" style="font-size: 14px; max-height: 34px">Редактировать ведомость</a>
                 <button type="button" onclick="tableToExcel('my-table')" class="btn btn-default" style="font-size: 14px; max-height: 34px">Выгрузить в Excel</button>
             </div>
             <div class="dropdown-divider" style="border-color:lightgrey; margin-top: 15px"></div>
@@ -52,7 +73,7 @@
                 </tr>
                 <tr>
                     <td style="width: 40%"><span style="font-weight: bold">Статья</span></td>
-                    <td style="width: 60%">{{ object.item.name }}</td>
+                    <td style="width: 60%">{% if object.item %}{{ object.item.name }}{% else %}(не задано){% endif %}</td>
                     <td style="width: 0%"></td>
                 </tr>
                 <tr>

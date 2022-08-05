@@ -7,17 +7,20 @@
         .sort-date:hover {
             cursor: pointer;
         }
+        .sort-month:hover {
+            cursor: pointer;
+        }
         .hover-li:hover {
             background-color: lightgrey;
         }
     </style>
 {% endblock %}
 
-{% block transactions %}class="nav-link active-link" style="color: black; background-color: #e1f1ea"{% endblock %}
+{% block invoices %}class="nav-link active-link" style="color: black; background-color: #e1f1ea"{% endblock %}
 
-{% block title %}Касса{% endblock %}
-{% block name_page %}Касса{% endblock %}
-{% block nav %}Касса{% endblock %}
+{% block title %}Квитанции на оплату{% endblock %}
+{% block name_page %}Квитанции на оплату{% endblock %}
+{% block nav %}Квитанции на оплату{% endblock %}
 
 {% block content %}
     <div class="row" style="padding: 0 10px 10px 10px">
@@ -63,48 +66,51 @@
                 Выберите действие <span class="caret"></span>
             </button>
             <ul class="dropdown-menu">
-                <li class="hover-li"><a style="padding: 5px; color: #6c757d" href="{% url 'transaction_create' %}?type=income">Создать приход</a></li>
-                <li class="hover-li"><a style="padding: 5px; color: #6c757d" href="{% url 'transaction_create' %}?type=expense">Создать расход</a></li>
-                <li class="hover-li"><span style="padding: 5px; color: #6c757d; cursor: pointer" onclick="tableToExcel('my-table')">Выгрузить в Excel</span></li>
+                <li class="hover-li"><a style="padding: 5px; color: #6c757d" href="{% url 'transaction_create' %}?type=income">Создать общую квитанцию</a></li>
+                <li id="delete" class="hover-li"><span style="padding: 5px; color: #6c757d">Удалить</span></li>
             </ul>
         </div>
     </div>
     <div class="my-box" style="min-height: 0">
         <div class="container-fluid">
             <div style="text-align: right; padding-right: 2px; padding-top: 5px; margin-bottom: 5px">
-                <a id="clear" href="{% url 'transactions_list' %}" class="btn btn-default" style="font-size: 14px; max-height: 34px">Очистить</a>
+                <a id="clear" href="{% url 'invoices_list' %}" class="btn btn-default" style="font-size: 14px; max-height: 34px">Очистить</a>
             </div>
             <form method="get" id="form">
-                <table id="my-table" class="table table-hover table-striped table-responsive no-padding" style="color: #333333; font-size: 14px">
+                <table id="my-table" class="table table-hover table-striped table-responsive no-padding" style="color: #333333; font-size: 14px; padding-bottom: 10px">
                     <thead>
                         <tr>
-                            <th style="width: 7%">№</th>
-                            <th style="width: 7%" class="sort-date"><span style="color: #72afd2" id="sort-date-span">Дата</span></th>
-                            <th style="width: 7%">Статус</th>
-                            <th style="width: 12%">Тип платежа</th>
+                            <th style="width: 0%"><input type="checkbox" id="check-all"></th>
+                            <th style="width: 12%; min-width: 150px">№ квитанции</th>
+                            <th style="width: 8%">Статус</th>
+                            <th style="width: 8%" class="sort-date"><span style="color: #72afd2" id="sort-date-span">Дата</span></th>
+                            <th style="width: 8%" class="sort-month"><span style="color: #72afd2" id="sort-month-span">Месяц</span></th>
+                            <th style="width: 24%">Квартира</th>
                             <th style="width: 24%">Владелец</th>
-                            <th style="width: 24%">Лицевой счет</th>
-                            <th style="width: 12%">Приход/Расход</th>
-                            <th style="width: 7%">Сумма(грн)</th>
+                            <th style="width: 8%">Проведена</th>
+                            <th style="width: 8%">Сумма(грн)</th>
                             <th style="width: 0%"></th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td style="padding: 5px; min-width: 90px"><input type="number" class="form-control" name="number" id="number"></td>
-                            <td style="padding: 5px"><input type="text" class="form-control" name="input_date" id="input_date"></td>
+                            <td></td>
+                            <td style="padding: 5px"><input type="number" class="form-control" name="number" id="number"></td>
                             <td style="padding: 5px">
                                 <select class="form-select" name="status" id="status">
                                     <option hidden disabled selected value></option>
-                                    <option value="yes">Проведен</option>
-                                    <option value="no">Непроведен</option>
+                                    <option value="paid">Оплачена</option>
+                                    <option value="p_paid">Частично оплачена</option>
+                                    <option value="unpaid">Неоплачена</option>
                                 </select>
                             </td>
+                            <td style="padding: 5px"><input type="text" class="form-control" name="input_date" id="input_date"></td>
+                            <td style="padding: 5px"><input type="text" class="form-control" name="input_month" id="input_month"></td>
                             <td style="padding: 5px">
-                                <select class="form-select" name="type" id="type">
+                                <select class="form-select" name="apartment" id="apartment">
                                     <option hidden disabled selected value></option>
-                                    {% for item in items %}
-                                        <option value="{{ item.id }}">{{ item.name }}</option>
+                                    {% for apartment in apartments %}
+                                        <option value="{{ apartment.id }}">{{ apartment.number }}, {% for house in houses %}{% if apartment.section in house.sections.all %}{{ house.name }}{% endif %}{% endfor %}</option>
                                     {% endfor %}
                                 </select>
                             </td>
@@ -116,31 +122,40 @@
                                     {% endfor %}
                                 </select>
                             </td>
-                            <td style="padding: 5px"><input type="number" class="form-control" name="personal_account" id="personal_account"></td>
                             <td style="padding: 5px">
-                                <select class="form-select" name="income" id="income">
+                                <select class="form-select" name="is_held" id="is_held">
                                     <option hidden disabled selected value></option>
-                                    <option value="true">Приход</option>
-                                    <option value="false">Расход</option>
+                                    <option value="true">Проведена</option>
+                                    <option value="false">Непроведена</option>
                                 </select>
                             </td>
                             <td></td>
                             <td></td>
                         </tr>
-                        {% for transaction in transactions %}
+                        {% for invoice in invoices %}
                             <tr>
-                                <td data-href="{% url 'transaction_detail' transaction.id %}" class="tr-link">{{ transaction }}</td>
-                                <td data-href="{% url 'transaction_detail' transaction.id %}" class="tr-link">{{ transaction.date|date:"d.m.Y" }}</td>
-                                <td data-href="{% url 'transaction_detail' transaction.id %}" class="tr-link">{% if transaction.completed %}Проведен{% else %}Непроведен{% endif %}</td>
-                                <td data-href="{% url 'transaction_detail' transaction.id %}" class="tr-link">{% if transaction.item %}{{ transaction.item }}{% else %}(не задано){% endif %}</td>
-                                <td data-href="{% url 'transaction_detail' transaction.id %}" class="tr-link">{% if transaction.owner %}{{ transaction.owner.last_name }} {{ transaction.owner.first_name }} {{ transaction.owner.patronymic }}{% else %}(не задано){% endif %}</td>
-                                <td data-href="{% url 'transaction_detail' transaction.id %}" class="tr-link">{% if transaction.personal_account %}{{ transaction.personal_account }}{% else %}(не задано){% endif %}</td>
-                                <td data-href="{% url 'transaction_detail' transaction.id %}" class="tr-link">{% if transaction.is_income %}<span style="color: green">Приход</span>{% else %}<span style="color: red">Расход</span>{% endif %}</td>
-                                <td data-href="{% url 'transaction_detail' transaction.id %}" class="tr-link">{% if transaction.amount > 0 %}<span style="color: green">{{ transaction.amount }}</span>{% else %}<span style="color: red">{{ transaction.amount }}</span>{% endif %}</td>
+                                <td><input type="checkbox" value="{{ invoice.id }}" class="delete"></td>
+                                <td data-href="{% url 'invoice_detail' invoice.id %}" class="tr-link">{{ invoice }}</td>
+                                <td data-href="{% url 'invoice_detail' invoice.id %}" class="tr-link">
+                                    {% if invoice.status == 'paid' %}
+                                    <small class="btn btn-sm btn-success status">Оплачена</small>
+                                    {% elif invoice.status == 'p_paid' %}
+                                    <small class="btn btn-sm btn-warning status">Частично</small>
+                                    {% elif invoice.status == 'unpaid' %}
+                                    <small class="btn btn-sm btn-danger status">Неоплачена</small>
+                                    {% endif %}
+                                </td>
+                                <td data-href="{% url 'invoice_detail' invoice.id %}" class="tr-link">{{ invoice.date|date:"d.m.Y" }}</td>
+                                <td data-href="{% url 'invoice_detail' invoice.id %}" class="tr-link">{{ invoice.date|date:"F Y" }}</td>
+                                <td data-href="{% url 'invoice_detail' invoice.id %}" class="tr-link">{{ invoice.apartment.number }}, {% for house in houses %}{% if invoice.apartment.section in house.sections.all %}{{ house.name }}{% endif %}{% endfor %}</td>
+                                <td data-href="{% url 'invoice_detail' invoice.id %}" class="tr-link">{% if invoice.apartment.owner %}{{ invoice.apartment.owner.last_name }} {{ invoice.apartment.owner.first_name }} {{ invoice.apartment.owner.patronymic }}{% else %}(не задано){% endif %}</td>
+                                <td data-href="{% url 'invoice_detail' invoice.id %}" class="tr-link">{% if invoice.is_held %}Проведена{% else %}Не проведена{% endif %}</td>
+                                <td data-href="{% url 'invoice_detail' invoice.id %}" class="tr-link">{{ invoice.amount }}</td>
                                 <td style="padding: 6px 5px 7px 4px">
                                     <div class="btn-group pull-right">
-                                        <a class="btn btn-default btn-sm" href="{% url 'transaction_update' transaction.id %}?type={% if transaction.is_income %}income{% else %}expense{% endif %}" title="Редактировать" data-toggle="tooltip"><i class="fa fa-pencil-alt"></i></a>
-                                        <button type="button" class="btn btn-default btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ forloop.counter }}"><i class="fa fa-trash-alt"></i></button>
+                                        <a class="btn btn-default btn-sm" href="" title="Копировать" data-toggle="tooltip"><i class="fas fa-copy"></i></a>
+                                        <a class="btn btn-default btn-sm" href="" title="Редактировать" data-toggle="tooltip"><i class="fa fa-pencil-alt"></i></a>
+                                        <button type="button" class="btn btn-default btn-sm not-allowed" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ forloop.counter }}"><i class="fa fa-trash-alt"></i></button>
                                     </div>
                                 </td>
                             </tr>
@@ -152,10 +167,10 @@
                                     <h5 class="modal-title" id="deleteModal1Label-{{ forloop.counter }}">Подтверждение удаления</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                   </div>
-                                  <form method="post" action="{% url 'transaction_delete' transaction.id %}">
+                                  <form method="post" action="">
                                       {% csrf_token %}
                                       <div class="modal-body">
-                                          Вы действительно хотите удалить ведомость <b>№ {{ transaction }}</b>?
+                                          Вы действительно хотите удалить квитанцию <b>№ {{ invoice }}</b>?
                                       </div>
                                       <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
@@ -168,11 +183,8 @@
                         {% endfor %}
                     </tbody>
                 </table>
+                <input type="hidden" name="filter-date" value="" id="filter-date">
             </form>
-            <div style="padding-bottom: 15px">
-                <span>Проведен приход: <b>{% if income %}{{ income }}{% else %}0,00{% endif %}</b></span><br/>
-                <span>Проведен расход: <b>{% if expense %}{{ expense }}{% else %}0,00{% endif %}</b></span>
-            </div>
         </div>
     </div>
     <div style="height: 30px"></div>
@@ -181,7 +193,7 @@
 {% block script %}
     <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
-    <script src="{% static 'crm/scripts/transactions/transactions_list.js' %}"></script>
+    <script src="{% static 'crm/scripts/invoices/invoices_list.js' %}"></script>
     <script>
         // Filters
         init_data()
@@ -234,6 +246,21 @@
         $('input[name="input_date"]').on('cancel.daterangepicker', function(ev, picker) {
             $(this).val('');
         });
+
+
+        // select checkboxes for delete invoices
+        $("#check-all").change(function () {
+            $('.delete').prop("checked", this.checked);
+        });
+        $('#delete').click(function (){
+            let idx = ''
+            $('.delete').each(function (index, element){
+                if ($(element).is(':checked')){
+                    idx += $(element).val() + ' '
+                }
+            })
+            console.log(idx)
+        })
 
 
         // Messages

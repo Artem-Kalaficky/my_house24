@@ -31,6 +31,7 @@ class TransactionForm(ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields['personal_account'].queryset = PersonalAccount.objects.filter(status='active')
         self.fields['date'].initial = datetime.datetime.today().strftime('%d.%m.%Y')
         self.fields['owner'].queryset = UserProfile.objects.filter(is_staff=False)
         managers = UserProfile.objects.select_related('role').filter(Q(is_staff=True) & (Q(role__role='director') |
@@ -40,7 +41,12 @@ class TransactionForm(ModelForm):
                 manager.role.get_role_display() + " - " + manager.first_name + " " + manager.last_name
         )) for manager in managers]
         self.fields['manager'].initial = 1
-
+        if kwargs.get('instance'):
+            self.fields['item'].empty_label = 'Выберите...'
+            if kwargs.get('instance').is_income:
+                self.fields['item'].queryset = Item.objects.filter(income_expense='income')
+            else:
+                self.fields['item'].queryset = Item.objects.filter(income_expense='expense')
 
     class Meta:
         model = Transaction

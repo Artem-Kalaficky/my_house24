@@ -120,7 +120,7 @@
           {% endif %}
           {% if user.role.has_invoice %}
           <li class="nav-item">
-            <a href="#" class="nav-link {% block invoices %}{% endblock %}">
+            <a id="invoices" href="{% url 'invoices_list' %}" {% block invoices %}class="nav-link"{% endblock %}>
               <i class="fas fa-copy" style="width: 23px"></i>
               <p style="color: #494949; font-size: 14px; font-weight: 600">
                 Квитанции на оплату
@@ -352,7 +352,7 @@
 <!-- My -->
 <script src="{% static 'crm/scripts/tables.js' %}"></script>
 <script>
-    $('#users, #items, #tariffs, #houses, #owners, #apartments, #personal-accounts, #meter-readings, #transactions').click(clear)
+    $('#users, #items, #tariffs, #houses, #owners, #apartments, #personal-accounts, #meter-readings, #transactions, #invoices').click(clear)
 </script>
 {% block script %}{% endblock %}
 </body>

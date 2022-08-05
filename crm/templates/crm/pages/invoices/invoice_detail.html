@@ -1,0 +1,152 @@
+{% extends 'crm/layout/base.html' %}
+{% load static %}
+
+{% block invoices %}class="nav-link active-link" style="color: black; background-color: #e1f1ea"{% endblock %}
+
+{% block title %}Квитанция{% endblock %}
+{% block name_page %}Квитанция{% endblock %}
+{% block previos_link %}<a href="{% url 'invoices_list' %}" style="color: #494949">/ Квитанции</a>{% endblock %}
+{% block nav %}Квитанция №{{ object }}{% endblock %}
+
+{% block content %}
+    <div class="row" style="padding-bottom: 10px; margin: 0">
+        <div class="col-xl-6">
+            <div class="row">
+                <div class="input-group col-xl-6" style="padding-bottom: 10px">
+                    <div class="form-control" style="max-width: 40px">№</div>
+                    <div class="input-group-append">
+                        <input type="text" class="form-control" value="{{ object }}" readonly>
+                    </div>
+                </div>
+
+                <div class="input-group col-xl-6">
+                    <span style="padding-top: 4px; padding-right: 10px">от</span>
+                    <div class="form-control" style="max-width: 40px"><i class="fa fa-calendar-alt"></i></div>
+                    <div class="input-group-append">
+                        <input type="text" class="form-control" value="{{ object.date|date:"d.m.Y" }}" readonly>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="my-box" style="min-height: 0">
+        <div class="container-fluid">
+            <span style="font-size: 20px" class="text-muted">Просмотр квитанции</span>
+            <div style="float: right; margin-bottom: 5px; padding-top: 5px; display: inline-block">
+                <a href="" class="btn btn-default" style="font-size: 14px; max-height: 34px">Печать</a>
+                <a href="" class="btn btn-default" style="font-size: 14px; max-height: 34px">Отправить на e-mail</a>
+                <a href="" class="btn btn-primary" style="font-size: 14px; max-height: 34px">Редактировать квитанцию</a>
+            </div>
+            <div class="dropdown-divider" style="border-color:lightgrey; margin-top: 15px"></div>
+            <table id="my-table" class="table table-hover table-striped table-responsive no-padding" style="color: #333333; font-size: 14px; padding-bottom: 10px">
+                <tr>
+                    <td style="width: 40%"><span style="font-weight: bold">Проведена</span></td>
+                    <td style="width: 60%">
+                        {% if object.is_held %}
+                            <small class="btn btn-sm btn-success status">Проведена</small>
+                        {% else %}
+                            <small class="btn btn-sm btn-danger status">Не проведена</small>
+                        {% endif %}
+                    </td>
+                    <td style="width: 0%"></td>
+                </tr>
+                <tr>
+                    <td style="width: 40%"><span style="font-weight: bold">Статус</span></td>
+                    <td style="width: 60%">
+                        {% if object.status == 'paid' %}
+                            <small class="btn btn-sm btn-success status">Оплачена</small>
+                        {% elif object.status == 'p_paid' %}
+                            <small class="btn btn-sm btn-warning status">Частично оплачена</small>
+                        {% elif object.status == 'unpaid' %}
+                            <small class="btn btn-sm btn-danger status">Неоплачена</small>
+                        {% endif %}
+                    </td>
+                    <td style="width: 0%"></td>
+                </tr>
+                <tr>
+                    <td style="width: 40%"><span style="font-weight: bold">Период</span></td>
+                    <td style="width: 60%">{{ object.date_with|date:"d.m.Y" }} - {{ object.date_before|date:"d.m.Y" }}</td>
+                    <td style="width: 0%"></td>
+                </tr>
+                <tr>
+                    <td style="width: 40%"><span style="font-weight: bold">Владелец</span></td>
+                    <td style="width: 60%">{% if object.apartment.owner %}<a href="{% url 'owner_detail' object.apartment.owner.id %}">{{ object.apartment.owner.last_name }} {{ object.apartment.owner.first_name }} {{ object.apartment.owner.patronymic }}</a>{% else %}(не задано){% endif %}</td>
+                    <td style="width: 0%"></td>
+                </tr>
+                <tr>
+                    <td style="width: 40%"><span style="font-weight: bold">Лицевой счет</span></td>
+                    <td style="width: 60%"><a href="{% url 'personal_account_detail' object.apartment.personal_account.id %}">{{ object.apartment.personal_account }}</a></td>
+                    <td style="width: 0%"></td>
+                </tr>
+                <tr>
+                    <td style="width: 40%"><span style="font-weight: bold">Телефон</span></td>
+                    <td style="width: 60%">{% if object.apartment.owner %}{{ object.apartment.owner.telephone }}{% else %}(не задано){% endif %}</td>
+                    <td style="width: 0%"></td>
+                </tr>
+                <tr>
+                    <td style="width: 40%"><span style="font-weight: bold">Дом</span></td>
+                    <td style="width: 60%">{% for house in houses %}{% if invoice.apartment.section in house.sections.all %}<a href="{% url 'house_detail' house.id %}">{{ house.name }}</a>{% endif %}{% endfor %}</td>
+                    <td style="width: 0%"></td>
+                </tr>
+                <tr>
+                    <td style="width: 40%"><span style="font-weight: bold">Квартира</span></td>
+                    <td style="width: 60%"><a href="{% url 'apartment_detail' object.apartment.id %}">{{ object.apartment.number }}</a></td>
+                    <td style="width: 0%"></td>
+                </tr>
+                <tr>
+                    <td style="width: 40%"><span style="font-weight: bold">Секция</span></td>
+                    <td style="width: 60%">{{ object.apartment.section }}</td>
+                    <td style="width: 0%"></td>
+                </tr>
+                <tr>
+                    <td style="width: 40%"><span style="font-weight: bold">Тариф</span></td>
+                    <td style="width: 60%"><a href="{% url 'tariff_detail' object.tariff.id %}">{{ object.tariff }}</a></td>
+                    <td style="width: 0%"></td>
+                </tr>
+            </table>
+
+            <table id="my-table" class="table table-hover table-striped table-responsive no-padding" style="color: #333333; font-size: 14px; padding-bottom: 30px">
+                <thead>
+                    <tr>
+                        <th style="width: 0%">#</th>
+                        <th style="width: 27%">Услуга</th>
+                        <th style="width: 27%">Колличество потребления (расход)</th>
+                        <th style="width: 7%">Ед. изм.</th>
+                        <th style="width: 17%">Цена за ед., грн</th>
+                        <th style="width: 20%">Стоимость, грн</th>
+                        <th style="width: 0%"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for service in services %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ service.service.name }}</td>
+                            <td>{{ service.expense }}</td>
+                            <td>{{ service.service.unit.name }}</td>
+                            <td>{{ service.cost_for_unit }}</td>
+                            <td>{{ service.full_cost }}</td>
+                            <td></td>
+                        </tr>
+                    {% endfor %}
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td><b>Итого: {{ object.amount }}</b></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div style="height: 30px"></div>
+{% endblock %}
+
+{% block script %}
+    <script>
+        $(':input[readonly]').css({'background-color': 'white'});
+    </script>
+{% endblock %}

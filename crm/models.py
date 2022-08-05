@@ -213,9 +213,9 @@ class ServiceForTariff(models.Model):
 class ServiceForInvoice(models.Model):
     invoice = models.ForeignKey('Invoice', on_delete=models.CASCADE, verbose_name='Квитанция')
     service = models.ForeignKey(Service, on_delete=models.CASCADE, verbose_name='Услуга')
-    cost_for_unit = models.DecimalField(max_digits=4, decimal_places=2, verbose_name='Цена за ед., грн.')
+    cost_for_unit = models.DecimalField(max_digits=8, decimal_places=2, verbose_name='Цена за ед., грн.')
     expense = models.IntegerField(verbose_name='Расход')
-    full_cost = models.DecimalField(max_digits=6, decimal_places=2, verbose_name='Стоимость, грн.')
+    full_cost = models.DecimalField(max_digits=8, decimal_places=2, verbose_name='Стоимость, грн.')
 
     class Meta:
         verbose_name = 'Услуга для квитанции'
@@ -254,8 +254,7 @@ class Invoice(models.Model):
     date = models.DateField(default=timezone.now, verbose_name='Дата')
     apartment = models.ForeignKey(Apartment, on_delete=models.PROTECT, verbose_name='Квартира')
     is_held = models.BooleanField(default=True, verbose_name='Проведена')
-    CHOICES = ((None, 'Выберите...'),
-               ('paid', 'Оплачена'),
+    CHOICES = (('paid', 'Оплачена'),
                ('p_paid', 'Частично оплачена'),
                ('unpaid', 'Неоплачена'))
     status = models.CharField(max_length=16, choices=CHOICES, default='paid', verbose_name='Статус')
@@ -270,6 +269,9 @@ class Invoice(models.Model):
         verbose_name = 'Квитанция'
         verbose_name_plural = 'Квитанции'
 
+    def __str__(self):
+        return str(self.number).zfill(10)
+
 
 class PersonalAccount(models.Model):
     personal_number = models.BigIntegerField(default=personal_account_number, unique=True,
@@ -277,7 +279,8 @@ class PersonalAccount(models.Model):
     CHOICES = (('active', 'Активный'),
                ('inactive', 'Неактивный'))
     status = models.CharField(choices=CHOICES, max_length=16, default='active', verbose_name='Статус')
-    apartment = models.OneToOneField(Apartment, on_delete=models.CASCADE, null=True, blank=True, verbose_name='Квартира')
+    apartment = models.OneToOneField(Apartment, on_delete=models.CASCADE, null=True, related_name='personal_account',
+                                     blank=True, verbose_name='Квартира')
     balance = models.DecimalField(max_digits=8, decimal_places=2, default=0, verbose_name='Остаток (грн.)')
 
     class Meta:

@@ -14,7 +14,8 @@ from .views import (
     MeterReadingUpdateView, ApplicationsListView, ApplicationDetailView, ApplicationCreateView, ApplicationDeleteView,
     get_apartment_by_owner, ApplicationUpdateView, MessagesListView, MessageDetailView, MessageCreateView,
     MessageDeleteView, select_recipients_for_send_message, delete_selected_messages, TransactionsListView,
-    TransactionDetailView, TransactionCreateView, create_transaction
+    TransactionDetailView, TransactionCreateView, create_transaction, TransactionDeleteView, TransactionUpdateView,
+    InvoicesListView, InvoiceDetailView
 )
 
 
@@ -23,10 +24,17 @@ urlpatterns = [
     path('', StatisticsTemplateView.as_view(), name='home'),
 
     # transactions
+    path('transactions/delete/<int:pk>/', TransactionDeleteView.as_view(), name='transaction_delete'),
+    path('transactions/update/<int:pk>/', TransactionUpdateView.as_view(), name='transaction_update'),
     path('transactions/<int:pk>/', TransactionDetailView.as_view(), name='transaction_detail'),
     path('transactions/create/', TransactionCreateView.as_view(), name='transaction_create'),
     path('transactions/', TransactionsListView.as_view(), name='transactions_list'),
     path('create-transaction-ajax/', create_transaction, name='create_transaction'),
+
+    # invoices
+    path('invoices/<int:pk>/', InvoiceDetailView.as_view(), name='invoice_detail'),
+
+    path('invoices/', InvoicesListView.as_view(), name='invoices_list'),
 
     # personal_accounts
     path('personal-accounts/delete/<int:pk>/', PersonalAccountDeleteView.as_view(), name='personal_account_delete'),
