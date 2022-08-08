@@ -12,6 +12,7 @@
         }
         .hover-li:hover {
             background-color: lightgrey;
+            cursor: pointer;
         }
     </style>
 {% endblock %}
@@ -66,7 +67,7 @@
                 Выберите действие <span class="caret"></span>
             </button>
             <ul class="dropdown-menu">
-                <li class="hover-li"><a style="padding: 5px; color: #6c757d" href="{% url 'transaction_create' %}?type=income">Создать общую квитанцию</a></li>
+                <li class="hover-li"><a style="padding: 5px; color: #6c757d" href="{% url 'invoice_create' %}">Создать общую квитанцию</a></li>
                 <li id="delete" class="hover-li"><span style="padding: 5px; color: #6c757d">Удалить</span></li>
             </ul>
         </div>
@@ -167,7 +168,7 @@
                                     <h5 class="modal-title" id="deleteModal1Label-{{ forloop.counter }}">Подтверждение удаления</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                   </div>
-                                  <form method="post" action="">
+                                  <form method="post" action="{% url 'invoice_delete' invoice.id %}">
                                       {% csrf_token %}
                                       <div class="modal-body">
                                           Вы действительно хотите удалить квитанцию <b>№ {{ invoice }}</b>?
@@ -259,7 +260,19 @@
                     idx += $(element).val() + ' '
                 }
             })
-            console.log(idx)
+            $.ajax({
+                url: '{% url "delete_selected_invoices" %}',
+                type: 'GET',
+                data: {'idx': idx},
+                success: (data) => {
+                    if (idx) {
+                        document.location.reload();
+                    }
+                },
+                error: (data) => {
+                    console.log('no')
+                }
+            })
         })
 
 

@@ -211,7 +211,7 @@ class ServiceForTariff(models.Model):
 
 
 class ServiceForInvoice(models.Model):
-    invoice = models.ForeignKey('Invoice', on_delete=models.CASCADE, verbose_name='Квитанция')
+    invoice = models.ForeignKey('Invoice', on_delete=models.CASCADE, blank=True, verbose_name='Квитанция')
     service = models.ForeignKey(Service, on_delete=models.CASCADE, verbose_name='Услуга')
     cost_for_unit = models.DecimalField(max_digits=8, decimal_places=2, verbose_name='Цена за ед., грн.')
     expense = models.IntegerField(verbose_name='Расход')
@@ -261,7 +261,7 @@ class Invoice(models.Model):
     tariff = models.ForeignKey(Tariff, on_delete=models.PROTECT, verbose_name='Тариф')
     date_with = models.DateField(default=timezone.now, verbose_name='Период с')
     date_before = models.DateField(default=timezone.now, verbose_name='Период до')
-    amount = models.DecimalField(max_digits=8, decimal_places=2, default=0, verbose_name='Сумма')
+    amount = models.DecimalField(max_digits=8, decimal_places=2, default=0, blank=True, verbose_name='Сумма')
     services = models.ManyToManyField(Service, through=ServiceForInvoice, through_fields=('invoice', 'service'),
                                       verbose_name='Услуги')
 

@@ -25,8 +25,9 @@ from .forms import RoleFormSet, ItemForm, RequisiteForm, ServiceFormSet, UnitFor
     TariffForm, ServiceForTariffForm, MainPageForm, SeoForm, BlockFormSet, AboutPageForm, PhotoForm, DocumentFormSet, \
     ServicePageForm, AboutServiceFormSet, ContactPageForm, SectionFormSet, FloorFormSet, UserFormSet, HouseForm, \
     OwnerCreateForm, OwnerUpdateForm, InviteForm, ApartmentForm, PersonalAccountForm, MeterReadingForm, \
-    MeterReadingUpdateForm, ApplicationForm, MessageForm, TransactionForm
+    MeterReadingUpdateForm, ApplicationForm, MessageForm, TransactionForm, InvoiceForm, ServiceForInvoiceFormSet
 from users.forms import UserCreateForm, ChangeUserInfoForm
+from .serializers import my_serialize
 
 
 class StaffRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
@@ -278,8 +279,99 @@ class InvoiceDetailView(StaffRequiredMixin, DetailView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         context['houses'] = House.objects.prefetch_related('sections__apartment_set').all()
-        context['services'] = ServiceForInvoice.objects.select_related('service', 'service__unit').filter(invoice=self.object)
+        context['services'] = ServiceForInvoice.objects.select_related('service',
+                                                                       'service__unit').filter(invoice=self.object)
         return context
+
+
+class InvoiceCreateView(StaffRequiredMixin, SuccessMessageMixin, CreateView):
+    template_name = 'crm/pages/invoices/invoice_create.html'
+    success_url = reverse_lazy('invoices_list')
+    success_message = 'Общая квитанция успешно создана!'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['meter_readings'] = MeterReading.objects.select_related('apartment', 'apartment__section',
+                                                                        'meter', 'meter__unit').all()
+        context['houses'] = House.objects.prefetch_related('sections').all()
+        context['formset'] = ServiceForInvoiceFormSet(self.request.POST or None, prefix='formset',
+                                                      queryset=ServiceForInvoice.objects.none())
+        return context
+
+    def get_form(self, form_class=None):
+        if form_class is None:
+            if self.request.GET.get('id'):
+                pass
+            else:
+                form_class = InvoiceForm(self.request.POST or None)
+        return form_class
+
+    def form_valid(self, form):
+        invoice = form.save(commit=False)
+        invoice.amount = int(self.request.POST.get('amount'))
+        invoice.save()
+        formset = self.get_context_data()['formset']
+        for obj in formset:
+            if obj.is_valid():
+                service_for_invoice = obj.save(commit=False)
+                if obj.cleaned_data and not obj.cleaned_data['DELETE']:
+                    service_for_invoice.invoice = invoice
+                    try:
+                        service_for_invoice.save()
+                    except IntegrityError:
+                        pass
+        return super().form_valid(form)
+
+
+class InvoiceDeleteView(DeleteView):
+    model = Invoice
+    success_url = reverse_lazy('invoices_list')
+
+
+def delete_selected_invoices(request):
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        if request.method == 'GET':
+            if request.GET.get('idx'):
+                idx = [int(x) for x in request.GET.get('idx').split(' ')[:-1]]
+                Invoice.objects.filter(pk__in=idx).delete()
+                messages.add_message(request, messages.SUCCESS, 'Выбранные квитанции успешно удалены!')
+            return JsonResponse({}, status=200)
+
+
+def work_with_invoice(request):
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        if request.method == 'GET':
+            response = {}
+            meter_readings = MeterReading.objects.select_related('apartment', 'apartment__section', 'meter',
+                                                                 'meter__unit').all()
+            if request.GET.get('house_id'):
+                sections = get_object_or_404(House, pk=request.GET.get('house_id')).sections.all().values('id', 'name')
+                response = {'sections': json.loads(json.dumps(list(sections), cls=DjangoJSONEncoder))}
+            if request.GET.get('section_id'):
+                idx = []
+                for x in Apartment.objects.select_related('personal_account').filter(
+                        section_id=request.GET.get('section_id')):
+                    try:
+                        if x.personal_account.status == 'active':
+                            idx.append(x.id)
+                    except:
+                        pass
+                apartments = Apartment.objects.filter(pk__in=idx).values('id', 'number')
+                response = {'apartments': json.loads(json.dumps(list(apartments), cls=DjangoJSONEncoder))}
+            if request.GET.get('apartment_id'):
+                apartment = get_object_or_404(Apartment, pk=request.GET.get('apartment_id'))
+                meter_readings = meter_readings.filter(apartment_id=request.GET.get('apartment_id'))
+                personal_account = apartment.personal_account.personal_number
+                response = {'number': str(personal_account).zfill(10),
+                            'owner': f'{apartment.owner.last_name} '
+                                     f'{apartment.owner.first_name} '
+                                     f'{apartment.owner.patronymic}' if apartment.owner else '(не задано)',
+                            'telephone': apartment.owner.telephone if apartment.owner else '(не задано)',
+                            'tariff': apartment.tariff.id if apartment.tariff else None}
+            response['meter_readings'] = my_serialize(meter_readings)
+            if request.GET.get('service_id'):
+                response = {'unit_id': get_object_or_404(Service, pk=request.GET.get('service_id')).unit.id}
+            return JsonResponse(response, status=200)
 # endregion Invoices
 
 
