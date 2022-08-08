@@ -1,0 +1,405 @@
+{% extends 'crm/layout/base.html' %}
+{% load static %}
+
+{% block style %}
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+    <style>
+        input.error {
+            border: red 1px solid;
+            position: relative;
+            box-shadow: 0 0 4px 0 firebrick;
+        }
+        select.error {
+            border: red 1px solid;
+            position: relative;
+            box-shadow: 0 0 4px 0 firebrick;
+        }
+        .container-fluid {
+            font-size: 14px;
+        }
+        .hover-li:hover {
+            background-color: lightgrey;
+            cursor: pointer;
+        }
+    </style>
+{% endblock %}
+
+{% block invoices %}class="nav-link active-link" style="color: black; background-color: #e1f1ea"{% endblock %}
+
+{% block title %}Новая квитанция{% endblock %}
+{% block name_page %}Новая квитанция{% endblock %}
+{% block previos_link %}<a href="{% url 'invoices_list' %}" style="color: #494949">/ Квитанции</a>{% endblock %}
+{% block nav %}Новая квитанция{% endblock %}
+
+{% block content %}
+<form method="post" enctype="multipart/form-data" id="form">
+    {% csrf_token %}
+    <div class="row" style="padding-bottom: 10px; margin: 0">
+        <div class="col-xl-6">
+            <div class="row">
+                <div class="input-group col-xl-6" style="padding-bottom: 10px">
+                    <div class="form-control" style="max-width: 40px">№</div>
+                    <div class="input-group-append">
+                        {{ form.number }}
+                    </div>
+                </div>
+                <div class="input-group col-xl-6">
+                    <span style="padding-top: 4px; padding-right: 10px">от</span>
+                    <div class="form-control" style="max-width: 40px"><i class="fa fa-calendar-alt"></i></div>
+                    <div class="input-group-append">
+                        {{ form.date }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-6" style="text-align: right">
+            <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Выберите действие <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+                <li id="add-services" class="hover-li"><span style="padding: 5px; color: #6c757d">Выставить все услуги согласно тарифу</span></li>
+                <li id="add-meters" class="hover-li"><span style="padding: 5px; color: #6c757d">Добавить показания счетчиков</span></li>
+            </ul>
+        </div>
+    </div>
+    <div class="my-box" style="min-height: 0">
+        <div class="container-fluid">
+            <div class="row" style="padding: 8px 3px 0 3px">
+                <div class="col-xl-6">
+                    <p style="font-weight: bold; margin: 0">{{ form.house.label }}</p>
+                    {{ form.house }}
+                    <p style="font-weight: bold; margin: 0; padding-top: 10px">{{ form.section.label }}</p>
+                    {{ form.section }}
+                    <p style="font-weight: bold; margin: 0; padding-top: 10px">{{ form.apartment.label }}</p>
+                    {{ form.apartment }}
+                    <p style="font-weight: bold; margin: 0; padding-top: 10px">{{ form.personal_account.label }}</p>
+                    {{ form.personal_account }}
+                    <p style="font-weight: bold; margin: 0; padding-top: 10px">Владелец: <span id="owner" style="color: #4f94d2">не выбран</span></p>
+                    <p style="font-weight: bold; margin: 0; padding-top: 10px">Телефон: <span id="telephone" style="color: #4f94d2">не выбран</span></p>
+                </div>
+                <div class="col-xl-6">
+                    <div style="padding-top: 30px">
+                        {{ form.is_held }}<span style="font-weight: bold; margin: 0; padding-left: 5px">{{ form.is_held.label }}</span>
+                    </div>
+                    <p style="font-weight: bold; margin: 0; padding-top: 17px">{{ form.status.label }}</p>
+                    {{ form.status }}
+                    <p style="font-weight: bold; margin: 0; padding-top: 10px">{{ form.tariff.label }}</p>
+                    {{ form.tariff }}
+                    <div class="row">
+                        <div class="col-xl-6">
+                            <p style="font-weight: bold; margin: 0; padding-top: 10px">{{ form.date_with.label }}</p>
+                            <div class="input-group">
+                                <div class="form-control" style="max-width: 40px"><i class="fa fa-calendar-alt"></i></div>
+                                <div class="input-group-append">
+                                    {{ form.date_with }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-6">
+                            <p style="font-weight: bold; margin: 0; padding-top: 10px">{{ form.date_before.label }}</p>
+                            <div class="input-group">
+                                <div class="form-control" style="max-width: 40px"><i class="fa fa-calendar-alt"></i></div>
+                                <div class="input-group-append">
+                                    {{ form.date_before }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--Services Formset-->
+            {{ formset.management_form }}
+            <table id="formset-table" class="table table-hover table-striped table-responsive no-padding" style="color: #333333; font-size: 14px; padding-top: 20px">
+                <thead>
+                    <tr>
+                        <th style="width: 20%">Услуга</th>
+                        <th style="width: 23%">Расход</th>
+                        <th style="width: 11%">Ед. изм.</th>
+                        <th style="width: 23%">Цена за Ед., грн.</th>
+                        <th style="width: 23%">Стоимость, грн.</th>
+                        <th style="width: 0%"></th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="4" valing="middle">
+                            <button id="add-service" type="button" class="btn btn-default">
+                                Добавить услугу
+                            </button>
+                            <button type="button" class="btn btn-default set-tariff-services">
+                                Установить все услуги согласно тарифу
+                            </button>
+                            <button type="button" class="btn btn-default add-meters">
+                                Добавить показания счетчиков
+                            </button>
+                        </td>
+                        <td style="min-width: 180px;">
+                            <div class="h4">
+                                Итого: <b><span id="current_amount">0.00</span></b> грн
+                                <input hidden type="number" id="amount" name="amount">
+                            </div>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+            <div class="delete-list"></div>
+
+            <table id="test" style="display: none">
+                <tbody id="empty_form">
+                    <tr id="{{ formset.empty_form.prefix }}-form">
+                        {{ formset.empty_form.id }}
+                        <td>{{ formset.empty_form.service }}</td>
+                        <td>{{ formset.empty_form.expense }}</td>
+                        <td>{{ formset.empty_form.unit }}</td>
+                        <td>{{ formset.empty_form.cost_for_unit }}</td>
+                        <td>{{ formset.empty_form.full_cost }}</td>
+                        <td>
+                            <div class="btn-group pull-right">
+                                <button onclick="delete_service(this.id)" id="{{ formset.empty_form.prefix }}" type="button" class="btn btn-default btn-sm"><i class="fa fa-trash-alt"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <!--End Services Formset-->
+
+            <div style="text-align: right; padding: 15px 16px 15px 0">
+                <a href="{% url 'invoices_list' %}" class="btn btn-default">Отменить</a>
+                <input type="submit" class="btn btn-success" name="save" value="Сохранить">
+            </div>
+        </div>
+    </div>
+
+    <div style="height: 30px"></div>
+
+    <div class="my-box" style="min-height: 0">
+        <div class="container-fluid" style="padding: 0">
+            <span style="font-size: 20px; padding-left: 5px" class="text-muted">Показания счетчиков</span>
+            <table id="table" class="table table-hover table-striped table-responsive no-padding" style="color: #333333; font-size: 14px">
+                <thead>
+                    <tr>
+                        <th style="width: 8%">№</th>
+                        <th style="width: 8%">Статус</th>
+                        <th style="width: 8%">Дата</th>
+                        <th style="width: 8%">Месяц</th>
+                        <th style="width: 15%">Дом</th>
+                        <th style="width: 15%">Секция</th>
+                        <th style="width: 8%">№квартиры</th>
+                        <th style="width: 14%">Счетчик</th>
+                        <th style="width: 8%">Показания</th>
+                        <th style="width: 8%">Ед. изм.</th>
+                        <th style="width: 0%"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for meter_reading in meter_readings %}
+                        <tr>
+                            <td>{{ meter_reading }}</td>
+                            <td>{{ meter_reading.get_status_display }}</td>
+                            <td>{{ meter_reading.date|date:"d.m.Y" }}</td>
+                            <td>{{ meter_reading.date|date:"F Y" }}</td>
+                            <td>{% for house in houses %}{% if meter_reading.apartment.section in house.sections.all %}{{ house.name }}{% endif %}{% endfor %}</td>
+                            <td>{{ meter_reading.apartment.section }}</td>
+                            <td>{{ meter_reading.apartment.number }}</td>
+                            <td>{{ meter_reading.meter.name }}</td>
+                            <td>{{ meter_reading.expense }}</td>
+                            <td>{{ meter_reading.meter.unit.name }}</td>
+                            <th style="width: 0%"></th>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div style="height: 30px"></div>
+</form>
+{% endblock %}
+
+{% block script %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.maskedinput/1.4.1/jquery.maskedinput.min.js"></script>
+    <script src="{% static 'crm/scripts/invoices/invoice_create.js' %}"></script>
+    <script>
+        $(function (){
+            $('#id_section option:not(:selected)').css('display', 'none')
+            $('#id_apartment option:not(:selected)').css('display', 'none')
+        })
+
+        // AJAX
+        $('#id_house').change(function (){
+            let house_id = $('#id_house').val()
+            $.ajax({
+                url: '{% url "work_with_invoice" %}',
+                type: 'GET',
+                data: {'house_id': house_id},
+                success: (data) => {
+                    $('#id_section option').remove()
+                    $('#id_apartment option').remove()
+                    $('#id_personal_account').attr('value', null)
+                    $('#owner').html('не выбран')
+                    $('#telephone').html('не выбран')
+                    $("#table tbody tr").remove()
+                    let f_data = data.meter_readings
+                    let m_r = '';
+                    $(f_data).each(function(index, value) {
+                        m_r += "<tr><td>" + value.number + "</td><td>" + value.status + "</td><td>" + value.date + "</td><td>" + value.month + "</td><td>" + value.house + "</td><td>" + value.section + "</td><td>" + value.apartment + "</td><td>" + value.meter + "</td><td>" + value.expense + "</td><td>" + value.unit + "</td><td></td></tr>"
+                    })
+                    $("#table tbody").append(m_r)
+                    if (data.sections) {
+                        let data_sections = data.sections
+                        let sections = ''
+                        $(data_sections).each(function(index, value) {
+                            sections += "<option value=" + value.id + ">" + value.name + "</option>"
+                        })
+                        $("#id_section").append("<option value selected>Выберите...</option>")
+                        $("#id_apartment").append("<option value selected>Выберите...</option>")
+                        $("#id_section").append(sections)
+                    } else {
+                        $("#id_section").append("<option value selected>Выберите...</option>")
+                        $("#id_apartment").append("<option value selected>Выберите...</option>")
+                    }
+                },
+                error: (data) => {
+                    console.log('no')
+                }
+            })
+        })
+
+        // ajax for apartment
+        $('#id_section').change(function (){
+            let section_id = $(this).val()
+            $.ajax({
+                url: '{% url "work_with_invoice" %}',
+                type: 'GET',
+                data: {'section_id': section_id},
+                success: (data) => {
+                    $('#id_apartment option').remove()
+                    $('#id_personal_account').attr('value', null)
+                    $('#owner').html('не выбран')
+                    $('#telephone').html('не выбран')
+                    $("#table tbody tr").remove()
+                    let f_data = data.meter_readings
+                    let m_r = '';
+                    $(f_data).each(function(index, value) {
+                        m_r += "<tr><td>" + value.number + "</td><td>" + value.status + "</td><td>" + value.date + "</td><td>" + value.month + "</td><td>" + value.house + "</td><td>" + value.section + "</td><td>" + value.apartment + "</td><td>" + value.meter + "</td><td>" + value.expense + "</td><td>" + value.unit + "</td><td></td></tr>"
+                    })
+                    $("#table tbody").append(m_r)
+                    if (data.apartments) {
+                        let data_apartments = data.apartments
+                        let apartments = ''
+                        $(data_apartments).each(function (index, value) {
+                            apartments += "<option value=" + value.id + ">" + value.number + "</option>"
+                        })
+                        $("#id_apartment").append("<option value selected>Выберите...</option>")
+                        $("#id_apartment").append(apartments)
+                    } else {
+                        $("#id_apartment").append("<option value selected>Выберите...</option>")
+                    }
+                },
+                error: (data) => {
+                    console.log('no')
+                }
+            })
+        })
+
+        // ajax for personal_account
+        $('#id_apartment').change(function (){
+            let apartment_id = $(this).val()
+            $.ajax({
+                url: '{% url "work_with_invoice" %}',
+                type: 'GET',
+                data: {'apartment_id': apartment_id},
+                success: (data) => {
+                    if (data.number) {
+                        $('#id_personal_account').attr('value', data.number)
+                        $('#owner').html(data.owner)
+                        $('#telephone').html(data.telephone)
+                        $('#id_tariff option[value=' + data.tariff + ']').prop('selected', true)
+                    } else {
+                        $('#id_personal_account').attr('value', null)
+                        $('#owner').html('')
+                        $('#telephone').html('')
+                    }
+                    $("#table tbody tr").remove()
+                    let f_data = data.meter_readings
+                    let m_r = '';
+                    $(f_data).each(function(index, value) {
+                        m_r += "<tr><td>" + value.number + "</td><td>" + value.status + "</td><td>" + value.date + "</td><td>" + value.month + "</td><td>" + value.house + "</td><td>" + value.section + "</td><td>" + value.apartment + "</td><td>" + value.meter + "</td><td>" + value.expense + "</td><td>" + value.unit + "</td><td></td></tr>"
+                    })
+                    $("#table tbody").append(m_r)
+                },
+                error: (data) => {
+                    console.log('no')
+                }
+            })
+        })
+
+        $('#id_personal_account').blur(function (){
+            let personal_number = $(this).val()
+            $.ajax({
+                url: '{% url "work_with_invoice" %}',
+                type: 'GET',
+                data: {'personal_number': personal_number},
+                success: (data) => {
+                    console.log('yes')
+                },
+                error: (data) => {
+                    console.log('no')
+                }
+            })
+        })
+
+
+        // ajax for services
+        function select_service(index) {
+            let service_id = $('#' + index).val()
+            $.ajax({
+                url: '{% url "work_with_invoice" %}',
+                type: 'GET',
+                data: {'service_id': service_id},
+                success: (data) => {
+                    let unit = index.replace(/service/g, 'unit')
+                    if (data.unit_id) {
+                        $('#' + unit + ' option[value=' + data.unit_id + ']').prop('selected', true)
+                    } else {
+                        $('#' + unit + ' option[value=""]').prop('selected', true)
+                    }
+                },
+                error: (data) => {
+                    console.log('no')
+                }
+            })
+        }
+
+        // VALIDATION
+        $("#form").validate({
+          rules: {
+              number: {
+                  min: 1,
+                  maxlength: 10,
+              },
+          },
+          messages: {
+              date: {required: '* Обязательное поле'},
+              date_with: {required: '* Обязательное поле'},
+              date_before: {required: '* Обязательное поле'},
+              number: {required: '* Обязательное поле'},
+              tariff: {required: '* Обязательное поле'},
+              apartment: {required: '* Обязательное поле'}
+          },
+          wrapper: 'span',
+          errorPlacement: function (error, element) {
+              error.css({'text-align': 'left', 'font-size': '14px', 'color': 'red', 'width': '100%'});
+              error.insertAfter(element);
+          }
+        });
+
+        // mask for date widgets
+        $('input[name="date"], input[name="date_with"], input[name="date_before"]').mask('99.99.9999');
+    </script>
+{% endblock %}

@@ -1,6 +1,17 @@
 {% extends 'crm/layout/base.html' %}
 {% load static %}
 
+{% block style %}
+    <style>
+        .disabled {
+          pointer-events: none;
+        }
+        .disabled:hover {
+            cursor: not-allowed;
+        }
+    </style>
+{% endblock %}
+
 {% block personal-accounts %}class="nav-link active-link" style="color: black; background-color: #e1f1ea"{% endblock %}
 
 {% block title %}Лицевой счет{% endblock %}
@@ -23,7 +34,7 @@
         <div class="container-fluid">
             <span style="font-size: 20px" class="text-muted">Просмотр лицевого счета</span>
             <div style="float: right; margin-bottom: 5px; padding-top: 5px; display: inline-block">
-                <a href="#" class="btn btn-default" style="font-size: 14px; max-height: 34px"><i class="fa fa-dollar-sign"></i> Принять платёж</a>
+                <a href="{% url 'transaction_create' %}?type=income&personal_account_id={{ object.id }}" class="btn btn-default {% if not object.apartment or object.status == 'inactive' %}disabled{% endif %}" style="font-size: 14px; max-height: 34px"><i class="fa fa-dollar-sign"></i> Принять платёж</a>
                 <a href="#" class="btn btn-default" style="font-size: 14px; max-height: 34px"><i class="fa fa-copy"></i> Оформить квитанцию</a>
                 <a href="{% url 'personal_account_update' object.id %}" class="btn btn-primary" style="font-size: 14px; max-height: 34px">Редактировать счет</a>
             </div>
@@ -94,8 +105,8 @@
                     <td style="width: 0%"></td>
                 </tr>
             </table>
-            <p style="margin: 0; font-size: 15px"><a href="#">Посмотреть показания счетчиков</a></p>
-            <p style="margin: 0; font-size: 15px"><a href="#">Посмотреть приходы</a></p>
+            <p style="margin: 0; font-size: 15px"><a {% if object.apartment %}href="{% url 'meter_readings_by_apartment_list' %}?apartment_id={{ object.apartment.id }}" {% else %}style="cursor: not-allowed; color: grey" {% endif %}>Посмотреть показания счетчиков</a></p>
+            <p style="margin: 0; font-size: 15px"><a id="income" href="{% url 'transactions_list' %}">Посмотреть приходы</a></p>
             <p style="margin: 0; font-size: 15px; padding-bottom: 15px"><a href="#">Посмотреть квитанции</a></p>
         </div>
     </div>
@@ -105,5 +116,11 @@
 {% block script %}
     <script>
         $(':input[readonly]').css({'background-color': 'white'});
+
+        $('#income').click(function () {
+            localStorage.income = 'true'
+            localStorage.personal_account = {{ object.personal_number }}
+            localStorage.counter = 1
+        })
     </script>
 {% endblock %}

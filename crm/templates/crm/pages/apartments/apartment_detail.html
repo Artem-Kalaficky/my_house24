@@ -1,6 +1,17 @@
 {% extends 'crm/layout/base.html' %}
 {% load static %}
 
+{% block style %}
+    <style>
+        .disabled {
+          pointer-events: none;
+        }
+        .disabled:hover {
+            cursor: not-allowed;
+        }
+    </style>
+{% endblock %}
+
 {% block apartments %}class="nav-link active-link" style="color: black; background-color: #e1f1ea"{% endblock %}
 
 {% block title %}Квартира №{{ apartment.number }}, {% for house in houses %}{% for section in house.sections.all %}{% if section.id == apartment.section.id %}{{ house.name }}{% endif %}{% endfor %}{% endfor %}{% endblock %}
@@ -13,7 +24,7 @@
         <div class="container-fluid">
             <span style="font-size: 20px" class="text-muted">Просмотр квартиры</span>
             <div style="float: right; margin-bottom: 5px; padding-top: 5px; display: inline-block">
-                <a href="#" class="btn btn-default" style="font-size: 14px; max-height: 34px"><i class="fa fa-dollar-sign"></i> Принять платёж</a>
+                <a {% for personal_account in personal_accounts %}{% if personal_account.apartment == apartment %}href="{% url 'transaction_create' %}?type=income&personal_account_id={{ personal_account.id }}" {% else %} class="disabled btn btn-default" {% endif %}{% endfor %} class="btn btn-default" style="font-size: 14px; max-height: 34px"><i class="fa fa-dollar-sign"></i> Принять платёж</a>
                 <a href="#" class="btn btn-default" style="font-size: 14px; max-height: 34px"><i class="fa fa-copy"></i> Оформить квитанцию</a>
                 <a href="{% url 'apartment_update' apartment.id %}" class="btn btn-primary" style="font-size: 14px; max-height: 34px">Редактировать квартиру</a>
             </div>
@@ -71,10 +82,20 @@
                     </tr>
                 </tbody>
             </table>
-            <p style="margin: 0; font-size: 15px"><a href="#">Посмотреть показания счетчиков</a></p>
-            <p style="margin: 0; font-size: 15px"><a href="#">Посмотреть приходы</a></p>
+            <p style="margin: 0; font-size: 15px"><a href="{% url 'meter_readings_by_apartment_list' %}?apartment_id={{ apartment.id }}">Посмотреть показания счетчиков</a></p>
+            <p style="margin: 0; font-size: 15px"><a id="income" href="{% url 'transactions_list' %}">Посмотреть приходы</a></p>
             <p style="margin: 0; font-size: 15px; padding-bottom: 15px"><a href="#">Посмотреть квитанции</a></p>
         </div>
     </div>
     <div style="height: 30px"></div>
+{% endblock %}
+
+{% block script %}
+    <script>
+        $('#income').click(function () {
+            localStorage.income = 'true'
+            localStorage.personal_account = {% for personal_account in personal_accounts %}{% if personal_account.apartment == apartment %}{{ personal_account.personal_number }}{% endif %}{% endfor %}
+            localStorage.counter = 1
+        })
+    </script>
 {% endblock %}

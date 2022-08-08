@@ -40,5 +40,6 @@ function clear() {
     delete localStorage.master
     delete localStorage.personal_account
     delete localStorage.income
+    delete localStorage.is_held
 }
 

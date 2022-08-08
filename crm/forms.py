@@ -15,7 +15,7 @@ from users.models import Role, UserProfile
 from users.tasks import send_change_password_notification
 from .models import (
     Item, Requisites, Service, Unit, Tariff, ServiceForTariff, House, Section, Floor, Apartment, PersonalAccount,
-    MeterReading, Application, Message, Transaction
+    MeterReading, Application, Message, Transaction, Invoice, ServiceForInvoice
 )
 
 
@@ -31,6 +31,7 @@ class TransactionForm(ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields['personal_account'].queryset = PersonalAccount.objects.filter(status='active')
         self.fields['date'].initial = datetime.datetime.today().strftime('%d.%m.%Y')
         self.fields['owner'].queryset = UserProfile.objects.filter(is_staff=False)
         managers = UserProfile.objects.select_related('role').filter(Q(is_staff=True) & (Q(role__role='director') |
@@ -40,7 +41,12 @@ class TransactionForm(ModelForm):
                 manager.role.get_role_display() + " - " + manager.first_name + " " + manager.last_name
         )) for manager in managers]
         self.fields['manager'].initial = 1
-
+        if kwargs.get('instance'):
+            self.fields['item'].empty_label = 'Выберите...'
+            if kwargs.get('instance').is_income:
+                self.fields['item'].queryset = Item.objects.filter(income_expense='income')
+            else:
+                self.fields['item'].queryset = Item.objects.filter(income_expense='expense')
 
     class Meta:
         model = Transaction
@@ -58,6 +64,65 @@ class TransactionForm(ModelForm):
                    'manager': Select(attrs={'class': 'form-select'}),
                    'is_income': CheckboxInput(attrs={'hidden': 'true'})}
 # endregion Transactions
+
+
+# region Invoices
+class InvoiceForm(ModelForm):
+    house = forms.ModelChoiceField(required=False, label='Дом', widget=Select(attrs={'class': 'form-select'}),
+                                   queryset=House.objects.all(), empty_label="Выберите...")
+    section = forms.ModelChoiceField(required=False, label='Секция', widget=Select(attrs={'class': 'form-select'}),
+                                     queryset=Section.objects.all(), empty_label="Выберите...")
+    personal_account = forms.IntegerField(required=False, label='Лицевой счет',
+                                          widget=forms.NumberInput(attrs={'class': 'form-control'}))
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['date'].initial = datetime.datetime.today().strftime('%d.%m.%Y')
+        self.fields['date_with'].initial = datetime.datetime.today().strftime('%d.%m.%Y')
+        self.fields['date_before'].initial = datetime.datetime.today().strftime('%d.%m.%Y')
+        self.fields['apartment'].empty_label = 'Выберите...'
+        self.fields['tariff'].empty_label = 'Выберите...'
+
+    class Meta:
+        model = Invoice
+        fields = ('number', 'date', 'apartment', 'is_held', 'status', 'tariff', 'date_with', 'date_before')
+        widgets = {'number': NumberInput(attrs={'class': 'form-control'}),
+                   'date': DateInputWidget(attrs={'class': 'form-control',
+                                                  'type': 'text'}),
+                   'apartment': Select(attrs={'class': 'form-select'}),
+                   'status': Select(attrs={'class': 'form-select'}),
+                   'tariff': Select(attrs={'class': 'form-select'}),
+                   'date_with': DateInputWidget(attrs={'class': 'form-control',
+                                                       'type': 'text'}),
+                   'date_before': DateInputWidget(attrs={'class': 'form-control',
+                                                         'type': 'text'})}
+
+
+class ServiceForInvoiceForm(ModelForm):
+    unit = forms.ModelChoiceField(required=False, queryset=Unit.objects.all(),
+                                  widget=Select(attrs={'class': 'form-select',
+                                                       'disabled': 'true'}))
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['service'].empty_label = 'Выберите...'
+        self.fields['unit'].empty_label = 'Выберите...'
+
+    class Meta:
+        model = ServiceForInvoice
+        fields = ('service', 'invoice', 'cost_for_unit', 'expense', 'full_cost')
+        widgets = {'service': Select(attrs={'class': 'form-select',
+                                            'onchange': 'select_service(this.id)'}),
+                   'expense': NumberInput(attrs={'class': 'form-control',
+                                                 'onblur': 'get_cost(this.id)'}),
+                   'cost_for_unit': NumberInput(attrs={'class': 'form-control',
+                                                       'onblur': 'get_cost(this.id)'}),
+                   'full_cost': NumberInput(attrs={'class': 'form-control full-cost',
+                                                   'readonly': 'true'})}
+
+
+ServiceForInvoiceFormSet = modelformset_factory(ServiceForInvoice, form=ServiceForInvoiceForm, extra=0, can_delete=True)
+# endregion Invoices
 
 
 # region PersonalAccounts
