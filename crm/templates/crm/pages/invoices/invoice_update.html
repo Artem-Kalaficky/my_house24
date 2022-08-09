@@ -26,10 +26,10 @@
 
 {% block invoices %}class="nav-link active-link" style="color: black; background-color: #e1f1ea"{% endblock %}
 
-{% block title %}Новая квитанция{% endblock %}
-{% block name_page %}Новая квитанция{% endblock %}
-{% block previos_link %}<a href="{% url 'invoices_list' %}" style="color: #494949">/ Квитанции</a>{% endblock %}
-{% block nav %}Новая квитанция{% endblock %}
+{% block title %}Квитанция{% endblock %}
+{% block name_page %}Квитанция{% endblock %}
+{% block previos_link %}<a href="{% url 'invoices_list' %}" style="color: #494949">/ Квитанции</a><a href="{% url 'invoice_detail' object.id %}" style="color: #494949">/ Квитанция №{{ object }}</a>{% endblock %}
+{% block nav %}Редактирование{% endblock %}
 
 {% block content %}
 <form method="post" enctype="multipart/form-data" id="form">
@@ -242,13 +242,8 @@
         $(function (){
             $('#id_section option:not(:selected)').css('display', 'none')
             $('#id_apartment option:not(:selected)').css('display', 'none')
-            {% if request.GET.personal_account_id %}
-                $('#id_personal_account').trigger('blur')
-            {% endif %}
-            {% if request.GET.invoice_id %}
-                $('#id_personal_account').trigger('blur')
-                get_full_cost()
-            {% endif %}
+            $('#id_personal_account').trigger('blur')
+            get_full_cost()
         })
 
         // AJAX

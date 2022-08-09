@@ -16,7 +16,7 @@ from .views import (
     MessageDeleteView, select_recipients_for_send_message, delete_selected_messages, TransactionsListView,
     TransactionDetailView, TransactionCreateView, create_transaction, TransactionDeleteView, TransactionUpdateView,
     InvoicesListView, InvoiceDetailView, InvoiceCreateView, work_with_invoice, InvoiceDeleteView,
-    delete_selected_invoices
+    delete_selected_invoices, InvoiceUpdateView
 )
 
 
@@ -34,7 +34,7 @@ urlpatterns = [
 
     # invoices
     path('invoices/delete/<int:pk>/', InvoiceDeleteView.as_view(), name='invoice_delete'),
-
+    path('invoices/update/<int:pk>/', InvoiceUpdateView.as_view(), name='invoice_update'),
     path('invoices/<int:pk>/', InvoiceDetailView.as_view(), name='invoice_detail'),
     path('invoices/create/', InvoiceCreateView.as_view(), name='invoice_create'),
     path('invoices/', InvoicesListView.as_view(), name='invoices_list'),

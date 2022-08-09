@@ -107,6 +107,8 @@ class ServiceForInvoiceForm(ModelForm):
         super().__init__(*args, **kwargs)
         self.fields['service'].empty_label = 'Выберите...'
         self.fields['unit'].empty_label = 'Выберите...'
+        if kwargs.get('instance'):
+            self.fields['unit'].initial = kwargs.get('instance').service.unit.id
 
     class Meta:
         model = ServiceForInvoice

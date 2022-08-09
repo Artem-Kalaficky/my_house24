@@ -80,7 +80,7 @@
                 </tr>
                 <tr>
                     <td style="width: 40%"><span style="font-weight: bold">Телефон</span></td>
-                    <td style="width: 60%">{% if object.apartment.owner %}{{ object.apartment.owner.telephone }}{% else %}(не задано){% endif %}</td>
+                    <td style="width: 60%">{% if object.apartment.owner and object.apartment.owner.telephone %}{{ object.apartment.owner.telephone }}{% else %}(не задано){% endif %}</td>
                     <td style="width: 0%"></td>
                 </tr>
                 <tr>
