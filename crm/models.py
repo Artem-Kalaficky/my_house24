@@ -211,7 +211,7 @@ class ServiceForTariff(models.Model):
 
 
 class ServiceForInvoice(models.Model):
-    invoice = models.ForeignKey('Invoice', on_delete=models.CASCADE, blank=True, verbose_name='Квитанция')
+    invoice = models.ForeignKey('Invoice', on_delete=models.CASCADE, null=True, blank=True, verbose_name='Квитанция')
     service = models.ForeignKey(Service, on_delete=models.CASCADE, verbose_name='Услуга')
     cost_for_unit = models.DecimalField(max_digits=8, decimal_places=2, verbose_name='Цена за ед., грн.')
     expense = models.IntegerField(verbose_name='Расход')
@@ -271,6 +271,19 @@ class Invoice(models.Model):
 
     def __str__(self):
         return str(self.number).zfill(10)
+
+
+class Template(models.Model):
+    template = models.FileField(upload_to='files/', verbose_name='Загрузить пользовательский шаблон')
+    name = models.CharField(max_length=64, verbose_name='Название')
+    is_default = models.BooleanField(default=False, blank=True, verbose_name='По-умолчанию')
+
+    class Meta:
+        verbose_name = 'Шаблон'
+        verbose_name_plural = 'Шаблоны'
+
+    def __str__(self):
+        return self.name
 
 
 class PersonalAccount(models.Model):

@@ -3,7 +3,7 @@ from django.contrib import admin
 from users.models import Role
 from .models import (
     Item, Requisites, Unit, Service, Tariff, ServiceForTariff, House, Section, Floor, Apartment, PersonalAccount,
-    MeterReading, Application, Message, Transaction, Invoice, ServiceForInvoice
+    MeterReading, Application, Message, Transaction, Invoice, ServiceForInvoice, Template
 )
 
 
@@ -23,6 +23,7 @@ admin.site.register(Apartment)
 admin.site.register(Transaction)
 admin.site.register(Invoice)
 admin.site.register(ServiceForInvoice)
+admin.site.register(Template)
 admin.site.register(PersonalAccount)
 admin.site.register(Message)
 admin.site.register(Application)

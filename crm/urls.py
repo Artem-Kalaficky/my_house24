@@ -16,7 +16,8 @@ from .views import (
     MessageDeleteView, select_recipients_for_send_message, delete_selected_messages, TransactionsListView,
     TransactionDetailView, TransactionCreateView, create_transaction, TransactionDeleteView, TransactionUpdateView,
     InvoicesListView, InvoiceDetailView, InvoiceCreateView, work_with_invoice, InvoiceDeleteView,
-    delete_selected_invoices, InvoiceUpdateView
+    delete_selected_invoices, InvoiceUpdateView, TemplatesForInvoiceListView, TemplateCreateView, TemplateDeleteView,
+    set_template_by_default, get_xls_by_template
 )
 
 
@@ -33,6 +34,12 @@ urlpatterns = [
     path('create-transaction-ajax/', create_transaction, name='create_transaction'),
 
     # invoices
+    path('invoices/<int:pk>/templates/', TemplatesForInvoiceListView.as_view(), name='templates_list'),
+    path('invoices/template/settings/delete/<int:pk>/', TemplateDeleteView.as_view(), name='template_delete'),
+    path('invoices/template/settings/', TemplateCreateView.as_view(), name='template_create'),
+    path('set-template-by-default/', set_template_by_default, name='set_template_by_default'),
+    path('get-xls-by-template/', get_xls_by_template, name='get_xls_by_template'),
+
     path('invoices/delete/<int:pk>/', InvoiceDeleteView.as_view(), name='invoice_delete'),
     path('invoices/update/<int:pk>/', InvoiceUpdateView.as_view(), name='invoice_update'),
     path('invoices/<int:pk>/', InvoiceDetailView.as_view(), name='invoice_detail'),

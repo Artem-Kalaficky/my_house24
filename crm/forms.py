@@ -15,7 +15,7 @@ from users.models import Role, UserProfile
 from users.tasks import send_change_password_notification
 from .models import (
     Item, Requisites, Service, Unit, Tariff, ServiceForTariff, House, Section, Floor, Apartment, PersonalAccount,
-    MeterReading, Application, Message, Transaction, Invoice, ServiceForInvoice
+    MeterReading, Application, Message, Transaction, Invoice, ServiceForInvoice, Template
 )
 
 
@@ -124,6 +124,14 @@ class ServiceForInvoiceForm(ModelForm):
 
 
 ServiceForInvoiceFormSet = modelformset_factory(ServiceForInvoice, form=ServiceForInvoiceForm, extra=0, can_delete=True)
+
+
+class TemplateForm(ModelForm):
+    class Meta:
+        model = Template
+        fields = ('name', 'template', 'is_default')
+        widgets = {'name': TextInput(attrs={'class': 'form-control'}),
+                   'is_default': CheckboxInput(attrs={'hidden': 'true'})}
 # endregion Invoices
 
 
