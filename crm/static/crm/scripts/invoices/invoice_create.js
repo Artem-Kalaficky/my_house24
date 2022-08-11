@@ -8,7 +8,8 @@ $('#add-service').click(function() {
 
 function delete_service(index) {
 	$('.delete-list').append('<input type="hidden" value="on" name="' + index  + '-DELETE" id="id_' + index + '-DELETE">');
-	$('#' + index + '-form').remove();
+	$('#' + index + '-form').css('display', 'none');
+    $('#id_' + index + '-full_cost').removeClass('full-cost')
     get_full_cost()
 }
 

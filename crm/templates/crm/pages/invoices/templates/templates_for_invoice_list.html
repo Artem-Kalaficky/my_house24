@@ -1,0 +1,64 @@
+{% extends 'crm/layout/base.html' %}
+{% load static %}
+
+{% block invoices %}class="nav-link active-link" style="color: black; background-color: #e1f1ea"{% endblock %}
+
+{% block title %}Печатная форма документа{% endblock %}
+{% block name_page %}Печатная форма документа{% endblock %}
+{% block previos_link %}<a href="{% url 'invoices_list' %}" style="color: #494949">/ Квитанции</a> <a href="{% url 'invoice_detail' object.id %}" style="color: #494949">/ Квитанция № {{ object }}</a>{% endblock %}
+{% block nav %}Печатная форма документа{% endblock %}
+
+{% block content %}
+    <div class="my-box" style="min-height: 0">
+        <div class="container-fluid">
+            <span style="font-size: 20px" class="text-muted">Список шаблонов</span>
+            <div style="float: right; margin-bottom: 5px; padding-top: 5px; display: inline-block">
+                <a href="{% url 'template_create' %}" class="btn btn-default" style="font-size: 14px; max-height: 34px">Настройка шаблонов</a>
+            </div>
+            <div class="dropdown-divider" style="border-color:lightgrey; margin-top: 15px"></div>
+            <div>
+                {% for template in templates %}
+                    <div style="padding-top: 5px">
+                        <input type="radio" id="{{ forloop.counter }}" name="template" value="{{ template.template.url }}" style="margin-right: 3px" {% if template.is_default %}checked{% endif %}>
+                        <label style="font-weight: normal" for="{{ forloop.counter }}">{{ template.name }}{% if template.is_default %}<b>(по-умолчанию)</b>{% endif %}</label>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div style="text-align: right; padding: 15px 16px 15px 0">
+                <a id="download" href="" download class="btn btn-success">Скачать</a>
+                <button type="button" class="btn btn-default" name="save">Отправить на e-mail</button>
+            </div>
+        </div>
+    </div>
+    <div style="height: 30px"></div>
+{% endblock %}
+
+{% block script %}
+    <script>
+        $(function () {
+            let element = $('input[type=radio]:checked')
+            let file = element.val()
+            get_xls(file)
+        })
+
+        $('input[type=radio]').change(function () {
+            let file = $(this).val()
+            get_xls(file)
+        })
+
+        function get_xls(template_id) {
+            $.ajax({
+                url: '{% url "get_xls_by_template" %}',
+                type: 'GET',
+                data: {'template_id': template_id},
+                success: (data) => {
+                    console.log('yes')
+                },
+                error: (data) => {
+                    console.log('no')
+                }
+            })
+        }
+    </script>
+{% endblock %}

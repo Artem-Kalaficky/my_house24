@@ -26,10 +26,10 @@
 
 {% block invoices %}class="nav-link active-link" style="color: black; background-color: #e1f1ea"{% endblock %}
 
-{% block title %}Новая квитанция{% endblock %}
-{% block name_page %}Новая квитанция{% endblock %}
-{% block previos_link %}<a href="{% url 'invoices_list' %}" style="color: #494949">/ Квитанции</a>{% endblock %}
-{% block nav %}Новая квитанция{% endblock %}
+{% block title %}Квитанция{% endblock %}
+{% block name_page %}Квитанция{% endblock %}
+{% block previos_link %}<a href="{% url 'invoices_list' %}" style="color: #494949">/ Квитанции</a><a href="{% url 'invoice_detail' object.id %}" style="color: #494949">/ Квитанция №{{ object }}</a>{% endblock %}
+{% block nav %}Редактирование{% endblock %}
 
 {% block content %}
 <form method="post" enctype="multipart/form-data" id="form">
@@ -242,13 +242,8 @@
         $(function (){
             $('#id_section option:not(:selected)').css('display', 'none')
             $('#id_apartment option:not(:selected)').css('display', 'none')
-            {% if request.GET.personal_account_id %}
-                $('#id_personal_account').trigger('blur')
-            {% endif %}
-            {% if request.GET.invoice_id %}
-                $('#id_personal_account').trigger('blur')
-                get_full_cost()
-            {% endif %}
+            $('#id_personal_account').trigger('blur')
+            get_full_cost()
         })
 
         // AJAX
@@ -435,8 +430,13 @@
 
         // ajax for FORMSET (services by tariff)
         $('.set-tariff-services').click(function () {
-            $('#formset-table tbody tr').remove()
-            $('#current_amount').html('0.00')
+            $('#formset-table tbody tr').each(function (index, element) {
+                let indexx = element.id.replace(/-form/g, '')
+                $('.delete-list').append('<input type="hidden" value="on" name="' + indexx + '-DELETE" id="id_' + indexx + '-DELETE">');
+                $('#' + indexx + '-form').css('display', 'none');
+                $('#id_' + indexx + '-full_cost').removeClass('full-cost')
+                get_full_cost()
+            })
             let tariff_id = $('#id_tariff').val()
             $.ajax({
                 url: '{% url "work_with_invoice" %}',
@@ -451,7 +451,7 @@
                             $('#id_formset-TOTAL_FORMS').val(parseInt(form_idx) + 1);
                         }
                         let data_services = data.services
-                        $('#formset-table tbody tr').each(function (id, elem){
+                        $('#formset-table tbody tr:visible').each(function (id, elem){
                             let service = elem.id.replace(/-form/g, '-service')
                             let unit = elem.id.replace(/-form/g, '-unit')
                             let cost_for_unit = elem.id.replace(/-form/g, '-cost_for_unit')

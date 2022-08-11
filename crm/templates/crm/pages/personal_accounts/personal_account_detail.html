@@ -35,7 +35,7 @@
             <span style="font-size: 20px" class="text-muted">Просмотр лицевого счета</span>
             <div style="float: right; margin-bottom: 5px; padding-top: 5px; display: inline-block">
                 <a href="{% url 'transaction_create' %}?type=income&personal_account_id={{ object.id }}" class="btn btn-default {% if not object.apartment or object.status == 'inactive' %}disabled{% endif %}" style="font-size: 14px; max-height: 34px"><i class="fa fa-dollar-sign"></i> Принять платёж</a>
-                <a href="#" class="btn btn-default" style="font-size: 14px; max-height: 34px"><i class="fa fa-copy"></i> Оформить квитанцию</a>
+                <a href="{% url 'invoice_create' %}?personal_account_id={{ object.id }}" class="btn btn-default {% if not object.apartment or object.status == 'inactive' %}disabled{% endif %}" style="font-size: 14px; max-height: 34px"><i class="fa fa-copy"></i> Оформить квитанцию</a>
                 <a href="{% url 'personal_account_update' object.id %}" class="btn btn-primary" style="font-size: 14px; max-height: 34px">Редактировать счет</a>
             </div>
             <div class="dropdown-divider" style="border-color:lightgrey; margin-top: 15px"></div>
@@ -107,7 +107,7 @@
             </table>
             <p style="margin: 0; font-size: 15px"><a {% if object.apartment %}href="{% url 'meter_readings_by_apartment_list' %}?apartment_id={{ object.apartment.id }}" {% else %}style="cursor: not-allowed; color: grey" {% endif %}>Посмотреть показания счетчиков</a></p>
             <p style="margin: 0; font-size: 15px"><a id="income" href="{% url 'transactions_list' %}">Посмотреть приходы</a></p>
-            <p style="margin: 0; font-size: 15px; padding-bottom: 15px"><a href="#">Посмотреть квитанции</a></p>
+            <p style="margin: 0; font-size: 15px; padding-bottom: 15px"><a id="invoice" {% if object.apartment %}href="{% url 'invoices_list' %}" {% else %}style="cursor: not-allowed; color: grey" {% endif %}>Посмотреть квитанции</a></p>
         </div>
     </div>
     <div style="height: 30px"></div>
@@ -120,6 +120,11 @@
         $('#income').click(function () {
             localStorage.income = 'true'
             localStorage.personal_account = {{ object.personal_number }}
+            localStorage.counter = 1
+        })
+
+        $('#invoice').click(function () {
+            localStorage.apartment = {{ object.apartment.id }}
             localStorage.counter = 1
         })
     </script>

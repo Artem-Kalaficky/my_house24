@@ -25,7 +25,7 @@
             <span style="font-size: 20px" class="text-muted">Просмотр квартиры</span>
             <div style="float: right; margin-bottom: 5px; padding-top: 5px; display: inline-block">
                 <a {% for personal_account in personal_accounts %}{% if personal_account.apartment == apartment %}href="{% url 'transaction_create' %}?type=income&personal_account_id={{ personal_account.id }}" {% else %} class="disabled btn btn-default" {% endif %}{% endfor %} class="btn btn-default" style="font-size: 14px; max-height: 34px"><i class="fa fa-dollar-sign"></i> Принять платёж</a>
-                <a href="#" class="btn btn-default" style="font-size: 14px; max-height: 34px"><i class="fa fa-copy"></i> Оформить квитанцию</a>
+                <a {% if object.personal_account and object.personal_account.status == 'active' %}href="{% url 'invoice_create' %}?personal_account_id={{ object.personal_account.id }}" class="btn btn-default"{% else %} class="disabled btn btn-default" {% endif %} style="font-size: 14px; max-height: 34px"><i class="fa fa-copy"></i> Оформить квитанцию</a>
                 <a href="{% url 'apartment_update' apartment.id %}" class="btn btn-primary" style="font-size: 14px; max-height: 34px">Редактировать квартиру</a>
             </div>
             <div class="dropdown-divider" style="border-color:lightgrey; margin-top: 15px"></div>
@@ -84,7 +84,7 @@
             </table>
             <p style="margin: 0; font-size: 15px"><a href="{% url 'meter_readings_by_apartment_list' %}?apartment_id={{ apartment.id }}">Посмотреть показания счетчиков</a></p>
             <p style="margin: 0; font-size: 15px"><a id="income" href="{% url 'transactions_list' %}">Посмотреть приходы</a></p>
-            <p style="margin: 0; font-size: 15px; padding-bottom: 15px"><a href="#">Посмотреть квитанции</a></p>
+            <p style="margin: 0; font-size: 15px; padding-bottom: 15px"><a id="invoice" {% if object.personal_account %}href="{% url 'invoices_list' %}" {% else %}style="cursor: not-allowed; color: grey" {% endif %}>Посмотреть квитанции</a></p>
         </div>
     </div>
     <div style="height: 30px"></div>
@@ -92,9 +92,8 @@
 
 {% block script %}
     <script>
-        $('#income').click(function () {
-            localStorage.income = 'true'
-            localStorage.personal_account = {% for personal_account in personal_accounts %}{% if personal_account.apartment == apartment %}{{ personal_account.personal_number }}{% endif %}{% endfor %}
+        $('#invoice').click(function () {
+            localStorage.apartment = {{ object.id }}
             localStorage.counter = 1
         })
     </script>

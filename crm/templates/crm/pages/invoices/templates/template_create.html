@@ -1,0 +1,125 @@
+{% extends 'crm/layout/base.html' %}
+{% load static %}
+
+{% block style %}
+    <style>
+        .set-default:hover {
+            cursor: pointer;
+        }
+    </style>
+{% endblock %}
+
+{% block invoices %}class="nav-link active-link" style="color: black; background-color: #e1f1ea"{% endblock %}
+
+{% block title %}Настройка шаблонов{% endblock %}
+{% block name_page %}Настройка шаблонов{% endblock %}
+{% block previos_link %}<a href="{% url 'invoices_list' %}" style="color: #494949">/ Квитанции</a>{% endblock %}
+{% block nav %}Настройка шаблонов{% endblock %}
+
+{% block content %}
+    <div class="my-box" style="min-height: 0">
+        <div class="container-fluid">
+            <span style="font-size: 20px" class="text-muted">Список шаблонов</span>
+            <div class="dropdown-divider" style="border-color:lightgrey"></div>
+            <div>
+                {% for template in templates %}
+                    <div style="padding-top: 10px">
+                        <p style="margin: 0">{{ template.name }} <span class="default" id="{{ forloop.counter }}-default">{% if template.is_default %}<b>(по-умолчанию)</b>{% endif %}</span></p>
+                        <a href="{{ template.template.url }}" download style="text-decoration: none; font-size: 14px"><i class="fa fa-download" aria-hidden="true"></i> Скачать шаблон</a>
+                        <span id="{{ template.id }}" class="set-default" style="color: green; font-size: 14px; padding-left: 10px">• Назначить шаблоном по умоланию</span>
+                        <a href="" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ forloop.counter }}" style="color: red; text-decoration: none; font-size: 14px; padding-left: 10px"><i class="fa fa-trash-alt" style="color: red"></i> Удалить шаблон</a>
+                        <!-- Modal -->
+                        <div class="modal fade" id="deleteModal-{{ forloop.counter }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="deleteModalLabel-{{ forloop.counter }}" aria-hidden="true">
+                          <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                              <div class="modal-header bg-danger">
+                                <h5 class="modal-title" id="deleteModal1Label-{{ forloop.counter }}">Подтверждение удаления</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                              </div>
+                                  <div class="modal-body">
+                                      Вы действительно хотите удалить шаблон <b>{{ template.name }}</b>?
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                                    <a href="{% url 'template_delete' template.id %}" class="btn btn-danger">Удалить</a>
+                                  </div>
+                            </div>
+                          </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div style="padding-top: 30px; font-size: 14px">
+                    <p style="margin: 0; font-weight: bold">{{ form.template.label }}</p>
+                    {{ form.template }}
+                    <p style="margin: 0; font-weight: bold; padding-top: 10px">{{ form.name.label }}</p>
+                    <div class="col-xl-6" style="margin: 0; padding: 0">
+                        {{ form.name }}
+                    </div>
+                    {{ form.is_default }}
+                </div>
+
+                <div style="text-align: center; padding: 15px 16px 15px 0">
+                    <a href="{% url 'invoices_list' %}" class="btn btn-default">Отменить</a>
+                    <input type="submit" class="btn btn-success" value="Сохранить">
+                </div>
+            </form>
+        </div>
+    </div>
+    <div style="height: 30px"></div>
+{% endblock %}
+
+{% block script %}
+    <script>
+        $('.set-default').click(function (){
+            let template_id = this.id
+            $.ajax({
+                url: '{% url "set_template_by_default" %}',
+                type: 'GET',
+                data: {'template_id': template_id},
+                success: (data) => {
+                    $('.default').html('')
+                    $('#' + template_id + '-default').html('<b>(по-умолчанию)</b>')
+                },
+                error: (data) => {
+                    console.log('no')
+                }
+            })
+        })
+
+
+        // Messages
+        {% if messages %}
+        Swal.fire({
+          backdrop: false,
+          position: 'top-end',
+          padding: 0,
+          icon: 'success',
+          width: 300,
+          html: '{% for message in messages %}{% if message.tags == 'success' %}{{ message }}{% endif %}{% endfor %}',
+          showConfirmButton: false,
+          timer: 1500,
+        })
+        {% endif %}
+
+        {% if messages %}
+            {% for message in messages %}
+                {% if message.tags == 'error' %}
+                    Swal.fire({
+                      backdrop: false,
+                      position: 'top-end',
+                      padding: 0,
+                      icon: 'error',
+                      width: 300,
+                      html: '{{ message }}',
+                      showConfirmButton: false,
+                      timer: 1500,
+                    })
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    </script>
+{% endblock %}

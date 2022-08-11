@@ -18,14 +18,15 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormVi
 
 from users.tasks import send_invite_letter
 from .models import Item, Requisites, Service, Unit, Tariff, ServiceForTariff, House, Section, Floor, Apartment, \
-    PersonalAccount, MeterReading, Application, Message, Transaction, Invoice, ServiceForInvoice
+    PersonalAccount, MeterReading, Application, Message, Transaction, Invoice, ServiceForInvoice, Template
 from main.models import MainPage, Block, AboutPage, Photo, Document, ServicePage, AboutService, ContactPage
 from users.models import UserProfile, Role
 from .forms import RoleFormSet, ItemForm, RequisiteForm, ServiceFormSet, UnitFormSet, ServiceForTariffFormSet, \
     TariffForm, ServiceForTariffForm, MainPageForm, SeoForm, BlockFormSet, AboutPageForm, PhotoForm, DocumentFormSet, \
     ServicePageForm, AboutServiceFormSet, ContactPageForm, SectionFormSet, FloorFormSet, UserFormSet, HouseForm, \
     OwnerCreateForm, OwnerUpdateForm, InviteForm, ApartmentForm, PersonalAccountForm, MeterReadingForm, \
-    MeterReadingUpdateForm, ApplicationForm, MessageForm, TransactionForm, InvoiceForm, ServiceForInvoiceFormSet
+    MeterReadingUpdateForm, ApplicationForm, MessageForm, TransactionForm, InvoiceForm, ServiceForInvoiceFormSet, \
+    ServiceForInvoiceForm, TemplateForm
 from users.forms import UserCreateForm, ChangeUserInfoForm
 from .serializers import my_serialize
 
@@ -39,6 +40,36 @@ class StaffRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
 
 class StatisticsTemplateView(StaffRequiredMixin, TemplateView):
     template_name = 'crm/pages/statistics.html'
+
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+        applications = Application.objects.all()
+        personal_accounts = PersonalAccount.objects.all()
+        invoices = Invoice.objects.all()
+        transactions = Transaction.objects.all()
+        context['houses'] = House.objects.all()
+        context['owners'] = UserProfile.objects.filter(Q(is_staff=False) & (Q(status='is_active') | Q(status='new')))
+        context['in_progress_applications'] = applications.filter(status='in_progress')
+        context['apartments'] = Apartment.objects.all()
+        context['personal_accounts'] = personal_accounts
+        context['new_applications'] = applications.filter(status='new')
+        debt_balance = personal_accounts.aggregate(sum=Sum('balance', filter=Q(status='active', balance__lt=0)))['sum']
+        context['debt_balance'] = abs(debt_balance) if debt_balance else '0,00'
+        context['balance'] = personal_accounts.aggregate(sum=Sum('balance', filter=Q(status='active',
+                                                                                     balance__gte=0)))['sum']
+        context['cashbox'] = transactions.aggregate(sum=Sum('amount', filter=Q(completed=True)))['sum']
+        list_of_debts_by_month = []
+        list_of_incomes_by_month = []
+        for i in range(1, 13):
+            debt_by_month = invoices.aggregate(sum=Sum('amount', filter=(Q(date__month=i) & Q(is_held=True) &
+                                                                         (Q(status='unpaid') | Q(status='p_paid')))))
+            income_by_month = transactions.aggregate(sum=Sum('amount', filter=Q(date__month=i, is_income=True,
+                                                                                completed=True)))
+            list_of_debts_by_month.append(int(debt_by_month['sum']) if debt_by_month['sum'] else 0)
+            list_of_incomes_by_month.append(int(income_by_month['sum']) if income_by_month['sum'] else 0)
+        context['list_of_debts_by_month'] = list_of_debts_by_month
+        context['list_of_incomes_by_month'] = list_of_incomes_by_month
+        return self.render_to_response(context)
 
 
 # region Transactions
@@ -288,6 +319,7 @@ class InvoiceCreateView(StaffRequiredMixin, SuccessMessageMixin, CreateView):
     template_name = 'crm/pages/invoices/invoice_create.html'
     success_url = reverse_lazy('invoices_list')
     success_message = 'Общая квитанция успешно создана!'
+    id = None
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -296,20 +328,43 @@ class InvoiceCreateView(StaffRequiredMixin, SuccessMessageMixin, CreateView):
         context['houses'] = House.objects.prefetch_related('sections').all()
         context['formset'] = ServiceForInvoiceFormSet(self.request.POST or None, prefix='formset',
                                                       queryset=ServiceForInvoice.objects.none())
+        if self.request.GET.get('invoice_id'):
+            services_for_invoice = ServiceForInvoice.objects.select_related('service', 'service__unit').filter(
+                invoice_id=self.request.GET.get('invoice_id'))
+            formset = modelformset_factory(ServiceForInvoice, form=ServiceForInvoiceForm, can_delete=True,
+                                           extra=len(services_for_invoice))
+            context['formset'] = formset(self.request.POST or None, queryset=ServiceForInvoice.objects.none(),
+                                         prefix='formset', initial=[{'service': x.service,
+                                                                     'cost_for_unit': x.cost_for_unit,
+                                                                     'expense': x.expense,
+                                                                     'unit': x.service.unit.id,
+                                                                     'full_cost': x.full_cost}
+                                                                    for x in services_for_invoice])
         return context
 
     def get_form(self, form_class=None):
         if form_class is None:
-            if self.request.GET.get('id'):
-                pass
-            else:
-                form_class = InvoiceForm(self.request.POST or None)
+            form_class = InvoiceForm(self.request.POST or None)
+            if self.request.GET.get('personal_account_id'):
+                p_a = get_object_or_404(PersonalAccount, pk=self.request.GET.get('personal_account_id')).personal_number
+                form_class = InvoiceForm(self.request.POST or None, initial={'personal_account': str(p_a).zfill(10)})
+            if self.request.GET.get('invoice_id'):
+                largest = Invoice.objects.all().order_by('number').last()
+                invoice = get_object_or_404(Invoice, pk=self.request.GET.get('invoice_id'))
+                personal_account = str(invoice.apartment.personal_account.personal_number).zfill(10)
+                form_class = InvoiceForm(self.request.POST or None,
+                                         initial={'personal_account': personal_account,
+                                                  'number': str(largest.number + 1).zfill(10),
+                                                  'status': invoice.status,
+                                                  'is_held': invoice.is_held,
+                                                  'date': invoice.date.strftime('%d.%m.%Y'),
+                                                  'date_with': invoice.date_with.strftime('%d.%m.%Y'),
+                                                  'date_before': invoice.date_before.strftime('%d.%m.%Y')})
         return form_class
 
     def form_valid(self, form):
-        invoice = form.save(commit=False)
-        invoice.amount = int(self.request.POST.get('amount'))
-        invoice.save()
+        invoice = form.save()
+        self.id = invoice.id
         formset = self.get_context_data()['formset']
         for obj in formset:
             if obj.is_valid():
@@ -322,10 +377,100 @@ class InvoiceCreateView(StaffRequiredMixin, SuccessMessageMixin, CreateView):
                         pass
         return super().form_valid(form)
 
+    def get_success_url(self):
+        ready_invoice = get_object_or_404(Invoice, pk=self.id)
+        amount = ServiceForInvoice.objects.aggregate(sum=Sum('full_cost', filter=Q(invoice=ready_invoice)))['sum']
+        ready_invoice.amount = ready_invoice.amount + amount
+        ready_invoice.save()
+        if ready_invoice.is_held and (ready_invoice.status == 'unpaid' or ready_invoice.status == 'p_paid'):
+            personal_account = get_object_or_404(PersonalAccount, apartment=ready_invoice.apartment)
+            personal_account.balance = personal_account.balance - ready_invoice.amount
+            personal_account.save()
+        return self.success_url
+
+
+class InvoiceUpdateView(StaffRequiredMixin, SuccessMessageMixin, UpdateView):
+    queryset = Invoice.objects.select_related('apartment')
+    template_name = 'crm/pages/invoices/invoice_update.html'
+    success_url = reverse_lazy('invoices_list')
+    success_message = 'Данные о квитанции обновлены!'
+    is_held = None
+    p_a_id = None
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        queryset = ServiceForInvoice.objects.select_related('service', 'service__unit').filter(invoice=self.object)
+        context['formset'] = ServiceForInvoiceFormSet(self.request.POST or None, queryset=queryset, prefix='formset')
+        return context
+
+    def get_form(self, form_class=None):
+        if form_class is None:
+            form_class = InvoiceForm(self.request.POST or None, instance=self.object,
+                                     initial={'number': str(self.object.number).zfill(10),
+                                              'date': self.object.date.strftime('%d.%m.%Y'),
+                                              'date_with': self.object.date_with.strftime('%d.%m.%Y'),
+                                              'date_before': self.object.date_before.strftime('%d.%m.%Y'),
+                                              'personal_account': str(self.object.apartment.personal_account.personal_number).zfill(10)})
+        return form_class
+
+    def form_valid(self, form):
+        old_invoice = get_object_or_404(Invoice, pk=self.object.id)
+        self.is_held = old_invoice.is_held
+        self.p_a_id = old_invoice.apartment.personal_account.id
+        formset = self.get_context_data()['formset']
+        form.save()
+        if formset.is_valid():
+            formset.save(commit=False)
+            for obj in formset.deleted_objects:
+                obj.delete()
+            for obj in formset:
+                if obj.cleaned_data and not obj.cleaned_data['DELETE']:
+                    obj.instance.invoice = form.instance
+                    try:
+                        obj.save()
+                    except IntegrityError:
+                        pass
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        invoice = get_object_or_404(Invoice, pk=self.object.id)
+        amount = ServiceForInvoice.objects.aggregate(sum=Sum('full_cost', filter=Q(invoice=invoice)))['sum']
+        old_amount = invoice.amount
+        invoice.amount = amount
+        invoice.save()
+        if invoice.status == 'unpaid' or invoice.status == 'p_paid':
+            personal_account = get_object_or_404(PersonalAccount, apartment=invoice.apartment)
+            if personal_account.id != self.p_a_id:
+                old_p_a = get_object_or_404(PersonalAccount, pk=self.p_a_id)
+                if self.is_held:
+                    old_p_a.balance = old_p_a.balance + old_amount
+                if invoice.is_held:
+                    personal_account.balance = personal_account.balance - invoice.amount
+                old_p_a.save()
+            if self.is_held != invoice.is_held:
+                if invoice.is_held:
+                    personal_account.balance = personal_account.balance - invoice.amount
+                else:
+                    personal_account.balance = personal_account.balance + invoice.amount
+            else:
+                personal_account.balance = (personal_account.balance + old_amount) - invoice.amount
+            personal_account.save()
+        return self.success_url
+
 
 class InvoiceDeleteView(DeleteView):
     model = Invoice
     success_url = reverse_lazy('invoices_list')
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        success_url = self.get_success_url()
+        if self.object.is_held and (self.object.status == 'unpaid' or self.object.status == 'p_paid'):
+            personal_account = get_object_or_404(PersonalAccount, apartment=self.object.apartment)
+            personal_account.balance = personal_account.balance + self.object.amount
+            personal_account.save()
+        self.object.delete()
+        return HttpResponseRedirect(success_url)
 
 
 def delete_selected_invoices(request):
@@ -333,7 +478,13 @@ def delete_selected_invoices(request):
         if request.method == 'GET':
             if request.GET.get('idx'):
                 idx = [int(x) for x in request.GET.get('idx').split(' ')[:-1]]
-                Invoice.objects.filter(pk__in=idx).delete()
+                invoices = Invoice.objects.filter(pk__in=idx)
+                for invoice in invoices:
+                    if invoice.is_held and (invoice.status == 'unpaid' or invoice.status == 'p_paid'):
+                        personal_account = get_object_or_404(PersonalAccount, apartment=invoice.apartment)
+                        personal_account.balance = personal_account.balance + invoice.amount
+                        personal_account.save()
+                invoices.delete()
                 messages.add_message(request, messages.SUCCESS, 'Выбранные квитанции успешно удалены!')
             return JsonResponse({}, status=200)
 
@@ -342,6 +493,7 @@ def work_with_invoice(request):
     if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
         if request.method == 'GET':
             response = {}
+            houses = House.objects.prefetch_related('sections').all()
             meter_readings = MeterReading.objects.select_related('apartment', 'apartment__section', 'meter',
                                                                  'meter__unit').all()
             if request.GET.get('house_id'):
@@ -368,10 +520,102 @@ def work_with_invoice(request):
                                      f'{apartment.owner.patronymic}' if apartment.owner else '(не задано)',
                             'telephone': apartment.owner.telephone if apartment.owner else '(не задано)',
                             'tariff': apartment.tariff.id if apartment.tariff else None}
+            if request.GET.get('personal_number'):
+                try:
+                    personal_account = get_object_or_404(PersonalAccount,
+                                                         personal_number=int(request.GET.get('personal_number')))
+                    if personal_account.status == 'active':
+                        house = [x for x in houses if personal_account.apartment.section in x.sections.all()][0]
+                        sections = house.sections.all().values('id', 'name')
+                        apartments = Apartment.objects.filter(pk=personal_account.apartment.id).values('id', 'number')
+                        meter_readings = meter_readings.filter(apartment_id=personal_account.apartment.id)
+                        response['house_id'] = house.id
+                        response['sections'] = json.loads(json.dumps(list(sections), cls=DjangoJSONEncoder))
+                        response['section_id'] = personal_account.apartment.section.id
+                        response['apartments'] = json.loads(json.dumps(list(apartments), cls=DjangoJSONEncoder))
+                        response['apartment_id'] = personal_account.apartment.id
+                        response['tariff_id'] = personal_account.apartment.tariff.id \
+                            if personal_account.apartment.tariff else None
+                        response['owner'] = f'{personal_account.apartment.owner.last_name} ' \
+                                            f'{personal_account.apartment.owner.first_name} ' \
+                                            f'{personal_account.apartment.owner.patronymic}' \
+                                            if personal_account.apartment.owner else '(не задано)'
+                        response['telephone'] = personal_account.apartment.owner.telephone \
+                            if personal_account.apartment.owner else '(не задано)'
+                except:
+                    pass
             response['meter_readings'] = my_serialize(meter_readings)
+            if request.GET.get('tariff_id'):
+                services = ServiceForTariff.objects.filter(tariff_id=request.GET.get('tariff_id'))
+                response['count'] = len(services)
+                response['services'] = json.loads(json.dumps(
+                    list(services.values('service_id', 'service__unit_id', 'cost_for_unit')), cls=DjangoJSONEncoder))
+            if request.GET.get('meters_by_apartment_id'):
+                meter_readings = MeterReading.objects.filter(apartment_id=request.GET.get('meters_by_apartment_id'))
+                response['meters'] = json.loads(json.dumps(
+                    list(meter_readings.values('meter_id', 'expense')), cls=DjangoJSONEncoder))
             if request.GET.get('service_id'):
                 response = {'unit_id': get_object_or_404(Service, pk=request.GET.get('service_id')).unit.id}
             return JsonResponse(response, status=200)
+
+
+class TemplatesForInvoiceListView(StaffRequiredMixin, DetailView):
+    model = Invoice
+    template_name = 'crm/pages/invoices/templates/templates_for_invoice_list.html'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['templates'] = Template.objects.all().order_by('pk')
+        return context
+
+
+def get_xls_by_template(request):
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        if request.method == 'GET':
+            print(request.GET.get('template_id'))
+            return JsonResponse({}, status=200)
+
+
+class TemplateCreateView(StaffRequiredMixin, SuccessMessageMixin, CreateView):
+    form_class = TemplateForm
+    template_name = 'crm/pages/invoices/templates/template_create.html'
+    success_url = reverse_lazy('template_create')
+    success_message = 'Новый шаблон успешно добавлен!'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['templates'] = Template.objects.all().order_by('pk')
+        return context
+
+
+class TemplateDeleteView(DeleteView):
+    model = Template
+    success_url = reverse_lazy('template_create')
+
+    def get(self, request, *args, **kwargs):
+        return self.post(request, *args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        success_url = self.get_success_url()
+        if self.object.is_default:
+            messages.add_message(request, messages.ERROR, 'Невозможно удалить шаблон по умолчанию!')
+        else:
+            self.object.delete()
+            messages.add_message(request, messages.SUCCESS, 'Шаблон успешно удалён!')
+        return HttpResponseRedirect(success_url)
+
+
+def set_template_by_default(request):
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        if request.method == 'GET':
+            old_template_by_default = Template.objects.get(is_default=True)
+            old_template_by_default.is_default = False
+            old_template_by_default.save()
+            template = get_object_or_404(Template, pk=request.GET.get('template_id'))
+            template.is_default = True
+            template.save()
+            return JsonResponse({}, status=200)
 # endregion Invoices
 
 
@@ -851,7 +1095,6 @@ class HouseCreateView(StaffRequiredMixin, SuccessMessageMixin, CreateView):
             if obj.is_valid() and obj.cleaned_data and not obj.cleaned_data['DELETE']:
                 floor = obj.save()
                 house.floors.add(floor)
-
         if user_formset.is_valid():
             for obj in user_formset:
                 if obj.cleaned_data and not obj.cleaned_data['DELETE']:

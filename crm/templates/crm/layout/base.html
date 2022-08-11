@@ -100,7 +100,7 @@
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
           {% if user.role.has_statistics %}
           <li class="nav-item">
-            <a href="{% url 'home' %}" class="nav-link" {% block statistics %}{% endblock %}>
+            <a href="{% url 'home' %}" {% block statistics %}class="nav-link"{% endblock %}>
               <i class="fas fa-chart-line" style="width: 23px"></i>
               <p style="color: #494949; font-size: 14px; font-weight: 600">
                 Статистика
