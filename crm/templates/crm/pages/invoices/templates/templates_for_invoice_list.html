@@ -47,11 +47,12 @@
             get_xls(file)
         })
 
-        function get_xls(template_id) {
+        function get_xls(template) {
             $.ajax({
                 url: '{% url "get_xls_by_template" %}',
                 type: 'GET',
-                data: {'template_id': template_id},
+                data: {'template': template,
+                       'invoice_id': '{{ object.id }}'},
                 success: (data) => {
                     console.log('yes')
                 },

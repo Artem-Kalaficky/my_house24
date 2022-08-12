@@ -13,6 +13,7 @@ from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.template.loader import render_to_string
 from django.urls import reverse_lazy, reverse
+from django.utils import dateformat
 from django.views.generic import TemplateView, ListView, DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormView
 
@@ -28,6 +29,7 @@ from .forms import RoleFormSet, ItemForm, RequisiteForm, ServiceFormSet, UnitFor
     MeterReadingUpdateForm, ApplicationForm, MessageForm, TransactionForm, InvoiceForm, ServiceForInvoiceFormSet, \
     ServiceForInvoiceForm, TemplateForm
 from users.forms import UserCreateForm, ChangeUserInfoForm
+from .parsers import parse
 from .serializers import my_serialize
 
 
@@ -572,7 +574,27 @@ class TemplatesForInvoiceListView(StaffRequiredMixin, DetailView):
 def get_xls_by_template(request):
     if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
         if request.method == 'GET':
-            print(request.GET.get('template_id'))
+            houses = House.objects.prefetch_related('sections').all()
+            path = request.GET.get('template')[1:]
+            invoice = get_object_or_404(Invoice, pk=request.GET.get('invoice_id'))
+            serv_for_invs = ServiceForInvoice.objects.filter(invoice_id=request.GET.get('invoice_id'))
+            owner = f'{invoice.apartment.owner.last_name} ' \
+                    f'{invoice.apartment.owner.first_name} ' \
+                    f'{invoice.apartment.owner.last_name}' if invoice.apartment.owner else '(не задано)'
+            address = [house.address for house in houses if invoice.apartment.section in house.sections.all()][0]
+            data = {'invoiceAddress': f'{owner}, {address}, квартира № {invoice.apartment.number}',
+                    'total': invoice.amount,
+                    'accountBalance': invoice.apartment.personal_account.balance,
+                    'invoiceDate': invoice.date.strftime('%d.%m.%Y'),
+                    'invoiceMonth': dateformat.format(invoice.date, 'F Y'),
+                    'accountNumber': str(invoice.apartment.personal_account.personal_number).zfill(10),
+                    'invoiceNumber': str(invoice.number).zfill(10),
+                    'services': [{'service': serv.service.name,
+                                  'tariff': serv.cost_for_unit,
+                                  'unit': serv.service.unit.name,
+                                  'expense': serv.expense,
+                                  'full_cost': serv.full_cost} for serv in serv_for_invs]}
+            parse(path, data)
             return JsonResponse({}, status=200)
 
 
