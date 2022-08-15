@@ -50,7 +50,8 @@ class House(models.Model):
 class Apartment(models.Model):
     section = models.ForeignKey(Section, on_delete=models.CASCADE, verbose_name='Секция')
     floor = models.ForeignKey(Floor, on_delete=models.CASCADE, verbose_name='Этаж')
-    owner = models.ForeignKey(UserProfile, on_delete=models.PROTECT, null=True, blank=True, verbose_name='Владелец')
+    owner = models.ForeignKey(UserProfile, on_delete=models.PROTECT, null=True, blank=True, related_name='apartment',
+                              verbose_name='Владелец')
     tariff = models.ForeignKey('Tariff', on_delete=models.PROTECT, null=True, blank=True, verbose_name='Тариф')
     number = models.IntegerField(verbose_name='Номер квартиры')
     area = models.FloatField(null=True, blank=True, verbose_name='Площадь (кв.м.)')

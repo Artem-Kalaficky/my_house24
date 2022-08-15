@@ -13,7 +13,7 @@ from django.conf import settings
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'my_house24.settings')
 
-# you change change the name here
+# you change the name here
 app = Celery("my_house24", broker='redis://localhost')
 
 # read config from Django settings, the CELERY namespace would make celery

@@ -1,0 +1,166 @@
+{% extends 'personal_cabinet/layout/base.html' %}
+{% load static %}
+
+{% block profile %}class="nav-link active-link" style="color: black; background-color: #e1f1ea"{% endblock %}
+
+{% block title %}Профиль{% endblock %}
+{% block name_page %}Профиль{% endblock %}
+{% block nav %}Профиль{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-xl-3" style="padding: 0 15px 15px 15px">
+            <div style="background-color: #ffffff; border-top: 3px #d2d6de solid; border-radius: 3px; border-bottom: 1px #d2d6de solid">
+                <div class="userAvatar" style="text-align: center; padding: 10px">
+                    <img style="border: 3px lightgrey solid" class="img-circle img-responsive" src="{% if user.avatar  %}{{ user.avatar.url }}{% else %}{% static 'crm/dist/img/default_avatar.jpeg' %}{% endif %}" height="100" width="100">
+                    <p style="margin: 0; padding-top: 5px; font-size: 18px">{{ user.last_name }} {{ user.first_name }} {{ user.patronymic }}</p>
+                    <span class="text-muted">Владелец квартиры</span>
+                </div>
+                <div style="padding: 5px">
+                    <div class="dropdown-divider" style="border-color:lightgrey"></div>
+                    <span>Телефон</span> <span style="float: right">{% if user.telephone %}{{ user.telephone }}{% else %}(не задано){% endif %}</span>
+                    <div class="dropdown-divider" style="border-color:lightgrey"></div>
+                    <span>Viber</span> <span style="float: right">{% if user.viber %}{{ user.viber }}{% else %}(не задано){% endif %}</span>
+                    <div class="dropdown-divider" style="border-color:lightgrey"></div>
+                    <span>Telegram</span> <span style="float: right">{% if user.telegram %}{{ user.telegram }}{% else %}(не задано){% endif %}</span>
+                    <div class="dropdown-divider" style="border-color:lightgrey"></div>
+                    <span>Email</span> <span style="float: right">{% if user.email %}{{ user.email }}{% else %}(не задано){% endif %}</span>
+                    <div style="padding: 20px 0 5px 0">
+                        <a href="{% url 'owner_profile_update' user.id %}" class="btn btn-primary" style="width: 100%">Изменить</a>
+                    </div>
+                </div>
+            </div>
+            <div style="margin-top: 40px">
+                <h4>Обо мне (заметки)</h4>
+                <div style="background-color: #ffffff; border-top: 3px #d2d6de solid; border-radius: 3px; border-bottom: 1px #d2d6de solid">
+                    <div style="padding: 10px">
+                        {{ user.notes }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-9">
+            <h4 style="margin-left: 5px">Мои квартиры</h4>
+            {% if count_apartments < 1 %}
+            <div style="background-color: #ffffff; border-top: 3px #d2d6de solid; border-radius: 3px; border-bottom: 1px #d2d6de solid; margin-right: 5px; margin-left: 5px">
+                <div style="padding: 10px; font-size: 18px">
+                    Квартиры пока не добавены.
+                </div>
+            </div>
+            {% else %}
+                {% for apartment in user.apartment.all %}
+                    <div style="margin-bottom: 30px; background-color: #ffffff; border-top: 3px #d2d6de solid; border-radius: 3px; border-bottom: 1px #d2d6de solid; margin-right: 5px; margin-left: 5px">
+                        <div>
+                            <p style="margin: 0; padding: 5px; font-size: 18px">Описание квартиры</p>
+                            <div class="dropdown-divider" style="border-color:lightgrey; margin: 0"></div>
+                        </div>
+                        <div style="padding: 7px; font-size: 14px">
+                            {% for house in houses %}
+                                {% if apartment.section in house.sections.all %}
+                                    <p style="margin: 0; padding-bottom: 5px">{{ house.name }}, {{ house.address }}, кв. {{ apartment.number }}</p>
+
+                                    <div class="row">
+                                        <div class="col-xl-6">
+                                            <div style="border: 1px lightgrey solid; text-align: -webkit-center; border-radius: 4px">
+                                                <img id="id_image_1" src="{% if house.image_1 %}{{ house.image_1.url }}{% else %}{% static 'crm/dist/img/default' %}{% endif %}" height="350" width="100%" style="padding: 4px">
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-6">
+                                            <div class="row" style="padding-bottom: 18px">
+                                                <div class="col-xl-6">
+                                                    <div style="border: 1px lightgrey solid; text-align: -webkit-center; border-radius: 4px">
+                                                        <img id="id_image_2" src="{% if house.image_2 %}{{ house.image_2.url }}{% else %}{% static 'crm/dist/img/default' %}{% endif %}" height="165" width="100%" style="padding: 4px">
+                                                    </div>
+                                                </div>
+                                                <div class="col-xl-6">
+                                                    <div style="border: 1px lightgrey solid; text-align: -webkit-center; border-radius: 4px">
+                                                        <img id="id_image_3" src="{% if house.image_3 %}{{ house.image_3.url }}{% else %}{% static 'crm/dist/img/default' %}{% endif %}" height="165" width="100%" style="padding: 4px">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-xl-6">
+                                                    <div style="border: 1px lightgrey solid; text-align: -webkit-center; border-radius: 4px">
+                                                        <img id="id_image_4" src="{% if house.image_4 %}{{ house.image_4.url }}{% else %}{% static 'crm/dist/img/default' %}{% endif %}" height="165" width="100%" style="padding: 4px">
+                                                    </div>
+                                                </div>
+                                                <div class="col-xl-6">
+                                                    <div style="border: 1px lightgrey solid; text-align: -webkit-center; border-radius: 4px">
+                                                        <img id="id_image_5" src="{% if house.image_5 %}{{ house.image_5.url }}{% else %}{% static 'crm/dist/img/default' %}{% endif %}" height="165" width="100%" style="padding: 4px">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <table id="my-table" class="table table-hover table-striped table-responsive no-padding" style="color: #333333; font-size: 14px; padding-top: 15px">
+                                        <tr>
+                                            <td style="width: 50%"><span style="font-weight: bold">Описание</span></td>
+                                            <td style="width: 50%"></td>
+                                            <td style="width: 0%"></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width: 50%">Название дома</td>
+                                            <td style="width: 50%">{{ house.name }}</td>
+                                            <td style="width: 0%"></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width: 50%">Адрес</td>
+                                            <td style="width: 50%">{{ house.address }}</td>
+                                            <td style="width: 0%"></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width: 50%">№ квартиры</td>
+                                            <td style="width: 50%">{{ apartment.number }}</td>
+                                            <td style="width: 0%"></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width: 50%">Площадь</td>
+                                            <td style="width: 50%">{% if apartment.area %}{{ apartment.area }}м²{% else %}(не задано){% endif %}</td>
+                                            <td style="width: 0%"></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width: 50%">Этаж</td>
+                                            <td style="width: 50%">{{ apartment.floor }}</td>
+                                            <td style="width: 0%"></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width: 50%">Секция</td>
+                                            <td style="width: 50%">{{ apartment.section }}</td>
+                                            <td style="width: 0%"></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width: 50%">Лицевой счет</td>
+                                            <td style="width: 50%">{% if apartment.personal_account %}{{ apartment.personal_account }}{% else %}(не задано){% endif %}</td>
+                                            <td style="width: 0%"></td>
+                                        </tr>
+                                    </table>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'crm/scripts/owners/owners_list.js' %}"></script>
+    <script>
+        // Messages
+        {% if messages %}
+        Swal.fire({
+          backdrop: false,
+          position: 'top-end',
+          padding: 0,
+          icon: 'success',
+          width: 300,
+          html: '{% for message in messages %}{{ message }}{% endfor %}',
+          showConfirmButton: false,
+          timer: 1500,
+        })
+        {% endif %}
+    </script>
+{% endblock %}
+

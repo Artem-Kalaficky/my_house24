@@ -47,8 +47,8 @@
                                             <p style="font-weight: bold; padding: 0; margin-bottom: 0">{{ form.unit.label }}</p>
                                             <div class="input-group">
                                                 {{ form.unit }}
-                                                <div class="input-group-append">
-                                                    <button onclick="delete_service(this.id)" id="{{ form.prefix }}" type="button" class="btn btn-default"><i class="fa fa-trash"></i></button>
+                                                <div class="input-group-append {% if form.id.value in serv_for_invoice %}disabled{% endif %}">
+                                                    <button onclick="delete_service(this.id)" id="{{ form.prefix }}" type="button" class="btn btn-default" {% if form.id.value in serv_for_invoice %}disabled{% endif %}><i class="fa fa-trash"></i></button>
                                                 </div>
                                             </div>
                                             {{ form.unit.errors }}
@@ -100,8 +100,8 @@
                                             <span style="font-weight: bold">{{ form.name.label }}</span>
                                             <div class="input-group">
                                                 {{ form.name }}
-                                                <div class="input-group-append {% if form.id.value in idx %}disabled{% endif %}">
-                                                    <button onclick="delete_unit(this.id)" id="{{ form.prefix }}" type="button" class="btn btn-default" {% if form.id.value in idx %}disabled{% endif %}><i class="fa fa-trash"></i></button>
+                                                <div class="input-group-append {% if form.id.value in unit_for_serv %}disabled{% endif %}">
+                                                    <button onclick="delete_unit(this.id)" id="{{ form.prefix }}" type="button" class="btn btn-default" {% if form.id.value in unit_for_serv %}disabled{% endif %}><i class="fa fa-trash"></i></button>
                                                 </div>
                                             </div>
                                         </div>

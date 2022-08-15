@@ -9,8 +9,13 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="{% static 'crm/plugins/fontawesome-free/css/all.min.css' %}">
+  <link rel="stylesheet" href="{% static 'crm/bootstrap5dist/css/bootstrap.min.css' %}">
   <!-- Theme style -->
   <link rel="stylesheet" href="{% static 'crm/dist/css/adminlte.min.css' %}">
+  <!-- Select2 style -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <!-- My style -->
+  <link rel="stylesheet" href="{% static 'crm/styles/base.css' %}">
   {% block style %}{% endblock %}
   <style>
       .active-link {
@@ -98,6 +103,7 @@
       <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
 
+          {% if count_apartments > 0 %}
           <li class="nav-item {% block summary %}<!--menu-is-opening menu-open-->{% endblock %}">
             <a href="#" class="nav-link">
               <i class="fa fa-chart-line" style="width: 23px"></i>
@@ -115,6 +121,16 @@
               </li>
             </ul>
           </li>
+          {% else %}
+          <li class="nav-link" style="cursor: not-allowed; color: lightgrey" title="Раздел станет доступным после добавления квартиры">
+              <i class="fa fa-chart-line" style="width: 23px"></i>
+              <span style="font-size: 14px; font-weight: 600">
+                Сводка
+              </span>
+          </li>
+          {% endif %}
+
+          {% if count_apartments > 0 %}
           <li class="nav-item {% block invoices %}<!--menu-is-opening menu-open-->{% endblock %}">
             <a href="#" class="nav-link">
               <i class="fas fa-copy" style="width: 23px"></i>
@@ -138,6 +154,16 @@
               </li>
             </ul>
           </li>
+          {% else %}
+          <li class="nav-link" style="cursor: not-allowed; color: lightgrey" title="Раздел станет доступным после добавления квартиры">
+              <i class="fas fa-copy" style="width: 23px"></i>
+              <span style="font-size: 14px; font-weight: 600">
+                Квитанции
+              </span>
+          </li>
+          {% endif %}
+
+          {% if count_apartments > 0 %}
           <li class="nav-item {% block tariffs %}<!--menu-is-opening menu-open-->{% endblock %}">
             <a href="#" class="nav-link">
               <i class="fa fa-money-bill-wave" style="width: 23px"></i>
@@ -155,30 +181,61 @@
               </li>
             </ul>
           </li>
+          {% else %}
+          <li class="nav-link" style="cursor: not-allowed; color: lightgrey" title="Раздел станет доступным после добавления квартиры">
+              <i class="fa fa-money-bill-wave" style="width: 23px"></i>
+              <span style="font-size: 14px; font-weight: 600">
+                Тарифы
+              </span>
+          </li>
+          {% endif %}
+
+          {% if count_apartments > 0 %}
           <li class="nav-item">
-            <a href="#" class="nav-link {% block messages %}{% endblock %}">
+            <a href="" {% block messages %}class="nav-link"{% endblock %}>
               <i class="fas fa-envelope" style="width: 23px"></i>
               <p style="color: #494949; font-size: 14px; font-weight: 600">
                 Сообщения
               </p>
             </a>
           </li>
+          {% else %}
+          <li class="nav-link" style="cursor: not-allowed; color: lightgrey" title="Раздел станет доступным после добавления квартиры">
+              <i class="fas fa-envelope" style="width: 23px"></i>
+              <span style="font-size: 14px; font-weight: 600">
+                Сообщения
+              </span>
+          </li>
+          {% endif %}
+
+          {% if count_apartments > 0 %}
           <li class="nav-item">
-            <a href="#" class="nav-link {% block applications %}{% endblock %}">
+            <a href="" {% block application %}class="nav-link"{% endblock %}>
               <i class="fas fa-wrench" style="width: 23px"></i>
               <p style="color: #494949; font-size: 14px; font-weight: 600">
                 Вызов мастера
               </p>
             </a>
           </li>
+          {% else %}
+          <li class="nav-link" style="cursor: not-allowed; color: lightgrey" title="Раздел станет доступным после добавления квартиры">
+              <i class="fas fa-wrench" style="width: 23px"></i>
+              <span style="font-size: 14px; font-weight: 600">
+                Вызов мастера
+              </span>
+          </li>
+          {% endif %}
+
+
           <li class="nav-item">
-            <a href="#" class="nav-link {% block profile %}{% endblock %}">
+            <a href="{% url 'owner_profile' %}" {% block profile %}class="nav-link"{% endblock %}>
               <i class="fa fa-user-circle" style="width: 23px"></i>
               <p style="color: #494949; font-size: 14px; font-weight: 600">
                 Профиль
               </p>
             </a>
           </li>
+
         </ul>
       </nav>
       <!-- /.sidebar-menu -->
@@ -197,12 +254,12 @@
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item" style="font-size: 14px"><a href="#" style="color: #494949"><i class="fa fa-home" style="padding-right: 3px"></i>Главная</a></li>
+              <li class="breadcrumb-item" style="font-size: 14px"><a href="{% if count_apartments > 0 %}{% url 'cabinet' %}{% else %}{% url 'owner_profile' %}{% endif %}" style="color: #494949"><i class="fa fa-home" style="padding-right: 3px"></i>Главная </a>{% block previos_link %}{% endblock %}</li>
               <li class="breadcrumb-item active" style="font-size: 14px">{% block nav %}Сводка{% endblock %}</li>
             </ol>
           </div><!-- /.col -->
         </div><!-- /.row -->
-        <div class="dropdown-divider" style="border-color:lightgrey"></div>
+        <div class="dropdown-divider" style="border-color:lightgrey; margin: 0"></div>
       </div><!-- /.container-fluid -->
     </div>
     <!-- /.content-header -->
@@ -227,10 +284,17 @@
 
 <!-- jQuery -->
 <script src="{% static 'crm/plugins/jquery/jquery.min.js' %}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
 <!-- Bootstrap 4 -->
 <script src="{% static 'crm/plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'crm/bootstrap5dist/js/bootstrap.bundle.min.js' %}"></script>
 <!-- AdminLTE App -->
 <script src="{% static 'crm/dist/js/adminlte.min.js' %}"></script>
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<!-- Select2 -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<!-- My -->
+<script src="{% static 'crm/scripts/tables.js' %}"></script>
 {% block script %}{% endblock %}
 </body>
 </html>
