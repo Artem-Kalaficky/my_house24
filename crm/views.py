@@ -1,10 +1,12 @@
 import datetime
 import json
 
+import pdfkit
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
+from django.core.mail import EmailMessage
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db import IntegrityError
 from django.db.models import Q, Sum
@@ -16,8 +18,9 @@ from django.urls import reverse_lazy, reverse
 from django.utils import dateformat
 from django.views.generic import TemplateView, ListView, DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormView
+from xlsx2html import xlsx2html
 
-from users.tasks import send_invite_letter
+from users.tasks import send_invite_letter, send_invoice_in_pdf
 from .models import Item, Requisites, Service, Unit, Tariff, ServiceForTariff, House, Section, Floor, Apartment, \
     PersonalAccount, MeterReading, Application, Message, Transaction, Invoice, ServiceForInvoice, Template
 from main.models import MainPage, Block, AboutPage, Photo, Document, ServicePage, AboutService, ContactPage
@@ -381,7 +384,11 @@ class InvoiceCreateView(StaffRequiredMixin, SuccessMessageMixin, CreateView):
 
     def get_success_url(self):
         ready_invoice = get_object_or_404(Invoice, pk=self.id)
-        amount = ServiceForInvoice.objects.aggregate(sum=Sum('full_cost', filter=Q(invoice=ready_invoice)))['sum']
+        try:
+            amount = ServiceForInvoice.objects.aggregate(sum=Sum('full_cost', filter=Q(invoice=ready_invoice)))['sum']
+        except:
+            amount = 0
+        amount = 0 if not amount else amount
         ready_invoice.amount = ready_invoice.amount + amount
         ready_invoice.save()
         if ready_invoice.is_held and (ready_invoice.status == 'unpaid' or ready_invoice.status == 'p_paid'):
@@ -436,7 +443,11 @@ class InvoiceUpdateView(StaffRequiredMixin, SuccessMessageMixin, UpdateView):
 
     def get_success_url(self):
         invoice = get_object_or_404(Invoice, pk=self.object.id)
-        amount = ServiceForInvoice.objects.aggregate(sum=Sum('full_cost', filter=Q(invoice=invoice)))['sum']
+        try:
+            amount = ServiceForInvoice.objects.aggregate(sum=Sum('full_cost', filter=Q(invoice=invoice)))['sum']
+        except:
+            amount = 0
+        amount = 0 if not amount else amount
         old_amount = invoice.amount
         invoice.amount = amount
         invoice.save()
@@ -561,6 +572,7 @@ def work_with_invoice(request):
             return JsonResponse(response, status=200)
 
 
+# region templates for INVOICE
 class TemplatesForInvoiceListView(StaffRequiredMixin, DetailView):
     model = Invoice
     template_name = 'crm/pages/invoices/templates/templates_for_invoice_list.html'
@@ -574,28 +586,34 @@ class TemplatesForInvoiceListView(StaffRequiredMixin, DetailView):
 def get_xls_by_template(request):
     if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
         if request.method == 'GET':
+            response = {}
             houses = House.objects.prefetch_related('sections').all()
-            path = request.GET.get('template')[1:]
             invoice = get_object_or_404(Invoice, pk=request.GET.get('invoice_id'))
             serv_for_invs = ServiceForInvoice.objects.filter(invoice_id=request.GET.get('invoice_id'))
-            owner = f'{invoice.apartment.owner.last_name} ' \
-                    f'{invoice.apartment.owner.first_name} ' \
-                    f'{invoice.apartment.owner.last_name}' if invoice.apartment.owner else '(не задано)'
-            address = [house.address for house in houses if invoice.apartment.section in house.sections.all()][0]
-            data = {'invoiceAddress': f'{owner}, {address}, квартира № {invoice.apartment.number}',
-                    'total': invoice.amount,
-                    'accountBalance': invoice.apartment.personal_account.balance,
-                    'invoiceDate': invoice.date.strftime('%d.%m.%Y'),
-                    'invoiceMonth': dateformat.format(invoice.date, 'F Y'),
-                    'accountNumber': str(invoice.apartment.personal_account.personal_number).zfill(10),
-                    'invoiceNumber': str(invoice.number).zfill(10),
-                    'services': [{'service': serv.service.name,
-                                  'tariff': serv.cost_for_unit,
-                                  'unit': serv.service.unit.name,
-                                  'expense': serv.expense,
-                                  'full_cost': serv.full_cost} for serv in serv_for_invs]}
-            parse(path, data)
-            return JsonResponse({}, status=200)
+            if request.GET.get('template'):
+                path = request.GET.get('template')[1:]
+                owner = f'{invoice.apartment.owner.last_name} ' \
+                        f'{invoice.apartment.owner.first_name} ' \
+                        f'{invoice.apartment.owner.last_name}' if invoice.apartment.owner else '(не задано)'
+                address = [house.address for house in houses if invoice.apartment.section in house.sections.all()][0]
+                data = {'invoiceAddress': f'{owner}, {address}, квартира № {invoice.apartment.number}',
+                        'total': invoice.amount,
+                        'accountBalance': invoice.apartment.personal_account.balance,
+                        'invoiceDate': invoice.date.strftime('%d.%m.%Y'),
+                        'invoiceMonth': dateformat.format(invoice.date, 'F Y'),
+                        'accountNumber': str(invoice.apartment.personal_account.personal_number).zfill(10),
+                        'invoiceNumber': str(invoice.number).zfill(10),
+                        'services': [{'service': serv.service.name,
+                                      'tariff': serv.cost_for_unit,
+                                      'unit': serv.service.unit.name,
+                                      'expense': serv.expense,
+                                      'full_cost': serv.full_cost} for serv in serv_for_invs]}
+                temp_path = '/' + parse(path, data)
+                response['temp_path'] = temp_path
+            if request.GET.get('send') == 'true':
+                email = invoice.apartment.owner.email
+                send_invoice_in_pdf.delay(email)
+            return JsonResponse(response, status=200)
 
 
 class TemplateCreateView(StaffRequiredMixin, SuccessMessageMixin, CreateView):
@@ -638,6 +656,7 @@ def set_template_by_default(request):
             template.is_default = True
             template.save()
             return JsonResponse({}, status=200)
+# endregion templates for INVOICE
 # endregion Invoices
 
 
@@ -1707,13 +1726,10 @@ class ServiceCreateView(StaffRequiredMixin, SuccessMessageMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        services = Service.objects.select_related('unit')
-        idx = []
-        for service in services:
-            idx.append(service.unit.id)
-        context['idx'] = idx
+        context['unit_for_serv'] = [x.unit.id for x in Service.objects.select_related('unit').all()]
         context['unit_formset'] = UnitFormSet(self.request.POST or None, queryset=Unit.objects.all(),
                                               prefix='unit_formset')
+        context['serv_for_invoice'] = [x.service.id for x in ServiceForInvoice.objects.select_related('service').all()]
         return context
 
     def get_form(self, form_class=None):

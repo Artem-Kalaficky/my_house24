@@ -11,7 +11,7 @@
 {% block content %}
     <div class="my-box" style="min-height: 0">
         <div class="container-fluid">
-            <span style="font-size: 20px" class="text-muted">Список шаблонов</span>
+            <span id='test' style="font-size: 20px" class="text-muted">Список шаблонов</span>
             <div style="float: right; margin-bottom: 5px; padding-top: 5px; display: inline-block">
                 <a href="{% url 'template_create' %}" class="btn btn-default" style="font-size: 14px; max-height: 34px">Настройка шаблонов</a>
             </div>
@@ -27,7 +27,7 @@
 
             <div style="text-align: right; padding: 15px 16px 15px 0">
                 <a id="download" href="" download class="btn btn-success">Скачать</a>
-                <button type="button" class="btn btn-default" name="save">Отправить на e-mail</button>
+                <button id='send' type="button" class="btn btn-default">Отправить на e-mail</button>
             </div>
         </div>
     </div>
@@ -47,19 +47,28 @@
             get_xls(file)
         })
 
-        function get_xls(template) {
+        function get_xls(template, send='false') {
             $.ajax({
                 url: '{% url "get_xls_by_template" %}',
                 type: 'GET',
                 data: {'template': template,
-                       'invoice_id': '{{ object.id }}'},
+                       'invoice_id': '{{ object.id }}',
+                       'send': send},
                 success: (data) => {
-                    console.log('yes')
+                    if (data.temp_path) {
+                        $('#download').attr('href', data.temp_path)
+                    }
                 },
                 error: (data) => {
                     console.log('no')
                 }
             })
         }
+
+        $('#send').click(function (){
+            let element = $('input[type=radio]:checked')
+            let file = element.val()
+            get_xls(file, 'true')
+        })
     </script>
 {% endblock %}

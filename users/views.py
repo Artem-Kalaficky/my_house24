@@ -7,6 +7,10 @@ from django.core.signing import BadSignature
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse_lazy
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import never_cache
+from django.views.decorators.csrf import csrf_protect
+from django.views.decorators.debug import sensitive_post_parameters
 from django.views.generic import CreateView, TemplateView
 
 from .forms import AdminLoginForm, RegisterUserForm, OwnerLoginForm
@@ -50,7 +54,12 @@ class OwnerLoginView(LoginView):
         if not remember_me:
             self.request.session.set_expiry(0)
             self.request.session.modified = True
-        return HttpResponseRedirect(reverse_lazy('cabinet'))
+        url = reverse_lazy('cabinet')
+        if len(self.request.user.apartment.all()) < 1:
+            url = reverse_lazy('owner_profile')
+        if self.request.user.is_staff:
+            url = reverse_lazy('owner_login')
+        return HttpResponseRedirect(url)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
