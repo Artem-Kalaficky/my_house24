@@ -42,25 +42,73 @@
     <ul class="navbar-nav ml-auto">
 
       <!-- New users Dropdown Menu -->
+      {% if count_apartments|length > 0 %}
       <li class="nav-item dropdown" style="border-right: #e5e5e5 1px solid; border-left: #e5e5e5 1px solid">
         <a class="nav-link" data-toggle="dropdown" href="#">
           <i class="fa fa-bell"></i>
-          <span class="badge badge-warning navbar-badge">0</span>
+          <span id="bell" class="badge badge-warning navbar-badge"><span class="count_message">0</span></span>
         </a>
         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-          <span class="dropdown-header">Новых сообщений: 0</span>
+          <span class="dropdown-header">Новых сообщений: <span class="count_message">0</span></span>
+          {% for message in messagess %}
+              {% if message.message_for_owner == user %}
+                  <div class="dropdown-divider"></div>
+                  <a href="{% url 'owner_message_detail' message.id %}" class="dropdown-item">
+                    <span class="private_message" style="font-size: 14px">{{ message.topic }}</span>
+                  </a>
+              {% endif %}
+              {% if not message.message_for_owner and not message.house and not message.is_debt %}
+                  <div class="dropdown-divider"></div>
+                  <a href="{% url 'owner_message_detail' message.id %}" class="dropdown-item">
+                    <span class="private_message" style="font-size: 14px">{{ message.topic }}</span>
+                  </a>
+              {% endif %}
+                {% for apartment in  count_apartments %}
+                    {% if apartment.personal_account.balance < 0 %}
+                        {% if not message.message_for_owner and not message.house and message.is_debt %}
+                            <div class="dropdown-divider"></div>
+                              <a href="{% url 'owner_message_detail' message.id %}" class="dropdown-item">
+                                <span class="private_message" style="font-size: 14px">{{ message.topic }}</span>
+                              </a>
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+                {% for apartment in  count_apartments %}
+                    {% for house in houses %}
+                        {% if apartment.section in house.sections.all %}
+                            {% if message.house == house and not message.is_debt and not message.message_for_owner and not message.apartment %}
+                                <div class="dropdown-divider"></div>
+                                  <a href="{% url 'owner_message_detail' message.id %}" class="dropdown-item">
+                                    <span class="private_message" style="font-size: 14px">{{ message.topic }}</span>
+                                  </a>
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                {% endfor %}
+                    {% for apartment in  count_apartments %}
+                        {% for house in houses %}
+                            {% if apartment.section in house.sections.all %}
+                                {% if message.house == house and message.apartment == apartment %}
+                                    <div class="dropdown-divider"></div>
+                                      <a href="{% url 'owner_message_detail' message.id %}" class="dropdown-item">
+                                        <span class="private_message" style="font-size: 14px">{{ message.topic }}</span>
+                                      </a>
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
+                    {% endfor %}
+          {% endfor %}
           <div class="dropdown-divider"></div>
-          <a href="#" class="dropdown-item">
-            <span style="font-size: 14px">Тема сообщения 1</span>
-          </a>
-          <div class="dropdown-divider"></div>
-          <a href="#" class="dropdown-item">
-            <span style="font-size: 14px">Тема сообщения 2</span>
-          </a>
-          <div class="dropdown-divider"></div>
-          <a href="#" class="dropdown-item dropdown-footer" style="font-size: 13px">Перейти в раздел сообщений</a>
+          <a href="{% url 'owner_messages_list' %}" class="dropdown-item dropdown-footer" style="font-size: 13px">Перейти в раздел сообщений</a>
         </div>
       </li>
+      {% else %}
+      <li class="nav-item dropdown" style="border-right: #e5e5e5 1px solid; border-left: #e5e5e5 1px solid">
+        <span class="nav-link text-muted" style="cursor: not-allowed" data-toggle="dropdown">
+          <i class="fa fa-bell"></i>
+        </span>
+      </li>
+      {% endif %}
 
       <!-- User profile Dropdown Menu -->
       <li class="dropdown user user-menu">
@@ -76,7 +124,7 @@
                 <!-- Menu Footer-->
                 <li class="user-footer">
                     <div style="display: inline-block">
-                        <a class="btn btn-default" href="#">Профиль</a>
+                        <a class="btn btn-default" href="{% url 'owner_profile' %}">Профиль</a>
                     </div>
                     <div style="display: inline-block; float: right">
                         <a class="btn btn-default" href="{% url 'logout' %}" data-method="post">Выход</a>
@@ -92,7 +140,7 @@
   <!-- Main Sidebar Container -->
   <aside class="main-sidebar sidebar-light-primary elevation-4">
     <!-- Brand Logo -->
-    <a href="#" class="brand-link" style="text-align: -webkit-center;  padding: 8px 0 8px 0">
+    <a href="{% if count_apartments|length > 0 %}{% for apartment in count_apartments %}{% if forloop.counter0 == 0 %}{% url 'owner_apartment_detail' apartment.id %}{% endif %}{% endfor %}{% else %}{% url 'owner_profile' %}{% endif %}" class="brand-link" style="text-align: -webkit-center;  padding: 8px 0 8px 0">
       <img src="{% static 'crm/dist/img/logo.svg' %}" width="100%" height="40">
     </a>
 
@@ -102,9 +150,8 @@
       <!-- Sidebar Menu -->
       <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-
-          {% if count_apartments > 0 %}
-          <li class="nav-item {% block summary %}<!--menu-is-opening menu-open-->{% endblock %}">
+          {% if count_apartments|length > 0 %}
+          <li class="nav-item {% block summary %}{% endblock %}">
             <a href="#" class="nav-link">
               <i class="fa fa-chart-line" style="width: 23px"></i>
               <p style="color: #494949; font-size: 14px; font-weight: 600">
@@ -113,12 +160,18 @@
               </p>
             </a>
             <ul class="nav nav-treeview">
-              <li class="nav-item">
-                <a href="#" class="nav-link {% block apartment %}{% endblock %}">
-                  <i class="far fa-building nav-icon"></i>
-                  <p style="font-size: 14px">Дом1 - Квартира 1</p>
-                </a>
-              </li>
+              {% for apartment in count_apartments %}
+                  {% for house in houses %}
+                      {% if apartment.section in house.sections.all %}
+                      <li class="nav-item" id="{{ apartment.id }}">
+                        <a href="{% url 'owner_apartment_detail' apartment.id %}" class="nav-link {{ apartment.id }}">
+                          <i class="fa fa-building nav-icon"></i>
+                          <p style="font-size: 14px" {% block tariffs-active %}{% endblock %}>{{ house.name }}, кв.{{ apartment.number }}</p>
+                        </a>
+                      </li>
+                      {% endif %}
+                  {% endfor %}
+              {% endfor %}
             </ul>
           </li>
           {% else %}
@@ -130,28 +183,34 @@
           </li>
           {% endif %}
 
-          {% if count_apartments > 0 %}
-          <li class="nav-item {% block invoices %}<!--menu-is-opening menu-open-->{% endblock %}">
+          {% if count_apartments|length > 0 %}
+          <li class="nav-item {% block invoices %}{% endblock %}">
             <a href="#" class="nav-link">
-              <i class="fas fa-copy" style="width: 23px"></i>
+              <i class="far fa-copy" style="width: 23px"></i>
               <p style="color: #494949; font-size: 14px; font-weight: 600">
                 Квитанции
                 <i class="right fas fa-angle-left" style="padding-top: 3px"></i>
               </p>
             </a>
             <ul class="nav nav-treeview">
-              <li class="nav-item">
-                <a href="#" class="nav-link {% block all_invoices %}{% endblock %}">
-                  <i class="fas fa-copy nav-icon"></i>
+              <li class="nav-item" id="all-invoice">
+                <a href="{% url 'owner_invoices_list' %}" class="nav-link all-invoice clear_filters">
+                  <i class="far fa-copy nav-icon"></i>
                   <p style="font-size: 14px">Все квитанции</p>
                 </a>
               </li>
-              <li class="nav-item">
-                <a href="#" class="nav-link {% block invoice %}{% endblock %}">
-                  <i class="far fa-file nav-icon"></i>
-                  <p style="font-size: 14px">Дом1 - Квартира 1</p>
-                </a>
-              </li>
+              {% for apartment in count_apartments %}
+                  {% for house in houses %}
+                      {% if apartment.section in house.sections.all %}
+                      <li class="nav-item" id="{{ apartment.id }}-invoice">
+                        <a href="" class="nav-link {{ apartment.id }}-invoice clear_filters">
+                          <i class="far fa-file nav-icon"></i>
+                          <p style="font-size: 14px">{{ house.name }}, кв.{{ apartment.number }}</p>
+                        </a>
+                      </li>
+                      {% endif %}
+                  {% endfor %}
+              {% endfor %}
             </ul>
           </li>
           {% else %}
@@ -163,7 +222,7 @@
           </li>
           {% endif %}
 
-          {% if count_apartments > 0 %}
+          {% if count_apartments|length > 0 %}
           <li class="nav-item {% block tariffs %}<!--menu-is-opening menu-open-->{% endblock %}">
             <a href="#" class="nav-link">
               <i class="fa fa-money-bill-wave" style="width: 23px"></i>
@@ -190,9 +249,9 @@
           </li>
           {% endif %}
 
-          {% if count_apartments > 0 %}
+          {% if count_apartments|length > 0 %}
           <li class="nav-item">
-            <a href="" {% block messages %}class="nav-link"{% endblock %}>
+            <a href="{% url 'owner_messages_list' %}" {% block messages %}class="nav-link"{% endblock %}>
               <i class="fas fa-envelope" style="width: 23px"></i>
               <p style="color: #494949; font-size: 14px; font-weight: 600">
                 Сообщения
@@ -208,9 +267,9 @@
           </li>
           {% endif %}
 
-          {% if count_apartments > 0 %}
+          {% if count_apartments|length > 0 %}
           <li class="nav-item">
-            <a href="" {% block application %}class="nav-link"{% endblock %}>
+            <a href="{% url 'owner_applications_list' %}" {% block applications %}class="nav-link"{% endblock %}>
               <i class="fas fa-wrench" style="width: 23px"></i>
               <p style="color: #494949; font-size: 14px; font-weight: 600">
                 Вызов мастера
@@ -254,7 +313,7 @@
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item" style="font-size: 14px"><a href="{% if count_apartments > 0 %}{% url 'cabinet' %}{% else %}{% url 'owner_profile' %}{% endif %}" style="color: #494949"><i class="fa fa-home" style="padding-right: 3px"></i>Главная </a>{% block previos_link %}{% endblock %}</li>
+              <li class="breadcrumb-item" style="font-size: 14px"><a href="{% if count_apartments|length > 0 %}{% for apartment in count_apartments %}{% if forloop.counter0 == 0 %}{% url 'owner_apartment_detail' apartment.id %}{% endif %}{% endfor %}{% else %}{% url 'owner_profile' %}{% endif %}" style="color: #494949"><i class="fa fa-home" style="padding-right: 3px"></i>Главная </a>{% block previos_link %}{% endblock %}</li>
               <li class="breadcrumb-item active" style="font-size: 14px">{% block nav %}Сводка{% endblock %}</li>
             </ol>
           </div><!-- /.col -->
@@ -295,6 +354,16 @@
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <!-- My -->
 <script src="{% static 'crm/scripts/tables.js' %}"></script>
+<script>
+    $('.clear_filters').click(clear)
+    $(function () {
+        let count = $('.private_message').length
+        $('.count_message').html(count)
+        if (+count < 1) {
+            $('#bell').remove()
+        }
+    })
+</script>
 {% block script %}{% endblock %}
 </body>
 </html>
