@@ -7,10 +7,6 @@ from django.core.signing import BadSignature
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse_lazy
-from django.utils.decorators import method_decorator
-from django.views.decorators.cache import never_cache
-from django.views.decorators.csrf import csrf_protect
-from django.views.decorators.debug import sensitive_post_parameters
 from django.views.generic import CreateView, TemplateView
 
 from .forms import AdminLoginForm, RegisterUserForm, OwnerLoginForm
@@ -31,6 +27,8 @@ class AdminLoginView(LoginView):
         url = reverse_lazy('home')
         if self.request.user.role and not self.request.user.role.has_statistics:
             url = f"/crm/system-settings/users/update/{self.request.user.id}/"
+        if not self.request.user.is_staff:
+            url = reverse_lazy('owner_login')
         return HttpResponseRedirect(url)
 
     def get_context_data(self, **kwargs):
@@ -54,9 +52,12 @@ class OwnerLoginView(LoginView):
         if not remember_me:
             self.request.session.set_expiry(0)
             self.request.session.modified = True
-        url = reverse_lazy('cabinet')
-        if len(self.request.user.apartment.all()) < 1:
-            url = reverse_lazy('owner_profile')
+        url = reverse_lazy('owner_profile')
+        if not self.request.user.is_staff:
+            apartments = self.request.user.apartment.all() if len(self.request.user.apartment.all()) > 0 else None
+            if apartments:
+                apartment_id = [x.id for x in apartments][0]
+                url = reverse_lazy('owner_apartment_detail', kwargs={'pk': apartment_id})
         if self.request.user.is_staff:
             url = reverse_lazy('owner_login')
         return HttpResponseRedirect(url)

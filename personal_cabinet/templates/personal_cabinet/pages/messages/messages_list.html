@@ -1,0 +1,193 @@
+{% extends 'personal_cabinet/layout/base.html' %}
+{% load static %}
+
+{% block style %}
+    <link rel="stylesheet" href="{% static 'crm/plugins/bootstrap/css/dataTables.bootstrap4.min.css' %}">
+    <link rel="stylesheet" href="{% static 'crm/plugins/bootstrap/css/responsive.bootstrap4.min.css' %}">
+    <style>
+        .container-fluid {
+            font-size: 14px;
+        }
+        .checkbox-toggle:hover {
+            cursor: pointer;
+        }
+        .bottom-check {
+            position: fixed;
+            z-index: 100;
+            margin-top: -50px;
+        }
+    </style>
+{% endblock %}
+
+{% block messages %}class="nav-link active-link" style="color: black; background-color: #e1f1ea"{% endblock %}
+
+{% block title %}Сообщения{% endblock %}
+{% block name_page %}Сообщения{% endblock %}
+{% block nav %}Сообщения{% endblock %}
+
+{% block content %}
+    <div style="text-align: right; padding-right: 10px; padding-bottom: 10px">
+        <a href="{% url 'message_create' %}" class="btn btn-success">Отправить сообщение</a>
+    </div>
+    <div class="my-box" style="min-height: 0">
+        <div class="container-fluid">
+            <div class="mailbox-controls" style="padding-top: 10px; position: fixed; z-index: 100">
+                <button type="button" class="btn btn-default btn-sm checkbox-toggle"><i class="check-fa fa fa-square"></i></button>
+                <button type="button" class="btn btn-default btn-sm delete-many"><i class="fa fa-trash-alt"></i></button>
+                <div class="pull-right"></div>
+            </div>
+            <div style="padding-top: 10px; padding-bottom: 10px">
+                <table id="table" class="table table-hover table-striped table-responsive no-padding" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th style="width: 10%"></th>
+                            <th style="width: 40%">От кого</th>
+                            <th style="width: 40%">Текст</th>
+                            <th style="width: 10%">Дата</th>
+                            <th style="width: 0%"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for message in messagess %}
+                            {% if message.message_for_owner == user %}
+                                <tr>
+                                    <td class="tr-link"><input type="checkbox" class="delete" value="{{ message.id }}"></td>
+                                    <td data-href="{% url 'owner_message_detail' message.id %}" class="tr-link">{{ message.sender }}</td>
+                                    <td data-href="{% url 'owner_message_detail' message.id %}" class="tr-link"><span style="font-weight: bold">{{ message.topic }} </span></td>
+                                    <td data-href="{% url 'owner_message_detail' message.id %}" class="tr-link">{{ message.date|date:"d.m.y - H:i" }}</td>
+                                    <td data-href="{% url 'owner_message_detail' message.id %}"></td>
+                                </tr>
+                            {% endif %}
+                            {% if not message.message_for_owner and not message.house and not message.is_debt %}
+                                <tr>
+                                    <td class="tr-link"><input type="checkbox" class="delete" value="{{ message.id }}"></td>
+                                    <td data-href="{% url 'owner_message_detail' message.id %}" class="tr-link">{{ message.sender }}</td>
+                                    <td data-href="{% url 'owner_message_detail' message.id %}" class="tr-link"><span style="font-weight: bold">{{ message.topic }} </span></td>
+                                    <td data-href="{% url 'owner_message_detail' message.id %}" class="tr-link">{{ message.date|date:"d.m.y - H:i" }}</td>
+                                    <td data-href="{% url 'owner_message_detail' message.id %}"></td>
+                                </tr>
+                            {% endif %}
+                            {% for apartment in  count_apartments %}
+                                {% if apartment.personal_account.balance < 0 %}
+                                    {% if not message.message_for_owner and not message.house and message.is_debt %}
+                                        <tr>
+                                            <td class="tr-link"><input type="checkbox" class="delete" value="{{ message.id }}"></td>
+                                            <td data-href="{% url 'owner_message_detail' message.id %}" class="tr-link">{{ message.sender }}</td>
+                                            <td data-href="{% url 'owner_message_detail' message.id %}" class="tr-link"><span style="font-weight: bold">{{ message.topic }} </span></td>
+                                            <td data-href="{% url 'owner_message_detail' message.id %}" class="tr-link">{{ message.date|date:"d.m.y - H:i" }}</td>
+                                            <td data-href="{% url 'owner_message_detail' message.id %}"></td>
+                                        </tr>
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                            {% for apartment in  count_apartments %}
+                                {% for house in houses %}
+                                    {% if apartment.section in house.sections.all %}
+                                        {% if message.house == house and not message.is_debt and not message.message_for_owner and not message.apartment %}
+                                            <tr>
+                                                <td class="tr-link"><input type="checkbox" class="delete" value="{{ message.id }}"></td>
+                                                <td data-href="{% url 'owner_message_detail' message.id %}" class="tr-link">{{ message.sender }}</td>
+                                                <td data-href="{% url 'owner_message_detail' message.id %}" class="tr-link"><span style="font-weight: bold">{{ message.topic }} </span></td>
+                                                <td data-href="{% url 'owner_message_detail' message.id %}" class="tr-link">{{ message.date|date:"d.m.y - H:i" }}</td>
+                                                <td data-href="{% url 'owner_message_detail' message.id %}"></td>
+                                            </tr>
+                                        {% endif %}
+                                    {% endif %}
+                                {% endfor %}
+                            {% endfor %}
+                            {% for apartment in  count_apartments %}
+                                {% for house in houses %}
+                                    {% if apartment.section in house.sections.all %}
+                                        {% if message.house == house and message.apartment == apartment %}
+                                            <tr>
+                                                <td class="tr-link"><input type="checkbox" class="delete" value="{{ message.id }}"></td>
+                                                <td data-href="{% url 'owner_message_detail' message.id %}" class="tr-link">{{ message.sender }}</td>
+                                                <td data-href="{% url 'owner_message_detail' message.id %}" class="tr-link"><span style="font-weight: bold">{{ message.topic }} </span></td>
+                                                <td data-href="{% url 'owner_message_detail' message.id %}" class="tr-link">{{ message.date|date:"d.m.y - H:i" }}</td>
+                                                <td data-href="{% url 'owner_message_detail' message.id %}"></td>
+                                            </tr>
+                                        {% endif %}
+                                    {% endif %}
+                                {% endfor %}
+                            {% endfor %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="mailbox-controls bottom-check">
+                <button type="button" class="btn btn-default btn-sm checkbox-toggle"><i class="check-fa fa fa-square"></i></button>
+                <button type="button" class="btn btn-default btn-sm delete-many"><i class="fa fa-trash-alt"></i></button>
+                <div class="pull-right"></div>
+            </div>
+        </div>
+    </div>
+    <div style="height: 30px"></div>
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'crm/plugins/jquery/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'crm/plugins/bootstrap/js/dataTables.bootstrap4.min.js' %}"></script>
+    <script src="{% static 'crm/plugins/bootstrap/js/dataTables.responsive.min.js' %}"></script>
+    <script src="{% static 'crm/scripts/messages/messages_list.js' %}"></script>
+    <script>
+        $(function () {
+            $("#table").DataTable({
+                "responsive": false,
+                "lengthChange": false,
+                "autoWidth": true,
+                "ordering": false,
+                "bInfo" : false,
+                "language": {
+                    "infoFiltered": "(Отфильтровано _MAX_ записей)",
+                    "zeroRecords": "Записей не найдено",
+                    "info": "Показано с _START_ по _END_ записей из _TOTAL_",
+                    "infoEmpty": "Нет записей.",
+                    "search": "Поиск:",
+                    "paginate": {
+                        "previous": "Предыдущая",
+                        "last": "Последняя",
+                        "next": "Следующая"
+                    }
+                }
+            })
+        });
+
+        // delete selected messages
+        $('.delete-many').click(function () {
+            let idx = ''
+            let cells = $("#table").DataTable().column(0).nodes()
+            for (let i = 0; i < cells.length; i += 1) {
+                if (cells[i].querySelector("input[type='checkbox']").checked) {
+                    idx += cells[i].querySelector("input[type='checkbox']").value + ' '
+                }
+            }
+            $.ajax({
+                url: '{% url "delete_selected_messages" %}',
+                type: 'GET',
+                data: {'idx': idx},
+                success: (data) => {
+                    if (idx) {
+                        document.location.reload();
+                    }
+                },
+                error: (data) => {
+                    console.log('no')
+                }
+            })
+        })
+
+        // Messages
+        {% if messages %}
+        Swal.fire({
+          backdrop: false,
+          position: 'top-end',
+          padding: 0,
+          icon: 'success',
+          width: 300,
+          html: '{% for message in messages %}{{ message }}{% endfor %}',
+          showConfirmButton: false,
+          timer: 1500,
+        })
+        {% endif %}
+    </script>
+{% endblock %}

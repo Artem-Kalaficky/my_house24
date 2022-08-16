@@ -258,7 +258,7 @@ class Invoice(models.Model):
     CHOICES = (('paid', 'Оплачена'),
                ('p_paid', 'Частично оплачена'),
                ('unpaid', 'Неоплачена'))
-    status = models.CharField(max_length=16, choices=CHOICES, default='paid', verbose_name='Статус')
+    status = models.CharField(max_length=16, choices=CHOICES, default='unpaid', verbose_name='Статус')
     tariff = models.ForeignKey(Tariff, on_delete=models.PROTECT, verbose_name='Тариф')
     date_with = models.DateField(default=timezone.now, verbose_name='Период с')
     date_before = models.DateField(default=timezone.now, verbose_name='Период до')

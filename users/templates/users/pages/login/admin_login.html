@@ -38,7 +38,7 @@
         <div class="card">
             <ul class="nav nav-tabs" id="myTab" role="tablist" style="">
               <li class="nav-item" role="presentation" style="width: 50%; text-align: center">
-                <a style="color: #494949; font-size: 15px" class="nav-link" href="{% url 'owner_login' %}" role="tab" aria-controls="home" aria-selected="false">Для жильцa</a>
+                <a style="color: #494949; font-size: 15px" class="nav-link" href="{% if user.is_authenticated and not user.is_staff %}{% if count_apartments|length > 0 %}{% for apartment in count_apartments %}{% if forloop.counter0 == 0 %}{% url 'owner_apartment_detail' apartment.id %}{% endif %}{% endfor %}{% else %}{% url 'owner_profile' %}{% endif %}{% else %}{% url 'owner_login' %}{% endif %}" role="tab" aria-controls="home" aria-selected="false">Для жильцa</a>
               </li>
               <li class="nav-item" role="presentation" style="width: 50%; text-align: center">
                 <a style="color: #494949; font-size: 15px" class="nav-link active" id="profile-tab" data-toggle="tab" href="{% url 'admin_login' %}" role="tab" aria-controls="profile" aria-selected="true">Для администрации</a>

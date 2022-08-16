@@ -1,0 +1,110 @@
+{% extends 'personal_cabinet/layout/base.html' %}
+{% load static %}
+
+{% block style %}
+    <style>
+        .hover-li:hover {
+            background-color: lightgrey;
+        }
+    </style>
+{% endblock %}
+
+{% block applications %}class="nav-link active-link" style="color: black; background-color: #e1f1ea"{% endblock %}
+
+{% block title %}Вызов мастера{% endblock %}
+{% block name_page %}Вызов мастера{% endblock %}
+{% block nav %}Вызов мастера{% endblock %}
+
+{% block content %}
+    <div style="text-align: right; padding-right: 10px; padding-bottom: 10px">
+        <a href="{% url 'owner_application_create' %}" class="btn btn-success">Создать заявку</a>
+    </div>
+    <div class="my-box" style="min-height: 0">
+        <div class="container-fluid">
+            <table class="table table-hover table-striped table-responsive no-padding" style="color: #333333; font-size: 14px; padding-bottom: 10px">
+                <thead>
+                    <tr>
+                        <th style="width: 8%">№ заявки</th>
+                        <th style="width: 35%">Тип мастера</th>
+                        <th style="width: 35%">Описание</th>
+                        <th style="width: 14%">Удобное время</th>
+                        <th style="width: 8%">Статус</th>
+                        <th style="width: 0%"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if applications %}
+                    {% for application in applications %}
+                        <tr>
+                            <td>{{ application.id }}</td>
+                            <td>{{ application.get_type_master_display }}</td>
+                            <td>{{ application.description }}</td>
+                            <td>{{ application.date|date:"d.m.Y" }} - {{ application.time|date:"H:i" }}</td>
+                            <td>
+                                {% if application.status == 'new' %}
+                                    <small class="btn btn-sm btn-warning status">Новое</small>
+                                {% elif application.status == 'complete' %}
+                                    <small class="btn btn-sm btn-success status">Выполнено</small>
+                                {% elif application.status == 'in_progress' %}
+                                    <small class="btn btn-sm btn-primary status">В работе</small>
+                                {% endif %}
+                            </td>
+                            <td style="padding: 6px 5px 7px 4px">
+                                <div class="btn-group pull-right">
+                                    <button title="Удалить заявку" type="button" class="btn btn-default btn-sm not-allowed" {% if application.status == 'new' %}data-bs-toggle="modal" data-bs-target="#deleteModal-{{ forloop.counter }}" {% else %}style="cursor: not-allowed; opacity: 0.4"{% endif %}><i class="fa fa-trash-alt"></i></button>
+                                </div>
+                            </td>
+                        </tr>
+                        <!-- Modal -->
+                        <div class="modal fade" id="deleteModal-{{ forloop.counter }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="deleteModalLabel-{{ forloop.counter }}" aria-hidden="true">
+                          <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                              <div class="modal-header bg-danger">
+                                <h5 class="modal-title" id="deleteModal1Label-{{ forloop.counter }}">Подтверждение удаления</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                              </div>
+                                  <div class="modal-body">
+                                      Вы действительно хотите удалить заявку вызова мастера № <b>{{ application.id }}</b>?
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                                    <a href="{% url 'owner_application_delete' application.id %}" class="btn btn-danger">Удалить</a>
+                                  </div>
+                            </div>
+                          </div>
+                        </div>
+                    {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td>Нет заявок</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div style="height: 30px"></div>
+{% endblock %}
+
+{% block script %}
+    <script>
+        // Messages
+        {% if messages %}
+        Swal.fire({
+          backdrop: false,
+          position: 'top-end',
+          padding: 0,
+          icon: 'success',
+          width: 300,
+          html: '{% for message in messages %}{% if message.tags == 'success' %}{{ message }}{% endif %}{% endfor %}',
+          showConfirmButton: false,
+          timer: 1500,
+        })
+        {% endif %}
+    </script>
+{% endblock %}

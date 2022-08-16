@@ -1285,7 +1285,7 @@ def delete_selected_messages(request):
 
 
 # region Application
-class ApplicationsListView(StaffRequiredMixin, SuccessMessageMixin, ListView):
+class ApplicationsListView(StaffRequiredMixin, ListView):
     template_name = 'crm/pages/applications/applications_list.html'
     context_object_name = 'applications'
 

@@ -1,0 +1,99 @@
+{% extends 'personal_cabinet/layout/base.html' %}
+{% load static %}
+
+{% block style %}
+    <style>
+        .sort-date:hover {
+            cursor: pointer;
+        }
+        .hover-li:hover {
+            background-color: lightgrey;
+            cursor: pointer;
+        }
+        input[type="date"]:in-range::-webkit-datetime-edit-year-field,
+        input[type="date"]:in-range::-webkit-datetime-edit-month-field,
+        input[type="date"]:in-range::-webkit-datetime-edit-day-field,
+        input[type="date"]:in-range::-webkit-datetime-edit-text {
+            color: transparent
+        }
+    </style>
+{% endblock %}
+
+{% block invoices %}menu-is-opening menu-open{% endblock %}
+
+{% block title %}Квитанции на оплату{% endblock %}
+{% block name_page %}Квитанции на оплату{% endblock %}
+{% block nav %}Квитанции на оплату{% endblock %}
+
+{% block content %}
+<div class="my-box" style="min-height: 0">
+    <div class="container-fluid">
+        <div style="text-align: right; padding-right: 2px; padding-top: 5px; margin-bottom: 5px">
+            <a id="clear" href="{% url 'owner_invoices_list' %}" class="btn btn-default" style="font-size: 14px; max-height: 34px">Очистить</a>
+        </div>
+        <form method="get" id="form">
+            <table id="my-table" class="table table-hover table-striped table-responsive no-padding" style="color: #333333; font-size: 14px; padding-bottom: 10px">
+                <thead>
+                    <tr>
+                        <th style="width: 10%">№</th>
+                        <th style="width: 40%" class="sort-date"><span style="color: #72afd2" id="sort-date-span">Дата</span></th>
+                        <th style="width: 40%">Статус</th>
+                        <th style="width: 10%">Сумма</th>
+                        <th style="width: 0%"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td></td>
+                        <td style="padding: 5px"><input type="date" id="input_date" class="form-control" name="input_date"></td>
+                        <td style="padding: 5px">
+                            <select class="form-select" name="status" id="status">
+                                <option hidden disabled selected value></option>
+                                <option value="paid">Оплачена</option>
+                                <option value="p_paid">Частично оплачена</option>
+                                <option value="unpaid">Неоплачена</option>
+                            </select>
+                        </td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    {% for invoice in invoices %}
+                        <tr>
+                            <td>{{ invoice }}</td>
+                            <td>{{ invoice.date|date:'d.m.Y' }}</td>
+                            <td>
+                                {% if invoice.status == 'paid' %}
+                                    <small class="btn btn-sm btn-success status">Оплачена</small>
+                                {% elif invoice.status == 'p_paid' %}
+                                    <small class="btn btn-sm btn-warning status">Частично</small>
+                                {% elif invoice.status == 'unpaid' %}
+                                    <small class="btn btn-sm btn-danger status">Неоплачена</small>
+                                {% endif %}
+                            </td>
+                            <td>{{ invoice.amount }}</td>
+                            <td></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <input type="hidden" name="filter-date" value="" id="filter-date">
+        </form>
+    </div>
+</div>
+<div style="height: 30px"></div>
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'personal_cabinet/scripts/invoices/invoices_list.js' %}"></script>
+    <script>
+        {% if request.GET.apartment_id %}
+        {% else %}
+            $('#all-invoice').addClass('active-link').removeClass('nav-item')
+            $('.all-invoice').css('color', 'black')
+        {% endif %}
+
+        // Filters
+        init_data()
+        $('#clear').click(clear)
+    </script>
+{% endblock %}

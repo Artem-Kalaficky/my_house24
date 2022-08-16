@@ -1,0 +1,80 @@
+{% extends 'personal_cabinet/layout/base.html' %}
+{% load static %}
+
+{% block summary %}menu-is-opening menu-open{% endblock %}
+
+{% block title %}Сводка - {% for house in houses %}{% if apartment.section in house.sections.all %}{{ house.name }}, кв.{{ apartment.number }}{% endif %}{% endfor %}{% endblock %}
+{% block name_page %}Сводка - {% for house in houses %}{% if apartment.section in house.sections.all %}{{ house.name }}, кв.{{ apartment.number }}{% endif %}{% endfor %}{% endblock %}
+{% block nav %}Сводка - {% for house in houses %}{% if apartment.section in house.sections.all %}{{ house.name }}, кв.{{ apartment.number }}{% endif %}{% endfor %}{% endblock %}
+
+{% block content %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xs-12 col-md-6 col-lg-4">
+                <div class="small-box {% if apartment.personal_account.balance < 0 %}bg-red{% else %}bg-success{% endif %}">
+                    <div class="inner">
+                        <h3>{% if apartment.personal_account %}{{ apartment.personal_account.balance }}{% else %}0,00{% endif %} грн</h3>
+                        <p>Баланс по квартире</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fa fa-dollar-sign"></i>
+                    </div>
+                    <span class="small-box-footer">
+                        &nbsp;
+                    </span>
+                </div>
+            </div>
+            <div class="col-xs-12 col-md-6 col-lg-4">
+                <div class="small-box bg-blue">
+                    <div class="inner">
+                        <h3>{% if apartment.personal_account %}{{ apartment.personal_account }}{% else %}Не создан{% endif %}</h3>
+                        <p>Лицевой счет</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fa fa-user"></i>
+                    </div>
+                    <span class="small-box-footer">
+                        &nbsp;
+                    </span>
+                </div>
+            </div>
+            <div class="col-xs-12 col-md-6 col-lg-4">
+                <div class="small-box bg-yellow">
+                    <div class="inner">
+                        <h3>{{ expense }} грн</h3>
+                        <p>Средний расход за месяц</p>
+                    </div>
+                    <div class="icon">
+                        <i class="nav-icon fas fa-chart-pie"></i>
+                    </div>
+                    <span class="small-box-footer">
+                        &nbsp;
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div style="background-color: #ffffff; border-top: 3px #d2d6de solid; border-radius: 3px; border-bottom: 1px #d2d6de solid">
+            <div style="padding: 5px">
+                <span>Диаграмма расходов</span>
+                <div class="dropdown-divider" style="border-color:lightgrey"></div>
+                <span style="font-size: 14px">Недостаточно данных для отображения статистики</span>
+            </div>
+        </div>
+
+        <div style="background-color: #ffffff; border-top: 3px #d2d6de solid; border-radius: 3px; border-bottom: 1px #d2d6de solid; margin-top: 30px">
+            <div style="padding: 5px">
+                <span>Диаграмма расходов по месяцам за год</span>
+                <div class="dropdown-divider" style="border-color:lightgrey"></div>
+                <span style="font-size: 14px">Недостаточно данных для отображения статистики</span>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+<script>
+    $('#{{ apartment.id }}').addClass('active-link').removeClass('nav-item')
+    $('.{{ apartment.id }}').css('color', 'black')
+</script>
+{% endblock %}

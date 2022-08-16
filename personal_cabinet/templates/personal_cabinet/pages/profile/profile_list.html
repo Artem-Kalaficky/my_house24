@@ -41,7 +41,7 @@
         </div>
         <div class="col-xl-9">
             <h4 style="margin-left: 5px">Мои квартиры</h4>
-            {% if count_apartments < 1 %}
+            {% if count_apartments|length < 1 %}
             <div style="background-color: #ffffff; border-top: 3px #d2d6de solid; border-radius: 3px; border-bottom: 1px #d2d6de solid; margin-right: 5px; margin-left: 5px">
                 <div style="padding: 10px; font-size: 18px">
                     Квартиры пока не добавены.

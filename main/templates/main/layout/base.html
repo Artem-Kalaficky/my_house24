@@ -47,7 +47,7 @@
                             <a class="nav-link {% block contacts %}{% endblock %}" href="{% url 'contact_page' %}" style="padding-right: 15px; padding-left: 15px; font-size: 15px">Контакты</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{% if user.is_authenticated and not user.is_staff %}{% url 'cabinet' %}{% else %}{% url 'owner_login' %}{% endif %}" style="padding-right: 15px; padding-left: 15px; font-size: 15px"><i class="fas fa-sign-in-alt"></i> Вход</a>
+                            <a class="nav-link" href="{% if user.is_authenticated and not user.is_staff %}{% if count_apartments|length > 0 %}{% for apartment in count_apartments %}{% if forloop.counter0 == 0 %}{% url 'owner_apartment_detail' apartment.id %}{% endif %}{% endfor %}{% else %}{% url 'owner_profile' %}{% endif %}{% else %}{% url 'owner_login' %}{% endif %}" style="padding-right: 15px; padding-left: 15px; font-size: 15px"><i class="fas fa-sign-in-alt"></i> Вход</a>
                         </li>
                     </ul>
                 </div>
