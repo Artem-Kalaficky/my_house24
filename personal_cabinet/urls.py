@@ -4,7 +4,7 @@ from crm.views import delete_selected_messages
 from .views import (
     OwnerApartmentDetailView, ProfileListView, ProfileUpdateView, OwnerApplicationsListView, OwnerApplicationCreateView,
     OwnerApplicationDeleteView, OwnerMessagesListView, OwnerMessageDetailView, OwnerMessageDeleteView,
-    OwnerInvoicesListView,
+    OwnerInvoicesListView, OwnerInvoiceDetailView, work_with_invoice_in_cabinet, OwnerTariffDetailView
 )
 
 
@@ -13,7 +13,12 @@ urlpatterns = [
     path('apartment/<int:pk>/', OwnerApartmentDetailView.as_view(), name='owner_apartment_detail'),
 
     # invoices
+    path('invoices/<int:pk>/', OwnerInvoiceDetailView.as_view(), name='owner_invoice_detail'),
     path('invoices/', OwnerInvoicesListView.as_view(), name='owner_invoices_list'),
+    path('work-with-invoice-in-cabinet-ajax/', work_with_invoice_in_cabinet, name='work_with_invoice_in_cabinet'),
+
+    # tariffs
+    path('tariff/<int:pk>/', OwnerTariffDetailView.as_view(), name='owner_tariff_detail'),
 
     # messages
     path('messages/<int:pk>/delete/', OwnerMessageDeleteView.as_view(), name='owner_message_delete'),
