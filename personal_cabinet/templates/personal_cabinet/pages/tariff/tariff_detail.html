@@ -1,0 +1,44 @@
+{% extends 'personal_cabinet/layout/base.html' %}
+{% load static %}
+
+{% block tariff %}menu-is-opening menu-open{% endblock %}
+
+{% block title %}Тариф - {% for house in houses %}{% if apartment.section in house.sections.all %}{{ house.name }}, кв.{{ apartment.number }}{% endif %}{% endfor %}{% endblock %}
+{% block name_page %}Тариф - {% for house in houses %}{% if apartment.section in house.sections.all %}{{ house.name }}, кв.{{ apartment.number }}{% endif %}{% endfor %}{% endblock %}
+{% block nav %}Тариф - {% for house in houses %}{% if apartment.section in house.sections.all %}{{ house.name }}, кв.{{ apartment.number }}{% endif %}{% endfor %}{% endblock %}
+
+{% block content %}
+<div class="my-box" style="min-height: 0">
+    <div class="container-fluid">
+        <div>
+            <table id='my-table' class="table table-hover table-striped table-responsive no-padding" style="color: #333333; font-size: 14px; padding-bottom: 10px">
+                <thead>
+                    <tr>
+                        <th style="width: 40%">Услуга</th>
+                        <th style="width: 30%">Ед. изм.</th>
+                        <th style="width: 30%">Цена за ед., грн</th>
+                        <th style="width: 0%"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for service in services %}
+                        <tr>
+                            <td>{{ service.service }}</td>
+                            <td>{{ service.service.unit }}</td>
+                            <td>{{ service.cost_for_unit }}</td>
+                            <td></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+    $('#{{ apartment.id }}-tariff').addClass('active-link').removeClass('nav-item')
+    $('.{{ apartment.id }}-tariff').css('color', 'black')
+</script>
+{% endblock %}

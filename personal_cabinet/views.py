@@ -1,12 +1,15 @@
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db.models import Sum, Q
-from django.shortcuts import render
+from django.http import JsonResponse
+from django.shortcuts import render, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, ListView, UpdateView, CreateView, DeleteView, DetailView
 
 from crm.forms import OwnerUpdateForm
-from crm.models import Apartment, House, Application, Message, Invoice
+from crm.models import Apartment, House, Application, Message, Invoice, ServiceForInvoice, PersonalAccount, Tariff, \
+    ServiceForTariff
 from personal_cabinet.forms import OwnerApplicationForm
 from users.models import UserProfile
 
@@ -49,7 +52,11 @@ class OwnerInvoicesListView(OwnerRequiredMixin, ListView):
     context_object_name = 'invoices'
 
     def get_queryset(self):
-        queryset = Invoice.objects.filter(apartment_id__in=[x.id for x in self.request.user.apartment.all()])
+        if self.request.GET.get('apartment_id'):
+            queryset = Invoice.objects.filter(apartment_id=self.request.GET.get('apartment_id'), is_held=True)
+        else:
+            queryset = Invoice.objects.filter(apartment_id__in=[x.id for x in self.request.user.apartment.all()],
+                                              is_held=True)
         if self.request.GET.get('input_date'):
             queryset = queryset.filter(date=self.request.GET.get('input_date'))
         if self.request.GET.get('filter-date') == '0':
@@ -59,7 +66,45 @@ class OwnerInvoicesListView(OwnerRequiredMixin, ListView):
         if self.request.GET.get('status'):
             queryset = queryset.filter(status=self.request.GET.get('status'))
         return queryset
+
+
+class OwnerInvoiceDetailView(OwnerRequiredMixin, DetailView):
+    queryset = Invoice.objects.prefetch_related('services')
+    template_name = 'personal_cabinet/pages/invoices/invoice_detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['services'] = ServiceForInvoice.objects.select_related('service',
+                                                                       'service__unit').filter(invoice=self.object)
+        return context
+
+
+def work_with_invoice_in_cabinet(request):
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        if request.method == 'GET':
+            if request.GET.get('invoice_id'):
+                invoice = get_object_or_404(Invoice, pk=request.GET.get('invoice_id'))
+                personal_account = get_object_or_404(PersonalAccount, apartment=invoice.apartment)
+                personal_account.balance += invoice.amount
+                personal_account.save()
+                invoice.status = 'paid'
+                invoice.save()
+                messages.add_message(request, messages.SUCCESS, 'Квитанция успешно оплачена!')
+            return JsonResponse({}, status=200)
 # endregion Invoices
+
+
+# region Tariffs
+class OwnerTariffDetailView(OwnerRequiredMixin, DetailView):
+    queryset = Apartment.objects.select_related('section', 'personal_account', 'tariff')
+    template_name = 'personal_cabinet/pages/tariff/tariff_detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['services'] = ServiceForTariff.objects.select_related('service',
+                                                                      'service__unit').filter(tariff=self.object.tariff)
+        return context
+# endregion Tariffs
 
 
 # region Messages

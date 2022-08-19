@@ -106,6 +106,9 @@ $(function (){
         if ($(element).text().indexOf('Да') >= 0) {
             $(element).text('Да')
         }
+        if ($(element).text().indexOf('Нет') >= 0) {
+            $(element).text('Нет')
+        }
     })
 })
 

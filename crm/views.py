@@ -1,12 +1,10 @@
 import datetime
 import json
 
-import pdfkit
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
-from django.core.mail import EmailMessage
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db import IntegrityError
 from django.db.models import Q, Sum
@@ -18,7 +16,6 @@ from django.urls import reverse_lazy, reverse
 from django.utils import dateformat
 from django.views.generic import TemplateView, ListView, DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormView
-from xlsx2html import xlsx2html
 
 from users.tasks import send_invite_letter, send_invoice_in_pdf
 from .models import Item, Requisites, Service, Unit, Tariff, ServiceForTariff, House, Section, Floor, Apartment, \
@@ -40,7 +37,43 @@ class StaffRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
     login_url = '/admin/login/'
 
     def test_func(self):
-        return self.request.user.is_staff
+        permission = True
+        if self.request.user.is_staff:
+            if 'crm/statistics' in self.request.path:
+                permission = self.request.user.role.has_statistics
+            if 'crm/transactions' in self.request.path:
+                permission = self.request.user.role.has_cashbox
+            if 'crm/invoices' in self.request.path:
+                permission = self.request.user.role.has_invoice
+            if 'crm/personal-accounts' in self.request.path:
+                permission = self.request.user.role.has_personal_account
+            if 'crm/apartments' in self.request.path:
+                permission = self.request.user.role.has_apartment
+            if 'crm/owners' in self.request.path:
+                permission = self.request.user.role.has_owner
+            if 'crm/houses' in self.request.path:
+                permission = self.request.user.role.has_house
+            if 'crm/messages' in self.request.path:
+                permission = self.request.user.role.has_message
+            if 'crm/applications' in self.request.path:
+                permission = self.request.user.role.has_application
+            if 'crm/meter-readings' in self.request.path:
+                permission = self.request.user.role.has_meter
+            if 'crm/site-management' in self.request.path:
+                permission = self.request.user.role.has_site_management
+            if 'crm/system-settings/services' in self.request.path:
+                permission = self.request.user.role.has_service
+            if 'crm/system-settings/tariffs' in self.request.path:
+                permission = self.request.user.role.has_tariff
+            if 'crm/system-settings/roles' in self.request.path:
+                permission = self.request.user.role.has_role
+            if 'crm/system-settings/users' in self.request.path:
+                permission = self.request.user.role.has_users
+            if 'crm/system-settings/requisites' in self.request.path:
+                permission = self.request.user.role.has_requisites
+        else:
+            pass
+        return self.request.user.is_staff and permission
 
 
 class StatisticsTemplateView(StaffRequiredMixin, TemplateView):
@@ -1990,3 +2023,6 @@ class ItemDeleteView(SuccessMessageMixin, DeleteView):
     success_message = 'Статья успешно удалёна!'
 # endregion items page
 # endregion SYSTEM-SETTINGS
+
+
+

@@ -1,0 +1,5766 @@
+[
+{
+    "model": "main.seo",
+    "pk": 1,
+    "fields": {
+        "title": "Сайт Управляющей Компании ЖКХ - \"МОЙ ДОМ 24\"",
+        "description": "Универсальная система для управляющей компании ЖКХ многоквартирного дома \"МОЙ ДОМ 24\" - сайт управляющей компании + база управления квартирами + мобильное приложение - гибкая индивидуальная настройка для любой организации. Удобная комьютерная программа для ОСМД",
+        "keywords": "программа для ОСМД, управление домом, управление многоквартирным"
+    }
+},
+{
+    "model": "main.seo",
+    "pk": 2,
+    "fields": {
+        "title": "CRM-система для управляющей компании ЖКХ - \"МОЙ ДОМ 24\"",
+        "description": "Система учета услуг и расходов для жильцов многоквартирных домов - crm для  упавляющей компании ЖКХ и ОСМД. Система \"Мой Дом 24\" состоит из ПЯТИ компонентов:  сайт управляющей компании,  панель администратора,  персональные кабинеты жильцов дома,  мобильное приложение для IPhone и  Android",
+        "keywords": "Система Мой Дом 24,  сайт управляющей компании,  панель администратора,  персональные кабинеты жильцов дома,  мобильное приложение для IPhone,  мобильное приложение для Android, црм для ОСМД, управление квартирами для ОСМД, система управляющей компании жкх"
+    }
+},
+{
+    "model": "main.seo",
+    "pk": 3,
+    "fields": {
+        "title": "СRM система для ОСМД - \"МОЙ ДОМ 24\"",
+        "description": "Все возможности системы для ОСМД или управляющей компании ЖКХ: учет квартир, жильцов, показаний счетчиков, выставление счетов. Мобильные приложения для оплаты коммунальных услуг для жильцов многоквартиных домов.",
+        "keywords": "црм для осмд, мобильное приложение для оплаты коммунальных услуг, срм для управляющей компании жкх"
+    }
+},
+{
+    "model": "main.seo",
+    "pk": 4,
+    "fields": {
+        "title": "Система \"МОЙ ДОМ 24\" - Контакты",
+        "description": "Украина, г. Одесса, Космонавтов, 32   Телефон, Viber: +38 097 179-96-63  Telegram: SergeyMeleshkevych  Skype: SergeyMeleshkevych",
+        "keywords": "Система, МОЙ ДОМ 24, Контакты"
+    }
+},
+{
+    "model": "main.mainpage",
+    "pk": 1,
+    "fields": {
+        "slide_1": "gallery/slide123.jpeg",
+        "slide_2": "gallery/slide123_jS8MmLX.jpeg",
+        "slide_3": "gallery/slide123_1CJjZdr.jpeg",
+        "header": "Управляющая компания",
+        "text": "<h3><p>О ЖИЛОМ КОМПЛЕКСЕ</p></h3><p>Жилой комплекс «NORD» расположен на берегу Черного моря в живописном районе Одессы. Оригинальная архитектура комплекса делает его уникальным объектом не только для Одессы, но и для всей Украины – дом прекрасно вписывается в архитектуру берега и открывает свои жильцам и гостям прекрасный вид на бескрайнее море. Ярким преимуществом жилого комплекса является его месторасположения – удобная транспортная развязка, социальная инфраструктура, парк и прекрасный морской воздух создают все условия для комфортного проживания.</p>",
+        "show_urls": true,
+        "seo": 1
+    }
+},
+{
+    "model": "main.block",
+    "pk": 1,
+    "fields": {
+        "page_id": 1,
+        "image": "gallery/magazine.jpeg",
+        "header": "Магазины, Банки, Школы",
+        "description": "Район расположения жилого комплекса  имеет всю необходимую для проживания социальную инфраструктуру – в непосредственной близости находятся лечебно-профилактические учреждения, аптеки, магазины, отделения банков, частные и коммерческие детские сады, школы"
+    }
+},
+{
+    "model": "main.block",
+    "pk": 2,
+    "fields": {
+        "page_id": 1,
+        "image": "gallery/caffe.jpeg",
+        "header": "Рестораны и Кафе",
+        "description": "В непосредственной близости от жилого комплекса  расположены рыбный ресторан  и итальянская пиццерия. Кроме того, всего в десяти минутах ходьбы от комплекса находятся  рестораны испанской, итальянской, американской, украинской и русской кухни, пиццерии, кафе и лаунж-бары на любой вкус."
+    }
+},
+{
+    "model": "main.block",
+    "pk": 3,
+    "fields": {
+        "page_id": 1,
+        "image": "gallery/pliaz.jpeg",
+        "header": "Пляж",
+        "description": "<b></b>Жилой комплекс расположен на берегу Черного моря в районе Аркадия. В десяти минутах ходьбы от него находится знаменитые пляжи Аркадия и Чайка, а чуть дальше – пляжи курортный, 13-ая станция Большого Фонтана, Пляжник и другие знаменитые пляжи Одессы<b></b>"
+    }
+},
+{
+    "model": "main.block",
+    "pk": 4,
+    "fields": {
+        "page_id": 1,
+        "image": "gallery/sport.jpeg",
+        "header": "Спортивный Комплекс",
+        "description": "Всего в 5 минутах ходьбы от жилого комплекса  находится Спортивный комплекс Международного гуманитарного университета - это современный оборудованный комплекс с залами для проведения волейбольных соревнований, соревнований по танцам и борьбе и других спортивных мероприятий"
+    }
+},
+{
+    "model": "main.block",
+    "pk": 5,
+    "fields": {
+        "page_id": 1,
+        "image": "gallery/club.jpeg",
+        "header": "Клубная Жизнь",
+        "description": "Район расположения жилого комплекса  Аркадия является культовым местом ночного отдыха и развлечения – буквально в 5-10 минутах ходьбы от комплекса находятся такие места сосредоточения клубной жизни страны"
+    }
+},
+{
+    "model": "main.block",
+    "pk": 6,
+    "fields": {
+        "page_id": 1,
+        "image": "gallery/road.jpeg",
+        "header": "Удобная транспортная развязка",
+        "description": "ЖК  расположена  на берегу Черного моря в районе Аркадии и имеет удобную транспортную развязку, позволяющую даже в час Пик быстро и без проблем доехать в течение десяти минут до центра города или выехать на автострады Одесской обл"
+    }
+},
+{
+    "model": "main.aboutpage",
+    "pk": 1,
+    "fields": {
+        "header": "О управляющей компании",
+        "text": "<p>Компания-застройщик не только создала этот объект для своих покупателей, но и после окончания строительства взяла на себя все услуги по обеспечению удобного проживания своих жильцов. Для этого была организована управляющая компания «Морская симфония», которая осуществляет комплексное обслуживание коммунальной сферы жизнедеятельности своих клиентов.<br></p><p><b><i>Миссией управляющей компании является такая схема взаимодействия с жильцами дома, при которой услуги компании не отвлекают их от проживания и отдыха и создают максимально комфортную экосистему в доме. Незаметный сервис и максимально эффективная работа являются визитной карточкой компании.</i></b></p><p><br>В функции управляющей компании входят как содержание и управление хозяйством комплекса, так и охраняемой придомовой территории – уборка, техническое обслуживание лифтового хозяйства, системы электро и водоснабжения дома, котельной и пожарной систем, диспетчеризация, охрана, содержание придомовой территории и многое другое. В штате компании собраны только профессионалы своего дела, которые помогут жильцам в самых трудных и критических ситуациях решить их жилищно-коммунальные проблемы семь дней в неделю круглосуточно – электрики и сантехники, инженеры, монтеры и другие специалисты имеют многолетний опыт и высокий уровень квалификации. </p><p>Все это делает жилой комплекс  уникальным, комфортным и безопасным местом для проживания и отдыха всей семьи круглый год. Доверьте заботу о вашем доме и вашей квартире управляющей компании  и вы сможете круглый год наслаждаться проживанием на берегу моря и прекрасной природой Одессы.</p>",
+        "avatar": "gallery/imgonline-com-ua-Resize-ixiOxMm0kkN4X.jpg",
+        "additional_header": "Дополнительные услуги",
+        "additional_text": "<p>Главной обязанностью управляющей компании является поддержка комфортных условий для жильцов, оперативное реагирование на их просьбы и пожелания</p><p><b>К дополнительным услугам управляющей компании также относятся: 24-часовая охрана придомовой территории и паркинга, уборка территории и вывоз мусора, обслуживание пирса и пляжа. Также при желании жильцы дома могут заказать любые строительно-ремонтные работы от штатной бригады компании</b></p>",
+        "seo": 2
+    }
+},
+{
+    "model": "main.photo",
+    "pk": 1,
+    "fields": {
+        "photo": "gallery/gallery1.jpeg",
+        "is_main": true
+    }
+},
+{
+    "model": "main.photo",
+    "pk": 17,
+    "fields": {
+        "photo": "gallery/gallery1_S7v4BBp.jpeg",
+        "is_main": false
+    }
+},
+{
+    "model": "main.photo",
+    "pk": 20,
+    "fields": {
+        "photo": "gallery/road_8onLjhC.jpeg",
+        "is_main": false
+    }
+},
+{
+    "model": "main.photo",
+    "pk": 21,
+    "fields": {
+        "photo": "gallery/gallery1_iQgM61S.jpeg",
+        "is_main": true
+    }
+},
+{
+    "model": "main.photo",
+    "pk": 22,
+    "fields": {
+        "photo": "gallery/gallery1_UFlX8Ms.jpeg",
+        "is_main": false
+    }
+},
+{
+    "model": "main.document",
+    "pk": 2,
+    "fields": {
+        "name": "Document 1",
+        "document": "files/file21_202207101901.pdf"
+    }
+},
+{
+    "model": "main.document",
+    "pk": 7,
+    "fields": {
+        "name": "Document 2",
+        "document": "files/file21_202207101901_NFMLI5O.pdf"
+    }
+},
+{
+    "model": "main.servicepage",
+    "pk": 1,
+    "fields": {
+        "seo": 3
+    }
+},
+{
+    "model": "main.aboutservice",
+    "pk": 1,
+    "fields": {
+        "image": "gallery/parking.jpg",
+        "name": "Услуги паркинга",
+        "description": "Жилой комплекс  имеет собственный четырехуровневый надземный паркинг, обслуживание которого осуществляет управляющая компания.<br>Обслуживание паркинга включает в себя следующие работы и услуги: Уборка территории, &nbsp;Поддержание функционирования инженерных сетей паркинга, &nbsp;Обслуживание системы выезда-въезда в паркинг,  Обеспечение функционирования пропускного режима для въезда на территорию паркинга, &nbsp;Охрана и обеспечение безопасности жильцов и автомобильного транспорта."
+    }
+},
+{
+    "model": "main.aboutservice",
+    "pk": 19,
+    "fields": {
+        "image": "gallery/lift.jpeg",
+        "name": "Обслуживание лифтов",
+        "description": "<p>Лифтовое хозяйство жилого комплекса представлена современными высокоскоростными пассажирскими и грузопассажирскими лифтовыми системами от мирового производителя.<br>Обслуживание лифтового хозяйства включает в себя: &nbsp;Уборку в кабинах лифтов и обеспечение сохранности лифтов, выполняемые штатными сотрудниками компании, &nbsp;Техническое обслуживание лифтов, выполняемое силами подрядных организаций.<br></p>"
+    }
+},
+{
+    "model": "main.aboutservice",
+    "pk": 20,
+    "fields": {
+        "image": "gallery/sequrity.jpeg",
+        "name": "Охрана жилого комплекса",
+        "description": "<p>Охрана жилого комплекса осуществляется штатными специалистами управляющей компании. Охрана жилого комплекса охватывает апартаменты жильцов, придомовую территорию и надземный паркинг с автотранспортом. Охрана жилого комплекса осуществляется с использованием современной системы контроля доступа и видеонаблюдения за территорией. Попасть на территорию комплекса жильцы могут только при наличие электронного ключа, а гости – через систему заявок от жильцов дома на посещение.<br></p>"
+    }
+},
+{
+    "model": "main.contactpage",
+    "pk": 1,
+    "fields": {
+        "header": "Разработчик системы \"Мой Дом 24\"",
+        "text": "<p>Разработчиком системы \"Мой Дом 24\" является компания<b> AVADA-MEDIA </b>- компания специализирующаяся на разработке web и мобильных приложений разного уровня сложности, но неизменно высокого качества </p><p><b><i></i><i>Официальный сайт компании - </i></b><a target=\"_blank\" rel=\"nofollow\" href=\"https://avada-media.ua/\"><b><i>https://avada-media.ua/</i></b></a></p>",
+        "url": "https://avada-media.ua/moydom24/",
+        "full_name": "AVADA-MEDIA",
+        "location": "ул. Космонавтов, 32",
+        "address": "Малиновский р-н, г. Одесса",
+        "telephone": "+38 (097) 179-96-63",
+        "email": "info@avada-media.com.ua",
+        "map": "<div class=\"map\">\r\n        <iframe src=\"https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2749.8611266486014!2d30.713265815873395!3d46.43163207638925!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40c633a651e3fd09%3A0x9331380952bbfd2c!2z0LLRg9C70LjRhtGPINCa0L7RgdC80L7QvdCw0LLRgtGW0LIsIDMyLCDQntC00LXRgdCwLCDQntC00LXRgdGM0LrQsCDQvtCx0LvQsNGB0YLRjCwgNjUwMDA!5e0!3m2!1suk!2sua!4v1524221669656\" width=\"100%\" height=\"800\" frameborder=\"0\" style=\"border:0\" allowfullscreen></iframe>\r\n</div>",
+        "seo": 4
+    }
+},
+{
+    "model": "crm.section",
+    "pk": 2,
+    "fields": {
+        "name": "Секция 1"
+    }
+},
+{
+    "model": "crm.section",
+    "pk": 3,
+    "fields": {
+        "name": "Секция 1"
+    }
+},
+{
+    "model": "crm.section",
+    "pk": 4,
+    "fields": {
+        "name": "Секция 1"
+    }
+},
+{
+    "model": "crm.section",
+    "pk": 5,
+    "fields": {
+        "name": "Секция 1"
+    }
+},
+{
+    "model": "crm.section",
+    "pk": 6,
+    "fields": {
+        "name": "Секция 1"
+    }
+},
+{
+    "model": "crm.section",
+    "pk": 7,
+    "fields": {
+        "name": "Секция 4"
+    }
+},
+{
+    "model": "crm.section",
+    "pk": 8,
+    "fields": {
+        "name": "Секция 1"
+    }
+},
+{
+    "model": "crm.section",
+    "pk": 9,
+    "fields": {
+        "name": "Секция 3"
+    }
+},
+{
+    "model": "crm.section",
+    "pk": 10,
+    "fields": {
+        "name": "Секция 1"
+    }
+},
+{
+    "model": "crm.section",
+    "pk": 11,
+    "fields": {
+        "name": "Секция 3"
+    }
+},
+{
+    "model": "crm.section",
+    "pk": 13,
+    "fields": {
+        "name": "Секция 3"
+    }
+},
+{
+    "model": "crm.section",
+    "pk": 14,
+    "fields": {
+        "name": "Секция 5"
+    }
+},
+{
+    "model": "crm.section",
+    "pk": 16,
+    "fields": {
+        "name": "Секция 3"
+    }
+},
+{
+    "model": "crm.section",
+    "pk": 21,
+    "fields": {
+        "name": "Секция 1"
+    }
+},
+{
+    "model": "crm.section",
+    "pk": 22,
+    "fields": {
+        "name": "Секция 2"
+    }
+},
+{
+    "model": "crm.section",
+    "pk": 23,
+    "fields": {
+        "name": "Секция 1"
+    }
+},
+{
+    "model": "crm.section",
+    "pk": 24,
+    "fields": {
+        "name": "Секция 2"
+    }
+},
+{
+    "model": "crm.section",
+    "pk": 27,
+    "fields": {
+        "name": "Секция 3"
+    }
+},
+{
+    "model": "crm.section",
+    "pk": 28,
+    "fields": {
+        "name": "Секция 4"
+    }
+},
+{
+    "model": "crm.section",
+    "pk": 29,
+    "fields": {
+        "name": "Секция 3"
+    }
+},
+{
+    "model": "crm.section",
+    "pk": 30,
+    "fields": {
+        "name": "Секция 4"
+    }
+},
+{
+    "model": "crm.floor",
+    "pk": 3,
+    "fields": {
+        "name": "Этаж 1"
+    }
+},
+{
+    "model": "crm.floor",
+    "pk": 4,
+    "fields": {
+        "name": "Этаж 1"
+    }
+},
+{
+    "model": "crm.floor",
+    "pk": 5,
+    "fields": {
+        "name": "Этаж 3"
+    }
+},
+{
+    "model": "crm.floor",
+    "pk": 6,
+    "fields": {
+        "name": "Этаж 1"
+    }
+},
+{
+    "model": "crm.floor",
+    "pk": 7,
+    "fields": {
+        "name": "Этаж 3"
+    }
+},
+{
+    "model": "crm.floor",
+    "pk": 9,
+    "fields": {
+        "name": "Этаж 3"
+    }
+},
+{
+    "model": "crm.floor",
+    "pk": 10,
+    "fields": {
+        "name": "Этаж 5"
+    }
+},
+{
+    "model": "crm.floor",
+    "pk": 12,
+    "fields": {
+        "name": "Этаж 3"
+    }
+},
+{
+    "model": "crm.floor",
+    "pk": 16,
+    "fields": {
+        "name": "Этаж 1"
+    }
+},
+{
+    "model": "crm.floor",
+    "pk": 17,
+    "fields": {
+        "name": "Этаж 2"
+    }
+},
+{
+    "model": "crm.floor",
+    "pk": 18,
+    "fields": {
+        "name": "Этаж 1"
+    }
+},
+{
+    "model": "crm.floor",
+    "pk": 19,
+    "fields": {
+        "name": "Этаж 2"
+    }
+},
+{
+    "model": "crm.floor",
+    "pk": 20,
+    "fields": {
+        "name": "Этаж 2"
+    }
+},
+{
+    "model": "crm.floor",
+    "pk": 21,
+    "fields": {
+        "name": "Этаж 3"
+    }
+},
+{
+    "model": "crm.floor",
+    "pk": 24,
+    "fields": {
+        "name": "Этаж 3"
+    }
+},
+{
+    "model": "crm.floor",
+    "pk": 25,
+    "fields": {
+        "name": "Этаж 4"
+    }
+},
+{
+    "model": "crm.floor",
+    "pk": 26,
+    "fields": {
+        "name": "Этаж 3"
+    }
+},
+{
+    "model": "crm.floor",
+    "pk": 27,
+    "fields": {
+        "name": "Этаж 4"
+    }
+},
+{
+    "model": "crm.requisites",
+    "pk": 1,
+    "fields": {
+        "name": "Avada Media",
+        "information": "Здесь должна быть размещена информация о компании Avada Media."
+    }
+},
+{
+    "model": "crm.item",
+    "pk": 1,
+    "fields": {
+        "name": "Вывод средств",
+        "income_expense": "expense"
+    }
+},
+{
+    "model": "crm.item",
+    "pk": 3,
+    "fields": {
+        "name": "Перевод",
+        "income_expense": "income"
+    }
+},
+{
+    "model": "crm.item",
+    "pk": 4,
+    "fields": {
+        "name": "Оплата за квартиру",
+        "income_expense": "income"
+    }
+},
+{
+    "model": "crm.unit",
+    "pk": 2,
+    "fields": {
+        "name": "м2"
+    }
+},
+{
+    "model": "crm.unit",
+    "pk": 8,
+    "fields": {
+        "name": "м3"
+    }
+},
+{
+    "model": "crm.unit",
+    "pk": 14,
+    "fields": {
+        "name": "кВт"
+    }
+},
+{
+    "model": "crm.unit",
+    "pk": 40,
+    "fields": {
+        "name": "грн/час"
+    }
+},
+{
+    "model": "crm.service",
+    "pk": 1,
+    "fields": {
+        "name": "Холодная вода",
+        "show": true,
+        "unit": 8,
+        "currency": "грн"
+    }
+},
+{
+    "model": "crm.service",
+    "pk": 8,
+    "fields": {
+        "name": "Уборка территории",
+        "show": true,
+        "unit": 2,
+        "currency": "грн"
+    }
+},
+{
+    "model": "crm.service",
+    "pk": 9,
+    "fields": {
+        "name": "Электроэнергия",
+        "show": true,
+        "unit": 14,
+        "currency": "грн"
+    }
+},
+{
+    "model": "crm.service",
+    "pk": 16,
+    "fields": {
+        "name": "Отопление",
+        "show": true,
+        "unit": 8,
+        "currency": "грн"
+    }
+},
+{
+    "model": "crm.service",
+    "pk": 17,
+    "fields": {
+        "name": "Охрана",
+        "show": true,
+        "unit": 40,
+        "currency": "грн"
+    }
+},
+{
+    "model": "crm.meterreading",
+    "pk": 2,
+    "fields": {
+        "number": 2,
+        "date": "2022-07-28",
+        "apartment": 70,
+        "meter": 8,
+        "status": "accounted",
+        "expense": 20
+    }
+},
+{
+    "model": "crm.meterreading",
+    "pk": 3,
+    "fields": {
+        "number": 3,
+        "date": "2022-07-28",
+        "apartment": 70,
+        "meter": 9,
+        "status": "paid",
+        "expense": 30
+    }
+},
+{
+    "model": "crm.meterreading",
+    "pk": 8,
+    "fields": {
+        "number": 7,
+        "date": "2022-08-26",
+        "apartment": 56,
+        "meter": 1,
+        "status": "zero",
+        "expense": 123
+    }
+},
+{
+    "model": "crm.meterreading",
+    "pk": 46,
+    "fields": {
+        "number": 9,
+        "date": "2022-08-01",
+        "apartment": 70,
+        "meter": 1,
+        "status": "new",
+        "expense": 15
+    }
+},
+{
+    "model": "crm.meterreading",
+    "pk": 47,
+    "fields": {
+        "number": 10,
+        "date": "2022-08-01",
+        "apartment": 56,
+        "meter": 8,
+        "status": "new",
+        "expense": 24
+    }
+},
+{
+    "model": "crm.meterreading",
+    "pk": 48,
+    "fields": {
+        "number": 11,
+        "date": "2022-08-03",
+        "apartment": 58,
+        "meter": 1,
+        "status": "zero",
+        "expense": 123
+    }
+},
+{
+    "model": "crm.meterreading",
+    "pk": 49,
+    "fields": {
+        "number": 12,
+        "date": "2022-08-09",
+        "apartment": 70,
+        "meter": 1,
+        "status": "new",
+        "expense": 1
+    }
+},
+{
+    "model": "crm.tariff",
+    "pk": 2,
+    "fields": {
+        "name": "Основной тариф",
+        "description": "Это описание основного тарифа.",
+        "date_edit": "2022-07-15T17:34:50.968Z"
+    }
+},
+{
+    "model": "crm.tariff",
+    "pk": 3,
+    "fields": {
+        "name": "Пенсионный тариф",
+        "description": "Это описание пенсионного тарифа.",
+        "date_edit": "2022-07-15T13:01:27.624Z"
+    }
+},
+{
+    "model": "crm.tariff",
+    "pk": 59,
+    "fields": {
+        "name": "Дополнительный тариф",
+        "description": "Это описание дополнительного тарифа",
+        "date_edit": "2022-07-13T09:54:45.256Z"
+    }
+},
+{
+    "model": "crm.servicefortariff",
+    "pk": 4,
+    "fields": {
+        "tariff": 3,
+        "service": 1,
+        "cost_for_unit": "10.00"
+    }
+},
+{
+    "model": "crm.servicefortariff",
+    "pk": 5,
+    "fields": {
+        "tariff": 3,
+        "service": 8,
+        "cost_for_unit": "5.00"
+    }
+},
+{
+    "model": "crm.servicefortariff",
+    "pk": 6,
+    "fields": {
+        "tariff": 3,
+        "service": 9,
+        "cost_for_unit": "15.00"
+    }
+},
+{
+    "model": "crm.servicefortariff",
+    "pk": 45,
+    "fields": {
+        "tariff": 59,
+        "service": 1,
+        "cost_for_unit": "12.00"
+    }
+},
+{
+    "model": "crm.servicefortariff",
+    "pk": 46,
+    "fields": {
+        "tariff": 59,
+        "service": 8,
+        "cost_for_unit": "8.00"
+    }
+},
+{
+    "model": "crm.servicefortariff",
+    "pk": 47,
+    "fields": {
+        "tariff": 59,
+        "service": 9,
+        "cost_for_unit": "18.00"
+    }
+},
+{
+    "model": "crm.servicefortariff",
+    "pk": 69,
+    "fields": {
+        "tariff": 2,
+        "service": 8,
+        "cost_for_unit": "10.00"
+    }
+},
+{
+    "model": "crm.servicefortariff",
+    "pk": 70,
+    "fields": {
+        "tariff": 2,
+        "service": 1,
+        "cost_for_unit": "20.00"
+    }
+},
+{
+    "model": "crm.servicefortariff",
+    "pk": 89,
+    "fields": {
+        "tariff": 2,
+        "service": 9,
+        "cost_for_unit": "30.00"
+    }
+},
+{
+    "model": "crm.serviceforinvoice",
+    "pk": 84,
+    "fields": {
+        "invoice": null,
+        "service": 8,
+        "cost_for_unit": "5.00",
+        "expense": 10,
+        "full_cost": "50.00"
+    }
+},
+{
+    "model": "crm.serviceforinvoice",
+    "pk": 85,
+    "fields": {
+        "invoice": null,
+        "service": 8,
+        "cost_for_unit": "15.00",
+        "expense": 1,
+        "full_cost": "15.00"
+    }
+},
+{
+    "model": "crm.serviceforinvoice",
+    "pk": 128,
+    "fields": {
+        "invoice": 58,
+        "service": 1,
+        "cost_for_unit": "10.00",
+        "expense": 10,
+        "full_cost": "100.00"
+    }
+},
+{
+    "model": "crm.serviceforinvoice",
+    "pk": 129,
+    "fields": {
+        "invoice": 58,
+        "service": 8,
+        "cost_for_unit": "5.00",
+        "expense": 10,
+        "full_cost": "50.00"
+    }
+},
+{
+    "model": "crm.serviceforinvoice",
+    "pk": 130,
+    "fields": {
+        "invoice": 58,
+        "service": 9,
+        "cost_for_unit": "15.00",
+        "expense": 10,
+        "full_cost": "150.00"
+    }
+},
+{
+    "model": "crm.serviceforinvoice",
+    "pk": 131,
+    "fields": {
+        "invoice": 59,
+        "service": 1,
+        "cost_for_unit": "12.00",
+        "expense": 10,
+        "full_cost": "120.00"
+    }
+},
+{
+    "model": "crm.serviceforinvoice",
+    "pk": 132,
+    "fields": {
+        "invoice": 59,
+        "service": 8,
+        "cost_for_unit": "8.00",
+        "expense": 10,
+        "full_cost": "80.00"
+    }
+},
+{
+    "model": "crm.serviceforinvoice",
+    "pk": 133,
+    "fields": {
+        "invoice": 59,
+        "service": 9,
+        "cost_for_unit": "18.00",
+        "expense": 10,
+        "full_cost": "180.00"
+    }
+},
+{
+    "model": "crm.serviceforinvoice",
+    "pk": 137,
+    "fields": {
+        "invoice": 61,
+        "service": 8,
+        "cost_for_unit": "10.00",
+        "expense": 24,
+        "full_cost": "240.00"
+    }
+},
+{
+    "model": "crm.serviceforinvoice",
+    "pk": 138,
+    "fields": {
+        "invoice": 61,
+        "service": 1,
+        "cost_for_unit": "20.00",
+        "expense": 123,
+        "full_cost": "2460.00"
+    }
+},
+{
+    "model": "crm.serviceforinvoice",
+    "pk": 139,
+    "fields": {
+        "invoice": 61,
+        "service": 9,
+        "cost_for_unit": "30.00",
+        "expense": 10,
+        "full_cost": "300.00"
+    }
+},
+{
+    "model": "crm.serviceforinvoice",
+    "pk": 140,
+    "fields": {
+        "invoice": 62,
+        "service": 8,
+        "cost_for_unit": "10.00",
+        "expense": 10,
+        "full_cost": "100.00"
+    }
+},
+{
+    "model": "crm.serviceforinvoice",
+    "pk": 141,
+    "fields": {
+        "invoice": 62,
+        "service": 1,
+        "cost_for_unit": "20.00",
+        "expense": 10,
+        "full_cost": "200.00"
+    }
+},
+{
+    "model": "crm.serviceforinvoice",
+    "pk": 142,
+    "fields": {
+        "invoice": 62,
+        "service": 9,
+        "cost_for_unit": "30.00",
+        "expense": 10,
+        "full_cost": "300.00"
+    }
+},
+{
+    "model": "crm.serviceforinvoice",
+    "pk": 143,
+    "fields": {
+        "invoice": 63,
+        "service": 1,
+        "cost_for_unit": "12.00",
+        "expense": 10,
+        "full_cost": "120.00"
+    }
+},
+{
+    "model": "crm.serviceforinvoice",
+    "pk": 144,
+    "fields": {
+        "invoice": 63,
+        "service": 8,
+        "cost_for_unit": "8.00",
+        "expense": 10,
+        "full_cost": "80.00"
+    }
+},
+{
+    "model": "crm.serviceforinvoice",
+    "pk": 145,
+    "fields": {
+        "invoice": 63,
+        "service": 9,
+        "cost_for_unit": "18.00",
+        "expense": 10,
+        "full_cost": "180.00"
+    }
+},
+{
+    "model": "crm.serviceforinvoice",
+    "pk": 146,
+    "fields": {
+        "invoice": 63,
+        "service": 16,
+        "cost_for_unit": "20.00",
+        "expense": 10,
+        "full_cost": "200.00"
+    }
+},
+{
+    "model": "crm.serviceforinvoice",
+    "pk": 147,
+    "fields": {
+        "invoice": 60,
+        "service": 8,
+        "cost_for_unit": "10.00",
+        "expense": 20,
+        "full_cost": "200.00"
+    }
+},
+{
+    "model": "crm.serviceforinvoice",
+    "pk": 148,
+    "fields": {
+        "invoice": 60,
+        "service": 1,
+        "cost_for_unit": "20.00",
+        "expense": 1,
+        "full_cost": "20.00"
+    }
+},
+{
+    "model": "crm.serviceforinvoice",
+    "pk": 149,
+    "fields": {
+        "invoice": 60,
+        "service": 9,
+        "cost_for_unit": "30.00",
+        "expense": 30,
+        "full_cost": "900.00"
+    }
+},
+{
+    "model": "crm.serviceforinvoice",
+    "pk": 156,
+    "fields": {
+        "invoice": 71,
+        "service": 8,
+        "cost_for_unit": "10.00",
+        "expense": 10,
+        "full_cost": "100.00"
+    }
+},
+{
+    "model": "crm.serviceforinvoice",
+    "pk": 157,
+    "fields": {
+        "invoice": 71,
+        "service": 1,
+        "cost_for_unit": "20.00",
+        "expense": 10,
+        "full_cost": "200.00"
+    }
+},
+{
+    "model": "crm.serviceforinvoice",
+    "pk": 158,
+    "fields": {
+        "invoice": 71,
+        "service": 9,
+        "cost_for_unit": "30.00",
+        "expense": 10,
+        "full_cost": "300.00"
+    }
+},
+{
+    "model": "crm.invoice",
+    "pk": 58,
+    "fields": {
+        "number": 1,
+        "date": "2022-08-11",
+        "apartment": 60,
+        "is_held": true,
+        "status": "paid",
+        "tariff": 3,
+        "date_with": "2022-08-11",
+        "date_before": "2022-08-11",
+        "amount": "300.00"
+    }
+},
+{
+    "model": "crm.invoice",
+    "pk": 59,
+    "fields": {
+        "number": 2,
+        "date": "2022-08-11",
+        "apartment": 58,
+        "is_held": true,
+        "status": "unpaid",
+        "tariff": 59,
+        "date_with": "2022-08-11",
+        "date_before": "2022-08-11",
+        "amount": "380.00"
+    }
+},
+{
+    "model": "crm.invoice",
+    "pk": 60,
+    "fields": {
+        "number": 3,
+        "date": "2022-08-11",
+        "apartment": 70,
+        "is_held": true,
+        "status": "unpaid",
+        "tariff": 2,
+        "date_with": "2022-08-11",
+        "date_before": "2022-08-11",
+        "amount": "1120.00"
+    }
+},
+{
+    "model": "crm.invoice",
+    "pk": 61,
+    "fields": {
+        "number": 4,
+        "date": "2022-08-11",
+        "apartment": 56,
+        "is_held": false,
+        "status": "p_paid",
+        "tariff": 2,
+        "date_with": "2022-08-11",
+        "date_before": "2022-08-11",
+        "amount": "3000.00"
+    }
+},
+{
+    "model": "crm.invoice",
+    "pk": 62,
+    "fields": {
+        "number": 5,
+        "date": "2022-08-11",
+        "apartment": 59,
+        "is_held": true,
+        "status": "paid",
+        "tariff": 2,
+        "date_with": "2022-08-11",
+        "date_before": "2022-08-11",
+        "amount": "600.00"
+    }
+},
+{
+    "model": "crm.invoice",
+    "pk": 63,
+    "fields": {
+        "number": 6,
+        "date": "2022-08-15",
+        "apartment": 58,
+        "is_held": true,
+        "status": "p_paid",
+        "tariff": 59,
+        "date_with": "2022-08-15",
+        "date_before": "2022-08-15",
+        "amount": "580.00"
+    }
+},
+{
+    "model": "crm.invoice",
+    "pk": 71,
+    "fields": {
+        "number": 7,
+        "date": "2022-08-11",
+        "apartment": 59,
+        "is_held": true,
+        "status": "unpaid",
+        "tariff": 2,
+        "date_with": "2022-08-11",
+        "date_before": "2022-08-11",
+        "amount": "600.00"
+    }
+},
+{
+    "model": "crm.template",
+    "pk": 1,
+    "fields": {
+        "template": "files/template1.xlsx",
+        "name": "Шаблон 1",
+        "is_default": true
+    }
+},
+{
+    "model": "crm.template",
+    "pk": 2,
+    "fields": {
+        "template": "files/template2.xlsx",
+        "name": "Шаблон 2",
+        "is_default": false
+    }
+},
+{
+    "model": "crm.personalaccount",
+    "pk": 26,
+    "fields": {
+        "personal_number": 1,
+        "status": "active",
+        "apartment": 60,
+        "balance": "0.00"
+    }
+},
+{
+    "model": "crm.personalaccount",
+    "pk": 30,
+    "fields": {
+        "personal_number": 13,
+        "status": "active",
+        "apartment": 56,
+        "balance": "2000.00"
+    }
+},
+{
+    "model": "crm.personalaccount",
+    "pk": 32,
+    "fields": {
+        "personal_number": 7209022,
+        "status": "inactive",
+        "apartment": null,
+        "balance": "0.00"
+    }
+},
+{
+    "model": "crm.personalaccount",
+    "pk": 34,
+    "fields": {
+        "personal_number": 4,
+        "status": "active",
+        "apartment": 70,
+        "balance": "2000.00"
+    }
+},
+{
+    "model": "crm.personalaccount",
+    "pk": 37,
+    "fields": {
+        "personal_number": 7209023,
+        "status": "active",
+        "apartment": null,
+        "balance": "0.00"
+    }
+},
+{
+    "model": "crm.personalaccount",
+    "pk": 39,
+    "fields": {
+        "personal_number": 7209025,
+        "status": "inactive",
+        "apartment": 71,
+        "balance": "0.00"
+    }
+},
+{
+    "model": "crm.personalaccount",
+    "pk": 40,
+    "fields": {
+        "personal_number": 2,
+        "status": "active",
+        "apartment": 58,
+        "balance": "492.00"
+    }
+},
+{
+    "model": "crm.personalaccount",
+    "pk": 41,
+    "fields": {
+        "personal_number": 7209026,
+        "status": "active",
+        "apartment": 57,
+        "balance": "100.00"
+    }
+},
+{
+    "model": "crm.personalaccount",
+    "pk": 42,
+    "fields": {
+        "personal_number": 3,
+        "status": "active",
+        "apartment": 59,
+        "balance": "-200.00"
+    }
+},
+{
+    "model": "users.role",
+    "pk": 1,
+    "fields": {
+        "role": "director",
+        "has_statistics": true,
+        "has_cashbox": true,
+        "has_invoice": true,
+        "has_personal_account": true,
+        "has_apartment": true,
+        "has_owner": true,
+        "has_house": true,
+        "has_message": true,
+        "has_application": true,
+        "has_meter": true,
+        "has_site_management": true,
+        "has_service": true,
+        "has_tariff": true,
+        "has_role": true,
+        "has_users": true,
+        "has_requisites": true
+    }
+},
+{
+    "model": "users.role",
+    "pk": 2,
+    "fields": {
+        "role": "manager",
+        "has_statistics": true,
+        "has_cashbox": false,
+        "has_invoice": false,
+        "has_personal_account": false,
+        "has_apartment": true,
+        "has_owner": true,
+        "has_house": true,
+        "has_message": true,
+        "has_application": true,
+        "has_meter": true,
+        "has_site_management": false,
+        "has_service": false,
+        "has_tariff": false,
+        "has_role": false,
+        "has_users": false,
+        "has_requisites": false
+    }
+},
+{
+    "model": "users.role",
+    "pk": 3,
+    "fields": {
+        "role": "accountant",
+        "has_statistics": true,
+        "has_cashbox": true,
+        "has_invoice": true,
+        "has_personal_account": true,
+        "has_apartment": true,
+        "has_owner": true,
+        "has_house": true,
+        "has_message": true,
+        "has_application": true,
+        "has_meter": true,
+        "has_site_management": true,
+        "has_service": true,
+        "has_tariff": true,
+        "has_role": true,
+        "has_users": true,
+        "has_requisites": true
+    }
+},
+{
+    "model": "users.role",
+    "pk": 4,
+    "fields": {
+        "role": "electric",
+        "has_statistics": false,
+        "has_cashbox": false,
+        "has_invoice": false,
+        "has_personal_account": false,
+        "has_apartment": false,
+        "has_owner": false,
+        "has_house": false,
+        "has_message": false,
+        "has_application": true,
+        "has_meter": false,
+        "has_site_management": false,
+        "has_service": false,
+        "has_tariff": false,
+        "has_role": false,
+        "has_users": false,
+        "has_requisites": false
+    }
+},
+{
+    "model": "users.role",
+    "pk": 5,
+    "fields": {
+        "role": "plumber",
+        "has_statistics": false,
+        "has_cashbox": false,
+        "has_invoice": false,
+        "has_personal_account": false,
+        "has_apartment": false,
+        "has_owner": false,
+        "has_house": false,
+        "has_message": false,
+        "has_application": true,
+        "has_meter": false,
+        "has_site_management": false,
+        "has_service": false,
+        "has_tariff": false,
+        "has_role": false,
+        "has_users": false,
+        "has_requisites": false
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "0hgq9ykphymxo1k3f6fp3pyg3t0kgj5w",
+    "fields": {
+        "session_data": ".eJxVi8sKwjAQRf9l1lKSdGI6Lu2HhJk8iIgKTbMS_70pdFEv3MV9nC94bmvxrabFPyLcYLRwOZfC4Zne-7LHOhy5DnOr6-eVlvtx-KMK19IRdpmEVDey5OCC03ESSzSJySY5tJZRc7hmichIKmBHjOoirdwIvw2XgjQp:1oDVTS:g2b2Ck7YqwFPpjhTTJ_5DF_t-sgGRlxi6E1s7T6g3DE",
+        "expire_date": "2022-08-01T18:28:06.493Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "31xq2ff0ria3ydkero1rn3jsd1q1zs90",
+    "fields": {
+        "session_data": "e30:1oNy1j:jYTQxbLD0e9rnJvM83cXB-9BsK4J7917-ivHHWI7P4s",
+        "expire_date": "2022-08-30T14:58:43.993Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "36e7q8vxpf79hbxqrba3a65d2sio0p8r",
+    "fields": {
+        "session_data": "e30:1oNy0f:yGBjOscwTwrTOsL3f2Nye_tE6tS4cYG9q14bBfqIa5g",
+        "expire_date": "2022-08-30T14:57:37.595Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "3u2sbpgkq2ndqjong4uuvyik6gqnbwkv",
+    "fields": {
+        "session_data": "e30:1o9VIg:DmyLOFXGDLR3GtYn5Ck4TQpvYqup9K-6-MDoch_2tOQ",
+        "expire_date": "2022-07-21T17:28:26.060Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "8a0ccp6o47w97rnmcklwm909dnmmxy2k",
+    "fields": {
+        "session_data": "e30:1oNzjA:cv20__SUnXQBUeKJeW-vmjlb-4vwzXKQktwtdkLTguM",
+        "expire_date": "2022-08-30T16:47:40.210Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "cycejgxky3krh4ebules9hplk6mh5max",
+    "fields": {
+        "session_data": "e30:1oNzic:NiIkhR6rNgLCMW4RnKm85yZuU79ha_NjRFelxcssbk0",
+        "expire_date": "2022-08-30T16:47:06.018Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "evw7dwtutqhbr663995etcx7dor2i2w5",
+    "fields": {
+        "session_data": "e30:1oEWbW:WdtPXBE5Ct5W3XQIADqBfbXql_UxwIgaQGO0f5MrZYY",
+        "expire_date": "2022-08-04T13:52:38.064Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "fkhx3rqpn0it9sal9sravv6kgctgtcxp",
+    "fields": {
+        "session_data": "e30:1oNzi0:34xRgmoZAKZcHJIHwkWrWWPAHWt9pn5HFZy46uRNIWw",
+        "expire_date": "2022-08-30T16:46:28.564Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "h6upasckeb8mudafudwc13t231thwx6q",
+    "fields": {
+        "session_data": "e30:1oNzgZ:Yfqd1hsaoJZNS1gpy53WGk5DcZVY_-atqf7wMauEeDc",
+        "expire_date": "2022-08-30T16:44:59.719Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "jo7i6dua96vpo8ts3h8t8jwvnv7jbi6g",
+    "fields": {
+        "session_data": ".eJxVjM0KwjAQhN8lZyn5a7LpUR8kZJMNKWIr3RYU8d210IMev5n55iVi2tYWN6YljkUMQvXi9Btiylea9mZH7g7m7rLxOt9oOR-DP6slbl8lQ0FjAUxAFSyQKeQqKiCvEbOWwUldVfFIYFXVFY1MoXjVO28g5bCfMjGP8xTpcR-Xpxjk-wPiXzt1:1o8QZu:4OWKD2ZDjrawy0W2C0YccOdoGwZNlVKPCXr7M3emFhg",
+        "expire_date": "2022-07-18T18:13:46.070Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "kku7bvv59em56rhof6sg6ib8npc8tdwp",
+    "fields": {
+        "session_data": "e30:1o9VH9:j_4kZMVcoAc_ctPOhdPWMiZ1FGQ5ycPxOhS7Ngnc3GU",
+        "expire_date": "2022-07-21T17:26:51.537Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "lfhcrn4hfrcdjnwvzecomdtzarmr4804",
+    "fields": {
+        "session_data": "e30:1oNz77:rFAJsRPuiHwkF7L_0TScV_uX4f27oxiAeSNKd9bEgyQ",
+        "expire_date": "2022-08-30T16:08:21.710Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "m03sdcm7bntirmswa90anyh2q288cxbm",
+    "fields": {
+        "session_data": ".eJxVjEEOwiAURO_C2hCg5Zd26d4zkA8fLGqgKW2iMd7dNulCM7uZN-_NLK7LaNcaZpuIDUyy02_n0N9D3ge6Yb4W7kte5uT4jvBjrfxSKDzOB_snGLGO2xuMUm0LDqUkEdFQdCR68q6TURgnlQFNKkqvtQhdg7oXXQ8QtwCoBnZpDbWmkm14Tml-sUF8vnn6PoU:1o8Iwo:HIATK82csdLS-PgBZKpNMpslTx2ch-9Pu_I0oRwRPk4",
+        "expire_date": "2022-07-18T10:04:54.878Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "mtdlbrepc8hclhmgvysg3vzxlrrvahv8",
+    "fields": {
+        "session_data": ".eJxVjEEOwiAURO_C2hCg5Zd26d4zkA8fLGqgKW2iMd7dNulCM7uZN-_NLK7LaNcaZpuIDUyy02_n0N9D3ge6Yb4W7kte5uT4jvBjrfxSKDzOB_snGLGO2xuMUm0LDqUkEdFQdCR68q6TURgnlQFNKkqvtQhdg7oXXQ8QtwCoBnZpDbWmkm14Tml-sUF8vnn6PoU:1o8IkB:KifGpC1UfXS0f_181EacFbKS82d8MVQBXBg99uAqnd8",
+        "expire_date": "2022-07-18T09:51:51.743Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "neb8jwwub7ikeoudhf8vdjkq5z9b2ivn",
+    "fields": {
+        "session_data": ".eJxVjMsOwiAQRf-FtSE82gJduvcbCMMMFjVgSptojP-uTbrQ7T3nnhfzYV0mvzaafUY2Mtmzw-8IIV6pbAQvoZwrj7Uscwa-KXynjZ8q0u24u3-BKbTp-44WQXfWagfSdZY00pBAWjIKICrhBqGSRANkO5lUAi2CQyP7wWgbotuijVrLtXh63PP8ZKN4fwC6bT9U:1o8QdC:fpk9tiyOSUtooi3eFoDyPZMJqGURU7zAhx7q_5M-_I4",
+        "expire_date": "2022-07-18T18:17:10.387Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "o0t8y6v0iztwdie3r5xiam19xcyo35n4",
+    "fields": {
+        "session_data": "e30:1oNy5k:gcLhjYaNtFsFGmLmGpk_KDbo7H2lV8S7Fsg0ApgG96I",
+        "expire_date": "2022-08-30T15:02:52.927Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "o3p32okqzsgd37a9h2jramxe479axwy1",
+    "fields": {
+        "session_data": ".eJxVjEEOgjAQRe_StWlaYIC6dM8ZmpnO1KKmTSisjHcXEha6fe_9_1YetzX5rcriZ1ZXZdXllxGGp-RD8APzvehQ8rrMpI9En7bqqbC8bmf7d5Cwpn3tpA125Bba2JuGDXXAjOzAEJAhI7EfHXCU4MQiQbODgQbnkBihE_X5AvlNOPc:1oOMSC:ujJbbtYVjYQAB1ho8KQZCVOhvEuDHkVRNQ_4v7VP1ZE",
+        "expire_date": "2022-08-31T17:03:40.336Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "obbexnn281tr9biwnca4dcx2vsd1p6y5",
+    "fields": {
+        "session_data": "e30:1oNxyn:I972VtYf9yycbFhvhduxPmtCgigiuT6PtpwlYQD1S1U",
+        "expire_date": "2022-08-30T14:55:41.498Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "psp3mjlwykvxw903cyq0sqo5qagafjzb",
+    "fields": {
+        "session_data": "e30:1oNy3d:kUOoJENCHmjgiJc-W-l3MwK1Lx8_5D7gJS8FjNYq3kg",
+        "expire_date": "2022-08-30T15:00:41.175Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "uy587tykem7ce0a2kr911a8g4nn8lk4v",
+    "fields": {
+        "session_data": ".eJxVjEEOgjAQRe_StWlaYIC6dM8ZmpnO1KKmTSisjHcXEha6fe_9_1YetzX5rcriZ1ZXZdXllxGGp-RD8APzvehQ8rrMpI9En7bqqbC8bmf7d5Cwpn3tpA125Bba2JuGDXXAjOzAEJAhI7EfHXCU4MQiQbODgQbnkBihE_X5AvlNOPc:1oEWh3:crfiGpgdhy9X4YI5n7GIu_6UXBWzpoaXogwf4L0Q8_g",
+        "expire_date": "2022-08-04T13:58:21.649Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "vbw4ovixbvkxjz54tyr43rokve10qzh4",
+    "fields": {
+        "session_data": "e30:1oNy2T:2k1rVkgGJOop4Gww2YlC0tEqr9YXgYEvy1uvxtRgHAA",
+        "expire_date": "2022-08-30T14:59:29.910Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "vg8qskvjhaawk0i2bmchbtmdxv14j77p",
+    "fields": {
+        "session_data": "e30:1o8fkt:wGYL7YZ1djJXYyTUEf-93Lsrkinx7Crk0_Z5RUtJnlo",
+        "expire_date": "2022-07-19T10:26:07.059Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "wfewpvz31x35qkov03itr8023fsshoxv",
+    "fields": {
+        "session_data": "e30:1o8fk3:tS9BgtL5pBuZaIDNg8WX52P1x66N5nsOhSVc_VNbjM0",
+        "expire_date": "2022-07-19T10:25:15.658Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "yp88ullwkc7842jnvtzy02xzjszl9two",
+    "fields": {
+        "session_data": "e30:1oNzeX:dbn83SKu585iSafnYvE3kSQoE5aiNYFgHK4ZaVYY_zM",
+        "expire_date": "2022-08-30T16:42:53.977Z"
+    }
+},
+{
+    "model": "users.userprofile",
+    "fields": {
+        "password": "pbkdf2_sha256$260000$aSyav4X9yUa3o7KSiYbinT$psaXp0g4jW2KVSe0efEN5hxdBnU68ZW7LjXbwAoSfsI=",
+        "last_login": "2022-08-17T17:03:40.196Z",
+        "is_superuser": true,
+        "email": "admin@gmail.com",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2022-07-01",
+        "user_id": "10355",
+        "first_name": "Иван",
+        "last_name": "Иванов",
+        "patronymic": "",
+        "avatar": "gallery/user2-160x160.jpg",
+        "telephone": "+380(066) 563-42-94",
+        "viber": null,
+        "telegram": null,
+        "notes": "",
+        "birth_date": null,
+        "status": "is_active",
+        "role": 1,
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "users.userprofile",
+    "fields": {
+        "password": "pbkdf2_sha256$260000$3NqVwiCKMBlyKAiC9y4Yha$6KSelkWqDtcZHctBYC4knPac12qCP6Eo6lQ8XDHvBdY=",
+        "last_login": "2022-08-17T16:19:26.639Z",
+        "is_superuser": false,
+        "email": "kalafickijartem@gmail.com",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2022-07-04",
+        "user_id": "68348",
+        "first_name": "Николай",
+        "last_name": "Карпов",
+        "patronymic": "Александрович",
+        "avatar": "gallery/user8-128x128.jpg",
+        "telephone": "+380(066) 666-66-66",
+        "viber": "+380(066) 666-66-66",
+        "telegram": "@karpovvv",
+        "notes": "Это заметки обо мне Это заметки обо мне Это заметки обо мне",
+        "birth_date": "2000-12-12",
+        "status": "is_active",
+        "role": null,
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "users.userprofile",
+    "fields": {
+        "password": "pbkdf2_sha256$260000$8ZiHzniVtK6ZjPMHZp0NbG$MnLtXttHJLjOxxaO08kWSotP9IrCMl0dEA4SkZufU/4=",
+        "last_login": "2022-07-07T17:44:41.453Z",
+        "is_superuser": false,
+        "email": "tesla@gmail.com",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2022-07-06",
+        "user_id": "25458",
+        "first_name": "Никола",
+        "last_name": "Тесла",
+        "patronymic": "",
+        "avatar": "",
+        "telephone": "+380(050) 100-10-10",
+        "viber": null,
+        "telegram": null,
+        "notes": "",
+        "birth_date": null,
+        "status": "is_active",
+        "role": 4,
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "users.userprofile",
+    "fields": {
+        "password": "pbkdf2_sha256$260000$yNNohHqRireowrKuRRi75O$OIL5jvu3bTRY93nu8oRCiRWWv6WwBaqaca+e1yRGYkI=",
+        "last_login": null,
+        "is_superuser": false,
+        "email": "leonardo@gmail.com",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2022-07-06",
+        "user_id": "90863",
+        "first_name": "Леонардо",
+        "last_name": "да Винчи",
+        "patronymic": "",
+        "avatar": "",
+        "telephone": "+380(050) 500-50-50",
+        "viber": null,
+        "telegram": null,
+        "notes": null,
+        "birth_date": null,
+        "status": "new",
+        "role": 5,
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "users.userprofile",
+    "fields": {
+        "password": "pbkdf2_sha256$260000$jQ4axzYEO37VvmVUPZzflS$+iVNb/EcdgmUxCfSt7IROYzYEgQM01jTthA6rN1wcWM=",
+        "last_login": "2022-08-17T15:11:04.230Z",
+        "is_superuser": false,
+        "email": "buffett@gmail.com",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2022-07-06",
+        "user_id": "60928",
+        "first_name": "Уоррен",
+        "last_name": "Баффетт",
+        "patronymic": "",
+        "avatar": "",
+        "telephone": "+380(066) 588-53-98",
+        "viber": null,
+        "telegram": null,
+        "notes": null,
+        "birth_date": null,
+        "status": "is_active",
+        "role": 2,
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "users.userprofile",
+    "fields": {
+        "password": "pbkdf2_sha256$260000$iabJAKtFBfmJHDA15sl7hM$/z/xAgmVi6lzjEMaVyulFazuisQrBlEWAygrEHngf2A=",
+        "last_login": null,
+        "is_superuser": false,
+        "email": "kalaficzkij@ukr.net",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2022-07-06",
+        "user_id": "82137",
+        "first_name": "Илон",
+        "last_name": "Маск",
+        "patronymic": "",
+        "avatar": "",
+        "telephone": "+380(065) 023-49-19",
+        "viber": null,
+        "telegram": null,
+        "notes": null,
+        "birth_date": null,
+        "status": "is_active",
+        "role": 3,
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "users.userprofile",
+    "fields": {
+        "password": "pbkdf2_sha256$260000$oyKBFOH8P9CM8pYsZiqQI6$b2dNXbqN70v2qUUCLCvvXBM9p08qGHRkzz0vU/jDhco=",
+        "last_login": "2022-08-16T16:41:49.894Z",
+        "is_superuser": false,
+        "email": "test1@gmail.com",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2022-07-20",
+        "user_id": "56397",
+        "first_name": "Евгений",
+        "last_name": "Омелькин",
+        "patronymic": "Дмитриевич",
+        "avatar": "gallery/user1-128x128.jpg",
+        "telephone": "+380(050) 500-50-50",
+        "viber": "+380(050) 500-50-50",
+        "telegram": "+380(050) 500-50-50",
+        "notes": "Немного обо мне",
+        "birth_date": "1990-07-03",
+        "status": "disable",
+        "role": null,
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "users.userprofile",
+    "fields": {
+        "password": "pbkdf2_sha256$260000$uMIqbvmTCei3RjeBpgjBO2$dnTa3BK/6xoZC4Xx+aOYHLdSE1jZf7L/KcYttoo8aA4=",
+        "last_login": null,
+        "is_superuser": false,
+        "email": "test2@gmail.com",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2022-07-20",
+        "user_id": "20834",
+        "first_name": "Елена",
+        "last_name": "Лисица",
+        "patronymic": "Павловна",
+        "avatar": "gallery/user4-128x128.jpg",
+        "telephone": "+380(099) 312-31-23",
+        "viber": "+380(099) 312-31-23",
+        "telegram": "@lisica",
+        "notes": "Интересная личность",
+        "birth_date": "2001-10-27",
+        "status": "is_active",
+        "role": null,
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "users.userprofile",
+    "fields": {
+        "password": "pbkdf2_sha256$260000$TigJ3jS7Tbg17ZFuo8BaTi$bq/wCzbnEZic7vi82RMlo77GlRl1UGaRThrRRHpS0qI=",
+        "last_login": "2022-08-16T16:58:27.611Z",
+        "is_superuser": false,
+        "email": "test11@gmail.com",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2022-07-21",
+        "user_id": "77983",
+        "first_name": "Фёдор",
+        "last_name": "Достоевский",
+        "patronymic": "Михайлович",
+        "avatar": "gallery/avatar_EzWvizs.png",
+        "telephone": "+380(066) 666-66-66",
+        "viber": "+380(066) 666-66-66",
+        "telegram": "@dostoevskiy",
+        "notes": "Отличный писатель!",
+        "birth_date": "2007-11-01",
+        "status": "new",
+        "role": null,
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "users.userprofile",
+    "fields": {
+        "password": "pbkdf2_sha256$260000$JZustv14ajSDD3cqC7hHqV$uDYhsLHq9510OaWsB+eiU+yXcRrf7ikwx4asncgkb8k=",
+        "last_login": "2022-08-16T16:41:03.063Z",
+        "is_superuser": false,
+        "email": "test4@gmail.com",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2022-07-21",
+        "user_id": "82395",
+        "first_name": "Галина",
+        "last_name": "Яничева",
+        "patronymic": "Петровна",
+        "avatar": "gallery/user5-128x128.jpg",
+        "telephone": null,
+        "viber": null,
+        "telegram": null,
+        "notes": "",
+        "birth_date": "1999-05-31",
+        "status": "new",
+        "role": null,
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "users.userprofile",
+    "fields": {
+        "password": "pbkdf2_sha256$260000$6bdWBbp5U6rZUTlNBFkSmW$Yvox59GCKeQVn+tL0MAs7DSuSxiWpQ5X2tjI01CMi9Y=",
+        "last_login": "2022-08-17T16:25:30.328Z",
+        "is_superuser": false,
+        "email": "test10@gmail.com",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2022-08-15",
+        "user_id": "14105",
+        "first_name": "Артём",
+        "last_name": "Тестовый",
+        "patronymic": "Батькович",
+        "avatar": "gallery/imgonline-com-ua-Resize-ixiOxMm0kkN4X_fvMMwOB.jpg",
+        "telephone": "+380(066) 666-66-66",
+        "viber": "+380(066) 666-66-66",
+        "telegram": "@artttek",
+        "notes": "Довольно скромное количество заметок, но всё же они есть.",
+        "birth_date": "1999-02-02",
+        "status": "new",
+        "role": null,
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "crm.transaction",
+    "pk": 2,
+    "fields": {
+        "number": 2,
+        "date": "2022-08-04",
+        "owner": null,
+        "personal_account": null,
+        "item": 1,
+        "amount": "-1500.00",
+        "completed": true,
+        "manager": [
+            "kalaficzkij@ukr.net"
+        ],
+        "comment": "Какой-то очень важный коммент",
+        "is_income": false
+    }
+},
+{
+    "model": "crm.transaction",
+    "pk": 7,
+    "fields": {
+        "number": 7,
+        "date": "2022-08-04",
+        "owner": null,
+        "personal_account": null,
+        "item": null,
+        "amount": "-230.00",
+        "completed": false,
+        "manager": [
+            "kalaficzkij@ukr.net"
+        ],
+        "comment": "123",
+        "is_income": false
+    }
+},
+{
+    "model": "crm.transaction",
+    "pk": 20,
+    "fields": {
+        "number": 9,
+        "date": "2022-08-05",
+        "owner": [
+            "test2@gmail.com"
+        ],
+        "personal_account": 30,
+        "item": 3,
+        "amount": "2000.00",
+        "completed": true,
+        "manager": [
+            "buffett@gmail.com"
+        ],
+        "comment": "Вот как-то так и никак иначе )",
+        "is_income": true
+    }
+},
+{
+    "model": "crm.transaction",
+    "pk": 21,
+    "fields": {
+        "number": 10,
+        "date": "2022-08-05",
+        "owner": [
+            "kalafickijartem@gmail.com"
+        ],
+        "personal_account": 40,
+        "item": null,
+        "amount": "100.00",
+        "completed": true,
+        "manager": [
+            "kalaficzkij@ukr.net"
+        ],
+        "comment": "",
+        "is_income": true
+    }
+},
+{
+    "model": "crm.transaction",
+    "pk": 22,
+    "fields": {
+        "number": 11,
+        "date": "2022-08-05",
+        "owner": [
+            "kalafickijartem@gmail.com"
+        ],
+        "personal_account": 42,
+        "item": null,
+        "amount": "400.00",
+        "completed": true,
+        "manager": [
+            "admin@gmail.com"
+        ],
+        "comment": "",
+        "is_income": true
+    }
+},
+{
+    "model": "crm.transaction",
+    "pk": 23,
+    "fields": {
+        "number": 12,
+        "date": "2022-08-09",
+        "owner": [
+            "kalafickijartem@gmail.com"
+        ],
+        "personal_account": 40,
+        "item": 4,
+        "amount": "1500.00",
+        "completed": true,
+        "manager": [
+            "admin@gmail.com"
+        ],
+        "comment": "",
+        "is_income": true
+    }
+},
+{
+    "model": "crm.transaction",
+    "pk": 24,
+    "fields": {
+        "number": 13,
+        "date": "2022-08-10",
+        "owner": [
+            "test11@gmail.com"
+        ],
+        "personal_account": 26,
+        "item": 3,
+        "amount": "300.00",
+        "completed": true,
+        "manager": [
+            "admin@gmail.com"
+        ],
+        "comment": "",
+        "is_income": true
+    }
+},
+{
+    "model": "crm.transaction",
+    "pk": 25,
+    "fields": {
+        "number": 14,
+        "date": "2022-08-10",
+        "owner": [
+            "test1@gmail.com"
+        ],
+        "personal_account": 41,
+        "item": 3,
+        "amount": "100.00",
+        "completed": true,
+        "manager": [
+            "admin@gmail.com"
+        ],
+        "comment": "",
+        "is_income": true
+    }
+},
+{
+    "model": "crm.transaction",
+    "pk": 26,
+    "fields": {
+        "number": 15,
+        "date": "2022-08-10",
+        "owner": null,
+        "personal_account": null,
+        "item": 1,
+        "amount": "-100.00",
+        "completed": true,
+        "manager": [
+            "admin@gmail.com"
+        ],
+        "comment": "",
+        "is_income": false
+    }
+},
+{
+    "model": "crm.transaction",
+    "pk": 27,
+    "fields": {
+        "number": 16,
+        "date": "2022-07-16",
+        "owner": null,
+        "personal_account": null,
+        "item": 3,
+        "amount": "1000.00",
+        "completed": true,
+        "manager": [
+            "admin@gmail.com"
+        ],
+        "comment": "",
+        "is_income": true
+    }
+},
+{
+    "model": "crm.message",
+    "pk": 23,
+    "fields": {
+        "message_for_owner": null,
+        "topic": "Должникам!",
+        "text": "<p>Пройдите в бухгалетрию!&nbsp;Пройдите в бухгалетрию!&nbsp;Пройдите в бухгалетрию! <br></p>",
+        "sender": [
+            "admin@gmail.com"
+        ],
+        "house": null,
+        "section": null,
+        "floor": null,
+        "apartment": null,
+        "is_debt": true,
+        "date": "2022-08-16T11:09:16.563Z"
+    }
+},
+{
+    "model": "crm.message",
+    "pk": 24,
+    "fields": {
+        "message_for_owner": [
+            "kalafickijartem@gmail.com"
+        ],
+        "topic": "Карпову!",
+        "text": "<p>Карпову! Карпову! Карпову!<br></p>",
+        "sender": [
+            "admin@gmail.com"
+        ],
+        "house": null,
+        "section": null,
+        "floor": null,
+        "apartment": null,
+        "is_debt": false,
+        "date": "2022-08-16T11:09:45.946Z"
+    }
+},
+{
+    "model": "crm.message",
+    "pk": 27,
+    "fields": {
+        "message_for_owner": null,
+        "topic": "Плата за квартиру",
+        "text": "<p>Плата за квартиру Плата за квартиру Плата за квартиру<br></p>",
+        "sender": [
+            "admin@gmail.com"
+        ],
+        "house": 1,
+        "section": 2,
+        "floor": 21,
+        "apartment": 58,
+        "is_debt": false,
+        "date": "2022-08-16T11:12:39.694Z"
+    }
+},
+{
+    "model": "crm.application",
+    "pk": 1,
+    "fields": {
+        "date": "2022-08-01",
+        "time": "16:18:00",
+        "description": "Сгорела проводка!",
+        "comment": "Какие-то комментарии =)",
+        "apartment": 70,
+        "type_master": "electric",
+        "status": "in_progress",
+        "master": [
+            "tesla@gmail.com"
+        ]
+    }
+},
+{
+    "model": "crm.application",
+    "pk": 2,
+    "fields": {
+        "date": "2022-07-31",
+        "time": "20:00:00",
+        "description": "Заливаю соседей снизу!",
+        "comment": "<u><b></b></u><h3><u><b></b></u><b></b><b>Какие-то комментарии...</b></h3><u></u>",
+        "apartment": 56,
+        "type_master": "electric",
+        "status": "complete",
+        "master": [
+            "leonardo@gmail.com"
+        ]
+    }
+},
+{
+    "model": "crm.application",
+    "pk": 41,
+    "fields": {
+        "date": "2022-08-02",
+        "time": "16:22:00",
+        "description": "Ремонт перед продажей!",
+        "comment": "<p><i>Какие-то комментарии</i><i></i></p>",
+        "apartment": 71,
+        "type_master": "any",
+        "status": "in_progress",
+        "master": [
+            "tesla@gmail.com"
+        ]
+    }
+},
+{
+    "model": "crm.application",
+    "pk": 43,
+    "fields": {
+        "date": "2022-08-03",
+        "time": "20:20:00",
+        "description": "123",
+        "comment": "<p>12312321</p>",
+        "apartment": 58,
+        "type_master": "any",
+        "status": "in_progress",
+        "master": [
+            "leonardo@gmail.com"
+        ]
+    }
+},
+{
+    "model": "crm.application",
+    "pk": 45,
+    "fields": {
+        "date": "2022-08-16",
+        "time": "14:00:00",
+        "description": "Что-то с проводкой",
+        "comment": null,
+        "apartment": 59,
+        "type_master": "electric",
+        "status": "new",
+        "master": null
+    }
+},
+{
+    "model": "crm.application",
+    "pk": 46,
+    "fields": {
+        "date": "2022-08-17",
+        "time": "19:45:00",
+        "description": ";lgmr;f;",
+        "comment": null,
+        "apartment": 58,
+        "type_master": "electric",
+        "status": "new",
+        "master": null
+    }
+},
+{
+    "model": "crm.apartment",
+    "pk": 56,
+    "fields": {
+        "section": 24,
+        "floor": 20,
+        "owner": [
+            "test2@gmail.com"
+        ],
+        "tariff": 2,
+        "number": 22,
+        "area": 38.4
+    }
+},
+{
+    "model": "crm.apartment",
+    "pk": 57,
+    "fields": {
+        "section": 23,
+        "floor": 19,
+        "owner": [
+            "test1@gmail.com"
+        ],
+        "tariff": null,
+        "number": 5,
+        "area": 22.0
+    }
+},
+{
+    "model": "crm.apartment",
+    "pk": 58,
+    "fields": {
+        "section": 2,
+        "floor": 21,
+        "owner": [
+            "kalafickijartem@gmail.com"
+        ],
+        "tariff": 59,
+        "number": 35,
+        "area": 55.3
+    }
+},
+{
+    "model": "crm.apartment",
+    "pk": 59,
+    "fields": {
+        "section": 23,
+        "floor": 18,
+        "owner": [
+            "kalafickijartem@gmail.com"
+        ],
+        "tariff": 2,
+        "number": 7,
+        "area": 32.0
+    }
+},
+{
+    "model": "crm.apartment",
+    "pk": 60,
+    "fields": {
+        "section": 2,
+        "floor": 21,
+        "owner": [
+            "test11@gmail.com"
+        ],
+        "tariff": 3,
+        "number": 13,
+        "area": 23.0
+    }
+},
+{
+    "model": "crm.apartment",
+    "pk": 70,
+    "fields": {
+        "section": 23,
+        "floor": 19,
+        "owner": [
+            "test4@gmail.com"
+        ],
+        "tariff": 2,
+        "number": 31,
+        "area": 62.5
+    }
+},
+{
+    "model": "crm.apartment",
+    "pk": 71,
+    "fields": {
+        "section": 24,
+        "floor": 21,
+        "owner": null,
+        "tariff": 2,
+        "number": 48,
+        "area": 32.8
+    }
+},
+{
+    "model": "crm.apartment",
+    "pk": 72,
+    "fields": {
+        "section": 23,
+        "floor": 19,
+        "owner": [
+            "test11@gmail.com"
+        ],
+        "tariff": 3,
+        "number": 6,
+        "area": 66.6
+    }
+},
+{
+    "model": "crm.house",
+    "pk": 1,
+    "fields": {
+        "name": "ЖК \"17-ая Жемчужина\"",
+        "address": "ул. Асташкина, 29/2",
+        "image_1": "gallery/image_1_PcIGxqE.jpeg",
+        "image_2": "gallery/image_2.jpeg",
+        "image_3": "gallery/image_3_0A3RN7Q.jpeg",
+        "image_4": "gallery/image_4_KNIGdZi.jpeg",
+        "image_5": "gallery/image_5.jpeg",
+        "sections": [
+            2,
+            24
+        ],
+        "floors": [
+            3,
+            20,
+            21
+        ],
+        "users": [
+            [
+                "kalaficzkij@ukr.net"
+            ],
+            [
+                "tesla@gmail.com"
+            ],
+            [
+                "admin@gmail.com"
+            ]
+        ]
+    }
+},
+{
+    "model": "crm.house",
+    "pk": 2,
+    "fields": {
+        "name": "ЖК \"Кадор\"",
+        "address": "ул.  Большая Арнаутская, 26",
+        "image_1": "gallery/image_1_gX0l18M.jpeg",
+        "image_2": "gallery/image_2_iQ9JaHw.jpeg",
+        "image_3": "gallery/image_3_cPjoz2y.jpeg",
+        "image_4": "gallery/image_4_vW3P63M.jpeg",
+        "image_5": "gallery/image_5_RLnimFP.jpeg",
+        "sections": [
+            23
+        ],
+        "floors": [
+            18,
+            19
+        ],
+        "users": [
+            [
+                "admin@gmail.com"
+            ]
+        ]
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 1,
+    "fields": {
+        "action_time": "2022-07-04T15:58:00.064Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "users",
+            "userprofile"
+        ],
+        "object_id": "2",
+        "object_repr": "kalaficzkij@ukr.net",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 2,
+    "fields": {
+        "action_time": "2022-07-04T15:59:36.076Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "users",
+            "userprofile"
+        ],
+        "object_id": "3",
+        "object_repr": "kalaficzkij@ukr.net",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 3,
+    "fields": {
+        "action_time": "2022-07-04T16:00:39.063Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "users",
+            "userprofile"
+        ],
+        "object_id": "4",
+        "object_repr": "kalaficzkij@ukr.net",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 4,
+    "fields": {
+        "action_time": "2022-07-04T16:08:59.980Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "users",
+            "userprofile"
+        ],
+        "object_id": "5",
+        "object_repr": "kalaficzkij@ukr.net",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 5,
+    "fields": {
+        "action_time": "2022-07-04T16:42:18.450Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "users",
+            "userprofile"
+        ],
+        "object_id": "6",
+        "object_repr": "kalaficzkij@ukr.net",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 6,
+    "fields": {
+        "action_time": "2022-07-04T16:44:38.915Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "users",
+            "userprofile"
+        ],
+        "object_id": "7",
+        "object_repr": "kalaficzkij@ukr.net",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 7,
+    "fields": {
+        "action_time": "2022-07-04T16:46:27.094Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "users",
+            "userprofile"
+        ],
+        "object_id": "8",
+        "object_repr": "kalaficzkij@ukr.net",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 8,
+    "fields": {
+        "action_time": "2022-07-04T16:48:05.663Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "users",
+            "userprofile"
+        ],
+        "object_id": "9",
+        "object_repr": "kalaficzkij@ukr.net",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 9,
+    "fields": {
+        "action_time": "2022-07-04T16:57:54.066Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "users",
+            "userprofile"
+        ],
+        "object_id": "10",
+        "object_repr": "kalaficzkij@ukr.net",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 10,
+    "fields": {
+        "action_time": "2022-07-04T17:04:48.337Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "users",
+            "userprofile"
+        ],
+        "object_id": "11",
+        "object_repr": "kalaficzkij@ukr.net",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 11,
+    "fields": {
+        "action_time": "2022-07-04T17:12:19.013Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "users",
+            "userprofile"
+        ],
+        "object_id": "12",
+        "object_repr": "kalaficzkij@ukr.net",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 12,
+    "fields": {
+        "action_time": "2022-07-04T17:18:07.781Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "users",
+            "userprofile"
+        ],
+        "object_id": "13",
+        "object_repr": "kalaficzkij@ukr.net",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 13,
+    "fields": {
+        "action_time": "2022-07-04T17:26:55.348Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "users",
+            "userprofile"
+        ],
+        "object_id": "14",
+        "object_repr": "kalaficzkij@ukr.net",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 14,
+    "fields": {
+        "action_time": "2022-07-04T17:27:15.795Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "users",
+            "userprofile"
+        ],
+        "object_id": "15",
+        "object_repr": "kalafickijartem@gmail.com",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"Is active\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 15,
+    "fields": {
+        "action_time": "2022-07-04T17:27:56.356Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "users",
+            "userprofile"
+        ],
+        "object_id": "15",
+        "object_repr": "kalafickijartem@gmail.com",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"Is active\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 16,
+    "fields": {
+        "action_time": "2022-07-04T17:45:57.426Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "users",
+            "userprofile"
+        ],
+        "object_id": "16",
+        "object_repr": "kalaficzkij@ukr.net",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 17,
+    "fields": {
+        "action_time": "2022-07-04T18:46:19.873Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "users",
+            "userprofile"
+        ],
+        "object_id": "1",
+        "object_repr": "admin@gmail.com",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"\\u0418\\u043c\\u044f\", \"\\u0424\\u0430\\u043c\\u0438\\u043b\\u0438\\u044f\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 18,
+    "fields": {
+        "action_time": "2022-07-04T18:50:08.914Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "users",
+            "userprofile"
+        ],
+        "object_id": "1",
+        "object_repr": "admin@gmail.com",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"\\u0421\\u0442\\u0430\\u0442\\u0443\\u0441\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 19,
+    "fields": {
+        "action_time": "2022-07-04T19:01:55.827Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "users",
+            "userprofile"
+        ],
+        "object_id": "1",
+        "object_repr": "admin@gmail.com",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"\\u0410\\u0432\\u0430\\u0442\\u0430\\u0440\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 20,
+    "fields": {
+        "action_time": "2022-07-04T19:11:34.585Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "users",
+            "userprofile"
+        ],
+        "object_id": "15",
+        "object_repr": "kalafickijartem@gmail.com",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"\\u0410\\u0432\\u0430\\u0442\\u0430\\u0440\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 21,
+    "fields": {
+        "action_time": "2022-07-05T11:13:43.132Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "users",
+            "role"
+        ],
+        "object_id": "1",
+        "object_repr": "Role object (1)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 22,
+    "fields": {
+        "action_time": "2022-07-05T11:14:58.997Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "users",
+            "role"
+        ],
+        "object_id": "2",
+        "object_repr": "Role object (2)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 23,
+    "fields": {
+        "action_time": "2022-07-05T11:15:22.939Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "users",
+            "role"
+        ],
+        "object_id": "3",
+        "object_repr": "Role object (3)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 24,
+    "fields": {
+        "action_time": "2022-07-05T11:15:35.997Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "users",
+            "role"
+        ],
+        "object_id": "4",
+        "object_repr": "Role object (4)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 25,
+    "fields": {
+        "action_time": "2022-07-05T11:15:43.743Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "users",
+            "role"
+        ],
+        "object_id": "5",
+        "object_repr": "Role object (5)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 26,
+    "fields": {
+        "action_time": "2022-07-05T11:43:14.498Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "users",
+            "userprofile"
+        ],
+        "object_id": "1",
+        "object_repr": "admin@gmail.com",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"\\u0420\\u043e\\u043b\\u044c\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 27,
+    "fields": {
+        "action_time": "2022-07-05T11:45:26.859Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "users",
+            "role"
+        ],
+        "object_id": "1",
+        "object_repr": "Role object (1)",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"\\u0414\\u043e\\u0441\\u0442\\u0443\\u043f \\u043a \\u0440\\u043e\\u043b\\u044f\\u043c\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 28,
+    "fields": {
+        "action_time": "2022-07-05T11:45:48.120Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "users",
+            "role"
+        ],
+        "object_id": "1",
+        "object_repr": "Role object (1)",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"\\u0414\\u043e\\u0441\\u0442\\u0443\\u043f \\u043a \\u0440\\u043e\\u043b\\u044f\\u043c\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 29,
+    "fields": {
+        "action_time": "2022-07-06T08:50:47.381Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "users",
+            "userprofile"
+        ],
+        "object_id": "17",
+        "object_repr": "kalaficzkij@ukr.net",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 30,
+    "fields": {
+        "action_time": "2022-07-06T08:53:17.092Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "users",
+            "userprofile"
+        ],
+        "object_id": "18",
+        "object_repr": "kalaficzkij@ukr.net",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 31,
+    "fields": {
+        "action_time": "2022-07-06T08:54:48.547Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "users",
+            "userprofile"
+        ],
+        "object_id": "19",
+        "object_repr": "kalaficzkij@ukr.net",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 32,
+    "fields": {
+        "action_time": "2022-07-06T11:30:49.058Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "users",
+            "userprofile"
+        ],
+        "object_id": "1",
+        "object_repr": "admin@gmail.com",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"\\u0421\\u0442\\u0430\\u0442\\u0443\\u0441\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 33,
+    "fields": {
+        "action_time": "2022-07-06T11:36:29.131Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "users",
+            "userprofile"
+        ],
+        "object_id": "15",
+        "object_repr": "kalafickijartem@gmail.com",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"\\u0421\\u0442\\u0430\\u0442\\u0443\\u0441\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 34,
+    "fields": {
+        "action_time": "2022-07-06T11:36:50.263Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "users",
+            "userprofile"
+        ],
+        "object_id": "15",
+        "object_repr": "kalafickijartem@gmail.com",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"\\u0421\\u0442\\u0430\\u0442\\u0443\\u0441\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 35,
+    "fields": {
+        "action_time": "2022-07-06T11:37:03.811Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "users",
+            "userprofile"
+        ],
+        "object_id": "1",
+        "object_repr": "admin@gmail.com",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"\\u0421\\u0442\\u0430\\u0442\\u0443\\u0441\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 36,
+    "fields": {
+        "action_time": "2022-07-06T11:37:18.383Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "users",
+            "userprofile"
+        ],
+        "object_id": "1",
+        "object_repr": "admin@gmail.com",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"\\u0421\\u0442\\u0430\\u0442\\u0443\\u0441\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 37,
+    "fields": {
+        "action_time": "2022-07-06T11:39:00.766Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "users",
+            "userprofile"
+        ],
+        "object_id": "1",
+        "object_repr": "admin@gmail.com",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"\\u0421\\u0442\\u0430\\u0442\\u0443\\u0441\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 38,
+    "fields": {
+        "action_time": "2022-07-06T17:20:03.981Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "users",
+            "userprofile"
+        ],
+        "object_id": "21",
+        "object_repr": "kalaficzkij@ukr.net",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 39,
+    "fields": {
+        "action_time": "2022-07-06T17:29:55.379Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "users",
+            "userprofile"
+        ],
+        "object_id": "22",
+        "object_repr": "kalaficzkij@ukr.net",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 40,
+    "fields": {
+        "action_time": "2022-07-06T17:38:39.782Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "users",
+            "userprofile"
+        ],
+        "object_id": "23",
+        "object_repr": "kalaficzkij@ukr.net",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 41,
+    "fields": {
+        "action_time": "2022-07-06T18:18:06.870Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "users",
+            "userprofile"
+        ],
+        "object_id": "24",
+        "object_repr": "kalaficzkij@ukr.net",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 42,
+    "fields": {
+        "action_time": "2022-07-06T19:13:39.260Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "users",
+            "userprofile"
+        ],
+        "object_id": "25",
+        "object_repr": "tesla@gmail.com",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"\\u0420\\u043e\\u043b\\u044c\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 43,
+    "fields": {
+        "action_time": "2022-07-07T18:06:37.706Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "item"
+        ],
+        "object_id": "1",
+        "object_repr": "Item object (1)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 44,
+    "fields": {
+        "action_time": "2022-07-07T18:06:51.127Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "item"
+        ],
+        "object_id": "2",
+        "object_repr": "Item object (2)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 45,
+    "fields": {
+        "action_time": "2022-07-11T09:56:34.748Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "requisites"
+        ],
+        "object_id": "1",
+        "object_repr": "Requisites object (1)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 46,
+    "fields": {
+        "action_time": "2022-07-11T10:56:45.782Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "unit"
+        ],
+        "object_id": "1",
+        "object_repr": "Unit object (1)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 47,
+    "fields": {
+        "action_time": "2022-07-11T10:57:23.112Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "unit"
+        ],
+        "object_id": "2",
+        "object_repr": "Unit object (2)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 48,
+    "fields": {
+        "action_time": "2022-07-11T11:03:28.068Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "service"
+        ],
+        "object_id": "1",
+        "object_repr": "Service object (1)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 49,
+    "fields": {
+        "action_time": "2022-07-11T11:06:35.423Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "service"
+        ],
+        "object_id": "1",
+        "object_repr": "Холодная вода",
+        "action_flag": 2,
+        "change_message": "[]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 50,
+    "fields": {
+        "action_time": "2022-07-11T11:07:12.838Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "service"
+        ],
+        "object_id": "2",
+        "object_repr": "Уборка территории",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 51,
+    "fields": {
+        "action_time": "2022-07-11T18:40:46.801Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "unit"
+        ],
+        "object_id": "11",
+        "object_repr": "",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 52,
+    "fields": {
+        "action_time": "2022-07-11T18:40:46.822Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "unit"
+        ],
+        "object_id": "10",
+        "object_repr": "",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 53,
+    "fields": {
+        "action_time": "2022-07-11T18:40:46.833Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "unit"
+        ],
+        "object_id": "9",
+        "object_repr": "тест",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 54,
+    "fields": {
+        "action_time": "2022-07-11T18:41:56.934Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "unit"
+        ],
+        "object_id": "13",
+        "object_repr": "",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 55,
+    "fields": {
+        "action_time": "2022-07-12T10:03:22.677Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "tariff"
+        ],
+        "object_id": "2",
+        "object_repr": "Tariff object (2)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 56,
+    "fields": {
+        "action_time": "2022-07-12T10:05:28.401Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "servicefortariff"
+        ],
+        "object_id": "1",
+        "object_repr": "ServiceForTariff object (1)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 57,
+    "fields": {
+        "action_time": "2022-07-12T10:05:38.321Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "servicefortariff"
+        ],
+        "object_id": "2",
+        "object_repr": "ServiceForTariff object (2)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 58,
+    "fields": {
+        "action_time": "2022-07-12T10:05:54.426Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "servicefortariff"
+        ],
+        "object_id": "3",
+        "object_repr": "ServiceForTariff object (3)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 59,
+    "fields": {
+        "action_time": "2022-07-12T10:07:05.097Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "tariff"
+        ],
+        "object_id": "3",
+        "object_repr": "Пенсионный тариф",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 60,
+    "fields": {
+        "action_time": "2022-07-12T10:07:28.147Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "servicefortariff"
+        ],
+        "object_id": "4",
+        "object_repr": "ServiceForTariff object (4)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 61,
+    "fields": {
+        "action_time": "2022-07-12T10:07:36.490Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "servicefortariff"
+        ],
+        "object_id": "5",
+        "object_repr": "ServiceForTariff object (5)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 62,
+    "fields": {
+        "action_time": "2022-07-12T10:07:41.009Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "servicefortariff"
+        ],
+        "object_id": "5",
+        "object_repr": "ServiceForTariff object (5)",
+        "action_flag": 2,
+        "change_message": "[]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 63,
+    "fields": {
+        "action_time": "2022-07-12T10:07:41.087Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "servicefortariff"
+        ],
+        "object_id": "5",
+        "object_repr": "ServiceForTariff object (5)",
+        "action_flag": 2,
+        "change_message": "[]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 64,
+    "fields": {
+        "action_time": "2022-07-12T10:07:48.346Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "servicefortariff"
+        ],
+        "object_id": "6",
+        "object_repr": "ServiceForTariff object (6)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 65,
+    "fields": {
+        "action_time": "2022-07-12T17:25:15.950Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "tariff"
+        ],
+        "object_id": "4",
+        "object_repr": "Avada Media",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 66,
+    "fields": {
+        "action_time": "2022-07-12T17:29:32.557Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "tariff"
+        ],
+        "object_id": "5",
+        "object_repr": "Avada Media",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 67,
+    "fields": {
+        "action_time": "2022-07-12T17:35:32.434Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "tariff"
+        ],
+        "object_id": "6",
+        "object_repr": "Avada Media",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 68,
+    "fields": {
+        "action_time": "2022-07-12T17:40:06.121Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "tariff"
+        ],
+        "object_id": "7",
+        "object_repr": "Железный человек",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 69,
+    "fields": {
+        "action_time": "2022-07-12T17:42:43.095Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "tariff"
+        ],
+        "object_id": "8",
+        "object_repr": "Железный человек",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 70,
+    "fields": {
+        "action_time": "2022-07-12T18:09:21.377Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "tariff"
+        ],
+        "object_id": "9",
+        "object_repr": "Avada Media",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 71,
+    "fields": {
+        "action_time": "2022-07-12T18:09:56.332Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "tariff"
+        ],
+        "object_id": "10",
+        "object_repr": "Железный человек",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 72,
+    "fields": {
+        "action_time": "2022-07-12T18:15:25.019Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "tariff"
+        ],
+        "object_id": "11",
+        "object_repr": "Железный человек",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 73,
+    "fields": {
+        "action_time": "2022-07-12T18:49:54.269Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "servicefortariff"
+        ],
+        "object_id": "6",
+        "object_repr": "ServiceForTariff object (6)",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"\\u0426\\u0435\\u043d\\u0430\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 74,
+    "fields": {
+        "action_time": "2022-07-12T18:50:16.058Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "servicefortariff"
+        ],
+        "object_id": "6",
+        "object_repr": "ServiceForTariff object (6)",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"\\u0426\\u0435\\u043d\\u0430\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 75,
+    "fields": {
+        "action_time": "2022-07-15T18:20:07.811Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "main",
+            "seo"
+        ],
+        "object_id": "1",
+        "object_repr": "Seo object (1)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 76,
+    "fields": {
+        "action_time": "2022-07-15T18:20:11.166Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "main",
+            "mainpage"
+        ],
+        "object_id": "1",
+        "object_repr": "MainPage object (1)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 77,
+    "fields": {
+        "action_time": "2022-07-15T18:21:55.131Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "main",
+            "block"
+        ],
+        "object_id": "1",
+        "object_repr": "Block object (1)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 78,
+    "fields": {
+        "action_time": "2022-07-15T18:22:33.144Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "main",
+            "block"
+        ],
+        "object_id": "2",
+        "object_repr": "Block object (2)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 79,
+    "fields": {
+        "action_time": "2022-07-15T18:22:55.129Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "main",
+            "block"
+        ],
+        "object_id": "3",
+        "object_repr": "Block object (3)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 80,
+    "fields": {
+        "action_time": "2022-07-15T18:23:10.865Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "main",
+            "block"
+        ],
+        "object_id": "4",
+        "object_repr": "Block object (4)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 81,
+    "fields": {
+        "action_time": "2022-07-15T18:23:23.510Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "main",
+            "block"
+        ],
+        "object_id": "5",
+        "object_repr": "Block object (5)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 82,
+    "fields": {
+        "action_time": "2022-07-15T18:23:39.404Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "main",
+            "block"
+        ],
+        "object_id": "6",
+        "object_repr": "Block object (6)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 83,
+    "fields": {
+        "action_time": "2022-07-15T19:24:33.570Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "main",
+            "mainpage"
+        ],
+        "object_id": "1",
+        "object_repr": "MainPage object (1)",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"Slug\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 84,
+    "fields": {
+        "action_time": "2022-07-16T19:16:11.965Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "main",
+            "seo"
+        ],
+        "object_id": "2",
+        "object_repr": "Seo object (2)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 85,
+    "fields": {
+        "action_time": "2022-07-16T19:16:16.718Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "main",
+            "aboutpage"
+        ],
+        "object_id": "1",
+        "object_repr": "AboutPage object (1)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 86,
+    "fields": {
+        "action_time": "2022-07-16T19:16:31.557Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "main",
+            "photo"
+        ],
+        "object_id": "1",
+        "object_repr": "Photo object (1)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 87,
+    "fields": {
+        "action_time": "2022-07-16T19:16:40.742Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "main",
+            "photo"
+        ],
+        "object_id": "2",
+        "object_repr": "Photo object (2)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 88,
+    "fields": {
+        "action_time": "2022-07-16T19:16:46.997Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "main",
+            "photo"
+        ],
+        "object_id": "3",
+        "object_repr": "Photo object (3)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 89,
+    "fields": {
+        "action_time": "2022-07-16T19:16:54.053Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "main",
+            "photo"
+        ],
+        "object_id": "4",
+        "object_repr": "Photo object (4)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 90,
+    "fields": {
+        "action_time": "2022-07-16T19:19:42.190Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "main",
+            "document"
+        ],
+        "object_id": "1",
+        "object_repr": "Document object (1)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 91,
+    "fields": {
+        "action_time": "2022-07-16T19:19:59.917Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "main",
+            "document"
+        ],
+        "object_id": "2",
+        "object_repr": "Document object (2)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 92,
+    "fields": {
+        "action_time": "2022-07-18T09:28:32.634Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "main",
+            "photo"
+        ],
+        "object_id": "1",
+        "object_repr": "Photo object (1)",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"\\u0424\\u043e\\u0442\\u043e\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 93,
+    "fields": {
+        "action_time": "2022-07-18T09:28:39.324Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "main",
+            "photo"
+        ],
+        "object_id": "2",
+        "object_repr": "Photo object (2)",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"\\u0424\\u043e\\u0442\\u043e\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 94,
+    "fields": {
+        "action_time": "2022-07-18T10:12:46.700Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "main",
+            "photo"
+        ],
+        "object_id": "7",
+        "object_repr": "Photo object (7)",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 95,
+    "fields": {
+        "action_time": "2022-07-18T10:12:46.716Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "main",
+            "photo"
+        ],
+        "object_id": "6",
+        "object_repr": "Photo object (6)",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 96,
+    "fields": {
+        "action_time": "2022-07-18T10:56:44.300Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "main",
+            "photo"
+        ],
+        "object_id": "10",
+        "object_repr": "Photo object (10)",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 97,
+    "fields": {
+        "action_time": "2022-07-18T10:56:44.322Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "main",
+            "photo"
+        ],
+        "object_id": "9",
+        "object_repr": "Photo object (9)",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 98,
+    "fields": {
+        "action_time": "2022-07-18T11:09:36.274Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "main",
+            "photo"
+        ],
+        "object_id": "15",
+        "object_repr": "Photo object (15)",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 99,
+    "fields": {
+        "action_time": "2022-07-18T11:09:36.288Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "main",
+            "photo"
+        ],
+        "object_id": "14",
+        "object_repr": "Photo object (14)",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 100,
+    "fields": {
+        "action_time": "2022-07-18T11:09:36.298Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "main",
+            "photo"
+        ],
+        "object_id": "13",
+        "object_repr": "Photo object (13)",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 101,
+    "fields": {
+        "action_time": "2022-07-18T11:09:36.308Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "main",
+            "photo"
+        ],
+        "object_id": "12",
+        "object_repr": "Photo object (12)",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 102,
+    "fields": {
+        "action_time": "2022-07-18T11:09:36.319Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "main",
+            "photo"
+        ],
+        "object_id": "11",
+        "object_repr": "Photo object (11)",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 103,
+    "fields": {
+        "action_time": "2022-07-18T11:09:36.330Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "main",
+            "photo"
+        ],
+        "object_id": "4",
+        "object_repr": "Photo object (4)",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 104,
+    "fields": {
+        "action_time": "2022-07-18T11:09:36.343Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "main",
+            "photo"
+        ],
+        "object_id": "3",
+        "object_repr": "Photo object (3)",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 105,
+    "fields": {
+        "action_time": "2022-07-18T14:38:17.255Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "main",
+            "aboutservice"
+        ],
+        "object_id": "1",
+        "object_repr": "AboutService object (1)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 106,
+    "fields": {
+        "action_time": "2022-07-18T14:38:30.085Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "main",
+            "aboutservice"
+        ],
+        "object_id": "2",
+        "object_repr": "AboutService object (2)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 107,
+    "fields": {
+        "action_time": "2022-07-18T14:40:21.156Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "main",
+            "seo"
+        ],
+        "object_id": "3",
+        "object_repr": "Seo object (3)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 108,
+    "fields": {
+        "action_time": "2022-07-18T14:40:22.840Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "main",
+            "servicepage"
+        ],
+        "object_id": "1",
+        "object_repr": "ServicePage object (1)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 109,
+    "fields": {
+        "action_time": "2022-07-18T15:52:43.162Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "main",
+            "aboutservice"
+        ],
+        "object_id": "4",
+        "object_repr": "AboutService object (4)",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 110,
+    "fields": {
+        "action_time": "2022-07-18T15:52:43.181Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "main",
+            "aboutservice"
+        ],
+        "object_id": "3",
+        "object_repr": "AboutService object (3)",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 111,
+    "fields": {
+        "action_time": "2022-07-18T17:28:30.571Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "main",
+            "seo"
+        ],
+        "object_id": "4",
+        "object_repr": "Seo object (4)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 112,
+    "fields": {
+        "action_time": "2022-07-18T17:28:32.040Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "main",
+            "contactpage"
+        ],
+        "object_id": "1",
+        "object_repr": "ContactPage object (1)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 113,
+    "fields": {
+        "action_time": "2022-07-19T15:39:24.042Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "section"
+        ],
+        "object_id": "1",
+        "object_repr": "Section object (1)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 114,
+    "fields": {
+        "action_time": "2022-07-19T15:39:33.458Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "section"
+        ],
+        "object_id": "2",
+        "object_repr": "Section object (2)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 115,
+    "fields": {
+        "action_time": "2022-07-19T15:39:39.353Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "floor"
+        ],
+        "object_id": "1",
+        "object_repr": "Floor object (1)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 116,
+    "fields": {
+        "action_time": "2022-07-19T15:39:44.538Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "floor"
+        ],
+        "object_id": "2",
+        "object_repr": "Floor object (2)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 117,
+    "fields": {
+        "action_time": "2022-07-19T15:39:49.432Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "floor"
+        ],
+        "object_id": "3",
+        "object_repr": "Floor object (3)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 118,
+    "fields": {
+        "action_time": "2022-07-19T15:40:08.762Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "house"
+        ],
+        "object_id": "1",
+        "object_repr": "House object (1)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 119,
+    "fields": {
+        "action_time": "2022-07-19T15:41:02.024Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "house"
+        ],
+        "object_id": "2",
+        "object_repr": "House object (2)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 120,
+    "fields": {
+        "action_time": "2022-07-20T11:32:44.943Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "users",
+            "userprofile"
+        ],
+        "object_id": "35",
+        "object_repr": "123 Артем",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 121,
+    "fields": {
+        "action_time": "2022-07-20T17:40:03.359Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "users",
+            "userprofile"
+        ],
+        "object_id": "15",
+        "object_repr": "Николай Карпов",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"\\u0422\\u0435\\u043b\\u0435\\u0444\\u043e\\u043d\", \"\\u0412\\u0430\\u0439\\u0431\\u0435\\u0440\", \"\\u0422\\u0435\\u043b\\u0435\\u0433\\u0440\\u0430\\u043c\", \"\\u041e \\u0432\\u043b\\u0430\\u0434\\u0435\\u043b\\u044c\\u0446\\u0435 (\\u0437\\u0430\\u043c\\u0435\\u0442\\u043a\\u0438)\", \"\\u0414\\u0430\\u0442\\u0430 \\u0440\\u043e\\u0436\\u0434\\u0435\\u043d\\u0438\\u044f\", \"\\u0421\\u0442\\u0430\\u0442\\u0443\\u0441\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 122,
+    "fields": {
+        "action_time": "2022-07-20T17:44:04.471Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "users",
+            "userprofile"
+        ],
+        "object_id": "36",
+        "object_repr": "Евгений Омелькин",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"Is active\", \"\\u0410\\u0432\\u0430\\u0442\\u0430\\u0440\", \"\\u0422\\u0435\\u043b\\u0435\\u0444\\u043e\\u043d\", \"\\u0412\\u0430\\u0439\\u0431\\u0435\\u0440\", \"\\u0422\\u0435\\u043b\\u0435\\u0433\\u0440\\u0430\\u043c\", \"\\u041e \\u0432\\u043b\\u0430\\u0434\\u0435\\u043b\\u044c\\u0446\\u0435 (\\u0437\\u0430\\u043c\\u0435\\u0442\\u043a\\u0438)\", \"\\u0414\\u0430\\u0442\\u0430 \\u0440\\u043e\\u0436\\u0434\\u0435\\u043d\\u0438\\u044f\", \"\\u0421\\u0442\\u0430\\u0442\\u0443\\u0441\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 123,
+    "fields": {
+        "action_time": "2022-07-20T17:46:30.413Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "users",
+            "userprofile"
+        ],
+        "object_id": "37",
+        "object_repr": "Елена Лисица",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"Is active\", \"\\u0410\\u0432\\u0430\\u0442\\u0430\\u0440\", \"\\u0422\\u0435\\u043b\\u0435\\u0444\\u043e\\u043d\", \"\\u0412\\u0430\\u0439\\u0431\\u0435\\u0440\", \"\\u0422\\u0435\\u043b\\u0435\\u0433\\u0440\\u0430\\u043c\", \"\\u041e \\u0432\\u043b\\u0430\\u0434\\u0435\\u043b\\u044c\\u0446\\u0435 (\\u0437\\u0430\\u043c\\u0435\\u0442\\u043a\\u0438)\", \"\\u0414\\u0430\\u0442\\u0430 \\u0440\\u043e\\u0436\\u0434\\u0435\\u043d\\u0438\\u044f\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 124,
+    "fields": {
+        "action_time": "2022-07-22T12:04:37.963Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "apartment"
+        ],
+        "object_id": "1",
+        "object_repr": "Apartment object (1)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 125,
+    "fields": {
+        "action_time": "2022-07-22T12:05:34.955Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "apartment"
+        ],
+        "object_id": "2",
+        "object_repr": "Apartment object (2)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 126,
+    "fields": {
+        "action_time": "2022-07-22T13:19:30.965Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "apartment"
+        ],
+        "object_id": "3",
+        "object_repr": "Apartment object (3)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 127,
+    "fields": {
+        "action_time": "2022-07-22T13:19:58.372Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "apartment"
+        ],
+        "object_id": "4",
+        "object_repr": "Apartment object (4)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 128,
+    "fields": {
+        "action_time": "2022-07-22T13:20:40.644Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "apartment"
+        ],
+        "object_id": "5",
+        "object_repr": "Apartment object (5)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 129,
+    "fields": {
+        "action_time": "2022-07-25T16:36:29.351Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "personalaccount"
+        ],
+        "object_id": "1",
+        "object_repr": "PersonalAccount object (1)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 130,
+    "fields": {
+        "action_time": "2022-07-25T16:38:07.592Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "personalaccount"
+        ],
+        "object_id": "2",
+        "object_repr": "0000000002",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 131,
+    "fields": {
+        "action_time": "2022-07-25T16:38:17.974Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "personalaccount"
+        ],
+        "object_id": "3",
+        "object_repr": "0000000003",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 132,
+    "fields": {
+        "action_time": "2022-07-25T16:38:22.663Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "personalaccount"
+        ],
+        "object_id": "4",
+        "object_repr": "0000000004",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 133,
+    "fields": {
+        "action_time": "2022-07-25T16:38:55.369Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "personalaccount"
+        ],
+        "object_id": "5",
+        "object_repr": "0000000005",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 134,
+    "fields": {
+        "action_time": "2022-07-25T16:50:33.240Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "apartment"
+        ],
+        "object_id": "8",
+        "object_repr": "Apartment object (8)",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 135,
+    "fields": {
+        "action_time": "2022-07-25T16:51:47.089Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "apartment"
+        ],
+        "object_id": "9",
+        "object_repr": "Apartment object (9)",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 136,
+    "fields": {
+        "action_time": "2022-07-25T18:26:23.331Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "personalaccount"
+        ],
+        "object_id": "5",
+        "object_repr": "0000000005",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 137,
+    "fields": {
+        "action_time": "2022-07-25T18:26:23.351Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "personalaccount"
+        ],
+        "object_id": "4",
+        "object_repr": "0000000004",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 138,
+    "fields": {
+        "action_time": "2022-07-25T18:26:23.362Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "personalaccount"
+        ],
+        "object_id": "3",
+        "object_repr": "0000000003",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 139,
+    "fields": {
+        "action_time": "2022-07-25T18:26:23.372Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "personalaccount"
+        ],
+        "object_id": "2",
+        "object_repr": "0000000002",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 140,
+    "fields": {
+        "action_time": "2022-07-25T18:26:23.382Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "personalaccount"
+        ],
+        "object_id": "1",
+        "object_repr": "0000000001",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 141,
+    "fields": {
+        "action_time": "2022-07-25T18:26:30.734Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "apartment"
+        ],
+        "object_id": "6",
+        "object_repr": "Apartment object (6)",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 142,
+    "fields": {
+        "action_time": "2022-07-25T18:26:30.748Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "apartment"
+        ],
+        "object_id": "4",
+        "object_repr": "Apartment object (4)",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 143,
+    "fields": {
+        "action_time": "2022-07-25T18:26:30.759Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "apartment"
+        ],
+        "object_id": "3",
+        "object_repr": "Apartment object (3)",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 144,
+    "fields": {
+        "action_time": "2022-07-25T18:37:54.324Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "apartment"
+        ],
+        "object_id": "14",
+        "object_repr": "Apartment object (14)",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 145,
+    "fields": {
+        "action_time": "2022-07-26T09:15:58.231Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "personalaccount"
+        ],
+        "object_id": "8",
+        "object_repr": "0000000002",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 146,
+    "fields": {
+        "action_time": "2022-07-26T09:16:02.514Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "personalaccount"
+        ],
+        "object_id": "9",
+        "object_repr": "0000000003",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 147,
+    "fields": {
+        "action_time": "2022-07-26T09:16:09.175Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "personalaccount"
+        ],
+        "object_id": "10",
+        "object_repr": "0000000004",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 148,
+    "fields": {
+        "action_time": "2022-07-26T10:52:01.505Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "apartment"
+        ],
+        "object_id": "33",
+        "object_repr": "Apartment object (33)",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 149,
+    "fields": {
+        "action_time": "2022-07-26T12:51:19.502Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "personalaccount"
+        ],
+        "object_id": "14",
+        "object_repr": "0000000022",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 150,
+    "fields": {
+        "action_time": "2022-07-26T12:51:19.522Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "personalaccount"
+        ],
+        "object_id": "10",
+        "object_repr": "0000000004",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 151,
+    "fields": {
+        "action_time": "2022-07-26T12:51:30.579Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "apartment"
+        ],
+        "object_id": "37",
+        "object_repr": "Apartment object (37)",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 152,
+    "fields": {
+        "action_time": "2022-07-26T12:57:31.049Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "personalaccount"
+        ],
+        "object_id": "24",
+        "object_repr": "0001235633",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 153,
+    "fields": {
+        "action_time": "2022-07-26T12:57:45.737Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "personalaccount"
+        ],
+        "object_id": "25",
+        "object_repr": "0001235634",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 154,
+    "fields": {
+        "action_time": "2022-07-26T13:45:20.448Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "personalaccount"
+        ],
+        "object_id": "22",
+        "object_repr": "0000000003",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"\\u041e\\u0441\\u0442\\u0430\\u0442\\u043e\\u043a (\\u0433\\u0440\\u043d.)\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 155,
+    "fields": {
+        "action_time": "2022-07-26T13:45:33.657Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "personalaccount"
+        ],
+        "object_id": "21",
+        "object_repr": "0000000002",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"\\u041e\\u0441\\u0442\\u0430\\u0442\\u043e\\u043a (\\u0433\\u0440\\u043d.)\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 156,
+    "fields": {
+        "action_time": "2022-07-27T11:02:00.461Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "personalaccount"
+        ],
+        "object_id": "28",
+        "object_repr": "0000000004",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 157,
+    "fields": {
+        "action_time": "2022-07-28T17:11:33.294Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "meterreading"
+        ],
+        "object_id": "1",
+        "object_repr": "MeterReading object (1)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 158,
+    "fields": {
+        "action_time": "2022-07-28T17:11:49.203Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "meterreading"
+        ],
+        "object_id": "2",
+        "object_repr": "MeterReading object (2)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 159,
+    "fields": {
+        "action_time": "2022-07-28T17:12:04.108Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "meterreading"
+        ],
+        "object_id": "3",
+        "object_repr": "MeterReading object (3)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 160,
+    "fields": {
+        "action_time": "2022-07-28T17:12:47.771Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "meterreading"
+        ],
+        "object_id": "4",
+        "object_repr": "MeterReading object (4)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 161,
+    "fields": {
+        "action_time": "2022-07-29T12:48:55.323Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "meterreading"
+        ],
+        "object_id": "5",
+        "object_repr": "0000000005",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 162,
+    "fields": {
+        "action_time": "2022-08-01T13:19:24.206Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "application"
+        ],
+        "object_id": "1",
+        "object_repr": "Application object (1)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 163,
+    "fields": {
+        "action_time": "2022-08-01T13:20:19.409Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "application"
+        ],
+        "object_id": "2",
+        "object_repr": "Application object (2)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 164,
+    "fields": {
+        "action_time": "2022-08-01T13:22:11.597Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "application"
+        ],
+        "object_id": "5",
+        "object_repr": "Application object (5)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 165,
+    "fields": {
+        "action_time": "2022-08-03T10:49:17.639Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "message"
+        ],
+        "object_id": "2",
+        "object_repr": "Message object (2)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 166,
+    "fields": {
+        "action_time": "2022-08-03T10:50:00.233Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "message"
+        ],
+        "object_id": "3",
+        "object_repr": "Message object (3)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 167,
+    "fields": {
+        "action_time": "2022-08-03T10:50:42.716Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "message"
+        ],
+        "object_id": "4",
+        "object_repr": "Message object (4)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 168,
+    "fields": {
+        "action_time": "2022-08-03T10:56:46.103Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "message"
+        ],
+        "object_id": "5",
+        "object_repr": "Message object (5)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 169,
+    "fields": {
+        "action_time": "2022-08-04T12:00:12.671Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "transaction"
+        ],
+        "object_id": "1",
+        "object_repr": "Transaction object (1)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 170,
+    "fields": {
+        "action_time": "2022-08-04T12:02:11.620Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "transaction"
+        ],
+        "object_id": "2",
+        "object_repr": "0000000002",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 171,
+    "fields": {
+        "action_time": "2022-08-04T12:04:54.995Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "transaction"
+        ],
+        "object_id": "3",
+        "object_repr": "0000000003",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 172,
+    "fields": {
+        "action_time": "2022-08-04T13:29:54.596Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "transaction"
+        ],
+        "object_id": "2",
+        "object_repr": "0000000002",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"\\u0421\\u0443\\u043c\\u043c\\u0430\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 173,
+    "fields": {
+        "action_time": "2022-08-04T13:33:54.519Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "transaction"
+        ],
+        "object_id": "4",
+        "object_repr": "0000000004",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 174,
+    "fields": {
+        "action_time": "2022-08-05T14:46:24.937Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "invoice"
+        ],
+        "object_id": "1",
+        "object_repr": "Invoice object (1)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 175,
+    "fields": {
+        "action_time": "2022-08-05T14:48:40.006Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "invoice"
+        ],
+        "object_id": "2",
+        "object_repr": "0000000002",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 176,
+    "fields": {
+        "action_time": "2022-08-05T14:49:18.577Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "invoice"
+        ],
+        "object_id": "3",
+        "object_repr": "0000000003",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 177,
+    "fields": {
+        "action_time": "2022-08-05T14:50:18.089Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "invoice"
+        ],
+        "object_id": "4",
+        "object_repr": "0000000004",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 178,
+    "fields": {
+        "action_time": "2022-08-05T14:55:45.150Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "serviceforinvoice"
+        ],
+        "object_id": "1",
+        "object_repr": "ServiceForInvoice object (1)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 179,
+    "fields": {
+        "action_time": "2022-08-05T14:58:09.782Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "serviceforinvoice"
+        ],
+        "object_id": "2",
+        "object_repr": "ServiceForInvoice object (2)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 180,
+    "fields": {
+        "action_time": "2022-08-05T16:54:10.271Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "invoice"
+        ],
+        "object_id": "4",
+        "object_repr": "0000000004",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"\\u0414\\u0430\\u0442\\u0430\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 181,
+    "fields": {
+        "action_time": "2022-08-05T17:22:30.859Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "invoice"
+        ],
+        "object_id": "1",
+        "object_repr": "0000000001",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"\\u0421\\u0443\\u043c\\u043c\\u0430\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 182,
+    "fields": {
+        "action_time": "2022-08-09T11:06:51.257Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "invoice"
+        ],
+        "object_id": "23",
+        "object_repr": "0000000010",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"\\u041d\\u043e\\u043c\\u0435\\u0440 \\u043a\\u0432\\u0438\\u0442\\u0430\\u043d\\u0446\\u0438\\u0438\", \"\\u0421\\u0443\\u043c\\u043c\\u0430\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 183,
+    "fields": {
+        "action_time": "2022-08-11T11:27:08.223Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "template"
+        ],
+        "object_id": "1",
+        "object_repr": "Шаблон 1",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 184,
+    "fields": {
+        "action_time": "2022-08-11T11:27:19.855Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "template"
+        ],
+        "object_id": "2",
+        "object_repr": "Шаблон 2",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 185,
+    "fields": {
+        "action_time": "2022-08-12T09:30:37.759Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "template"
+        ],
+        "object_id": "1",
+        "object_repr": "Шаблон 1",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"\\u0417\\u0430\\u0433\\u0440\\u0443\\u0437\\u0438\\u0442\\u044c \\u043f\\u043e\\u043b\\u044c\\u0437\\u043e\\u0432\\u0430\\u0442\\u0435\\u043b\\u044c\\u0441\\u043a\\u0438\\u0439 \\u0448\\u0430\\u0431\\u043b\\u043e\\u043d\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 186,
+    "fields": {
+        "action_time": "2022-08-12T09:30:46.420Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "template"
+        ],
+        "object_id": "2",
+        "object_repr": "Шаблон 2",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"\\u0417\\u0430\\u0433\\u0440\\u0443\\u0437\\u0438\\u0442\\u044c \\u043f\\u043e\\u043b\\u044c\\u0437\\u043e\\u0432\\u0430\\u0442\\u0435\\u043b\\u044c\\u0441\\u043a\\u0438\\u0439 \\u0448\\u0430\\u0431\\u043b\\u043e\\u043d\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 187,
+    "fields": {
+        "action_time": "2022-08-12T09:30:52.486Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "template"
+        ],
+        "object_id": "3",
+        "object_repr": "Шаблон 3",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"\\u0417\\u0430\\u0433\\u0440\\u0443\\u0437\\u0438\\u0442\\u044c \\u043f\\u043e\\u043b\\u044c\\u0437\\u043e\\u0432\\u0430\\u0442\\u0435\\u043b\\u044c\\u0441\\u043a\\u0438\\u0439 \\u0448\\u0430\\u0431\\u043b\\u043e\\u043d\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 188,
+    "fields": {
+        "action_time": "2022-08-12T09:54:17.306Z",
+        "user": [
+            "admin@gmail.com"
+        ],
+        "content_type": [
+            "crm",
+            "template"
+        ],
+        "object_id": "2",
+        "object_repr": "Шаблон 2",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"\\u0417\\u0430\\u0433\\u0440\\u0443\\u0437\\u0438\\u0442\\u044c \\u043f\\u043e\\u043b\\u044c\\u0437\\u043e\\u0432\\u0430\\u0442\\u0435\\u043b\\u044c\\u0441\\u043a\\u0438\\u0439 \\u0448\\u0430\\u0431\\u043b\\u043e\\u043d\"]}}]"
+    }
+}
+]

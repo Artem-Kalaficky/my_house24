@@ -23,7 +23,7 @@ from .views import (
 
 urlpatterns = [
     # statistics page
-    path('', StatisticsTemplateView.as_view(), name='home'),
+    path('statistics', StatisticsTemplateView.as_view(), name='home'),
 
     # transactions
     path('transactions/delete/<int:pk>/', TransactionDeleteView.as_view(), name='transaction_delete'),

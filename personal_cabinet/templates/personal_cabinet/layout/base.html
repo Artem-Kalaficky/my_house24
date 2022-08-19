@@ -166,7 +166,7 @@
                       <li class="nav-item" id="{{ apartment.id }}">
                         <a href="{% url 'owner_apartment_detail' apartment.id %}" class="nav-link {{ apartment.id }}">
                           <i class="fa fa-building nav-icon"></i>
-                          <p style="font-size: 14px" {% block tariffs-active %}{% endblock %}>{{ house.name }}, кв.{{ apartment.number }}</p>
+                          <p style="font-size: 14px">{{ house.name }}, кв.{{ apartment.number }}</p>
                         </a>
                       </li>
                       {% endif %}
@@ -203,7 +203,7 @@
                   {% for house in houses %}
                       {% if apartment.section in house.sections.all %}
                       <li class="nav-item" id="{{ apartment.id }}-invoice">
-                        <a href="" class="nav-link {{ apartment.id }}-invoice clear_filters">
+                        <a href="{% url 'owner_invoices_list' %}?apartment_id={{ apartment.id }}" class="nav-link {{ apartment.id }}-invoice clear_filters">
                           <i class="far fa-file nav-icon"></i>
                           <p style="font-size: 14px">{{ house.name }}, кв.{{ apartment.number }}</p>
                         </a>
@@ -223,7 +223,7 @@
           {% endif %}
 
           {% if count_apartments|length > 0 %}
-          <li class="nav-item {% block tariffs %}<!--menu-is-opening menu-open-->{% endblock %}">
+          <li class="nav-item {% block tariff %}{% endblock %}">
             <a href="#" class="nav-link">
               <i class="fa fa-money-bill-wave" style="width: 23px"></i>
               <p style="color: #494949; font-size: 14px; font-weight: 600">
@@ -232,12 +232,20 @@
               </p>
             </a>
             <ul class="nav nav-treeview">
-              <li class="nav-item">
-                <a href="#" class="nav-link {% block tariff %}{% endblock %}">
-                  <i class="far fa-file nav-icon"></i>
-                  <p style="font-size: 14px">Дом1 - Квартира 1</p>
-                </a>
-              </li>
+              {% for apartment in count_apartments %}
+                  {% if apartment.tariff %}
+                      {% for house in houses %}
+                          {% if apartment.section in house.sections.all %}
+                          <li class="nav-item" id="{{ apartment.id }}-tariff">
+                            <a href="{% url 'owner_tariff_detail' apartment.id %}" class="nav-link {{ apartment.id }}-tariff">
+                              <i class="far fa-file nav-icon"></i>
+                              <p style="font-size: 14px">{{ house.name }}, кв.{{ apartment.number }}</p>
+                            </a>
+                          </li>
+                          {% endif %}
+                      {% endfor %}
+                  {% endif %}
+              {% endfor %}
             </ul>
           </li>
           {% else %}

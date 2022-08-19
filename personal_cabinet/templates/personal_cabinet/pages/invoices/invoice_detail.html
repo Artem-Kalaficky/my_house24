@@ -1,0 +1,133 @@
+{% extends 'personal_cabinet/layout/base.html' %}
+{% load static %}
+
+{% block invoices %}menu-is-opening menu-open{% endblock %}
+
+{% block title %}Просмотр квитанции: #{{ object }}{% endblock %}
+{% block name_page %}Просмотр квитанции: #{{ object }}{% endblock %}
+{% block previos_link %}<a href="{% url 'owner_messages_list' %}" style="color: #494949">/ Квитанции</a>{% endblock %}
+{% block nav %}Просмотр квитанции: #{{ object }}{% endblock %}
+
+{% block content %}
+<div class="my-box" style="min-height: 0">
+    <div class="container-fluid">
+        <div style="text-align: right; margin-bottom: 5px; padding-top: 5px">
+            <button id="print" type="button" class="btn btn-info" style="font-size: 14px; max-height: 34px"><i class="fa fa-print" aria-hidden="true"></i> Распечатать</button>
+        </div>
+        <div>
+            <table id='my-table' class="table table-hover table-striped table-responsive no-padding" style="color: #333333; font-size: 14px">
+                <thead>
+                    <tr>
+                        <th style="width: 0%">#</th>
+                        <th style="width: 35%">Услуга</th>
+                        <th style="width: 35%">Количество потребления (расход)</th>
+                        <th style="width: 10%">Ед. изм.	</th>
+                        <th style="width: 10%">Цена за ед., грн</th>
+                        <th style="width: 10%">Стоимость, грн</th>
+                        <th style="width: 0%"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for service in services %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ service.service }}</td>
+                        <td>{{ service.expense }}</td>
+                        <td>{{ service.service.unit }}</td>
+                        <td>{{ service.cost_for_unit }}</td>
+                        <td>{{ service.full_cost }}</td>
+                        <td></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <th>Итого: {{ object.amount }}</th>
+                        <td></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        <div style="text-align: right; padding: 15px 0 15px 0">
+            <button type="button" style="font-size: 14px; max-height: 34px" onclick="tableToExcel('my-table')" class="btn btn-warning"><i class="fa fa-file-pdf" aria-hidden="true"></i> Скачать в PDF</button>
+            <button id="pay" value="{{ object.id }}" {% if object.status == 'paid' %} disabled {% endif %} style="font-size: 14px; max-height: 34px" type="button" class="btn btn-success"><i class="fa fa-credit-card" aria-hidden="true"></i> Оплатить</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
+    <script>
+        {% if request.GET.apartment_id %}
+            $('#{{ request.GET.apartment_id }}-invoice').addClass('active-link').removeClass('nav-item')
+            $('.{{ request.GET.apartment_id }}-invoice').css('color', 'black')
+        {% else %}
+            $('#all-invoice').addClass('active-link').removeClass('nav-item')
+            $('.all-invoice').css('color', 'black')
+        {% endif %}
+
+
+        // print invoice
+        $('#print').click(function (){
+            window.print()
+        })
+
+
+        // pay invoice
+        $('#pay').click(function (){
+            let invoice_id = $(this).val()
+            $.ajax({
+                url: '{% url "work_with_invoice_in_cabinet" %}',
+                type: 'GET',
+                data: {'invoice_id': invoice_id},
+                success: (data) => {
+                    document.location.reload()
+                },
+                error: (data) => {
+                    console.log('no')
+                }
+            })
+        })
+
+        // Messages
+        {% if messages %}
+        Swal.fire({
+          backdrop: false,
+          position: 'top-end',
+          padding: 0,
+          icon: 'success',
+          width: 300,
+          html: '{% for message in messages %}{{ message }}{% endfor %}',
+          showConfirmButton: false,
+          timer: 1500,
+        })
+        {% endif %}
+
+
+        let tableToExcel = (function() {
+          let uri = 'data:application/vnd.ms-excel;base64,',
+            template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>',
+            base64 = function(s) {
+              return window.btoa(unescape(encodeURIComponent(s)))
+            },
+            format = function(s, c) {
+              return s.replace(/{(\w+)}/g, function(m, p) {
+                return c[p];
+              })
+            }
+          return function(table, name) {
+            if (!table.nodeType) table = document.getElementById(table)
+            let ctx = {
+              worksheet: name || 'Worksheet',
+              table: table.innerHTML
+            }
+            window.location.href = uri + base64(format(template, ctx))
+          }
+        })()
+    </script>
+{% endblock %}

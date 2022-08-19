@@ -29,7 +29,7 @@
 <div class="my-box" style="min-height: 0">
     <div class="container-fluid">
         <div style="text-align: right; padding-right: 2px; padding-top: 5px; margin-bottom: 5px">
-            <a id="clear" href="{% url 'owner_invoices_list' %}" class="btn btn-default" style="font-size: 14px; max-height: 34px">Очистить</a>
+            <a id="clear" href="{% if request.GET.apartment_id %}{% url 'owner_invoices_list' %}?apartment_id={{ request.GET.apartment_id }}{% else %}{% url 'owner_invoices_list' %}{% endif %}" class="btn btn-default" style="font-size: 14px; max-height: 34px">Очистить</a>
         </div>
         <form method="get" id="form">
             <table id="my-table" class="table table-hover table-striped table-responsive no-padding" style="color: #333333; font-size: 14px; padding-bottom: 10px">
@@ -59,9 +59,9 @@
                     </tr>
                     {% for invoice in invoices %}
                         <tr>
-                            <td>{{ invoice }}</td>
-                            <td>{{ invoice.date|date:'d.m.Y' }}</td>
-                            <td>
+                            <td data-href="{% if request.GET.apartment_id %}{% url 'owner_invoice_detail' invoice.id %}?apartment_id={{ request.GET.apartment_id }}{% else %}{% url 'owner_invoice_detail' invoice.id %}{% endif %}" class="tr-link">{{ invoice }}</td>
+                            <td data-href="{% if request.GET.apartment_id %}{% url 'owner_invoice_detail' invoice.id %}?apartment_id={{ request.GET.apartment_id }}{% else %}{% url 'owner_invoice_detail' invoice.id %}{% endif %}" class="tr-link">{{ invoice.date|date:'d.m.Y' }}</td>
+                            <td data-href="{% if request.GET.apartment_id %}{% url 'owner_invoice_detail' invoice.id %}?apartment_id={{ request.GET.apartment_id }}{% else %}{% url 'owner_invoice_detail' invoice.id %}{% endif %}" class="tr-link">
                                 {% if invoice.status == 'paid' %}
                                     <small class="btn btn-sm btn-success status">Оплачена</small>
                                 {% elif invoice.status == 'p_paid' %}
@@ -70,8 +70,8 @@
                                     <small class="btn btn-sm btn-danger status">Неоплачена</small>
                                 {% endif %}
                             </td>
-                            <td>{{ invoice.amount }}</td>
-                            <td></td>
+                            <td data-href="{% if request.GET.apartment_id %}{% url 'owner_invoice_detail' invoice.id %}?apartment_id={{ request.GET.apartment_id }}{% else %}{% url 'owner_invoice_detail' invoice.id %}{% endif %}" class="tr-link">{{ invoice.amount }}</td>
+                            <td data-href="{% if request.GET.apartment_id %}{% url 'owner_invoice_detail' invoice.id %}?apartment_id={{ request.GET.apartment_id }}{% else %}{% url 'owner_invoice_detail' invoice.id %}{% endif %}" class="tr-link"></td>
                         </tr>
                     {% endfor %}
                 </tbody>
@@ -87,6 +87,8 @@
     <script src="{% static 'personal_cabinet/scripts/invoices/invoices_list.js' %}"></script>
     <script>
         {% if request.GET.apartment_id %}
+            $('#{{ request.GET.apartment_id }}-invoice').addClass('active-link').removeClass('nav-item')
+            $('.{{ request.GET.apartment_id }}-invoice').css('color', 'black')
         {% else %}
             $('#all-invoice').addClass('active-link').removeClass('nav-item')
             $('.all-invoice').css('color', 'black')
