@@ -2023,3 +2023,6 @@ class ItemDeleteView(SuccessMessageMixin, DeleteView):
     success_message = 'Статья успешно удалёна!'
 # endregion items page
 # endregion SYSTEM-SETTINGS
+
+
+

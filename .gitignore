@@ -128,12 +128,4 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-!/crm/static/crm/dist/css/bootstrap3-wysihtml5.css
-!/crm/static/crm/dist/img/appstore.png
-!/crm/static/crm/dist/img/default
-!/crm/static/crm/dist/img/default_avatar.jpeg
-!/crm/static/crm/dist/img/googleplay.png
-!/crm/static/crm/dist/js/bootstrap.min.js
-!/crm/static/crm/dist/js/bootstrap3-wysihtml5.all.js
-!/crm/static/crm/dist/js/bootstrap-wysihtml5.ru-RU.js
-!/crm/static/crm/dist/js/bootstrap3-wysihtml5.all.min.js
+

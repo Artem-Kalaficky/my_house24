@@ -157,9 +157,13 @@
     <script src="{% static 'crm/scripts/system-settings/tariffs/tariff_create.js' %}"></script>
     <script>
         $("#form").validate({
+          rules: {
+            'formset-0-cost_for_unit': {min: 1}
+          },
           messages: {
             name: "* Обязательное поле",
             description: "* Обязательное поле",
+            'formset-0-cost_for_unit': {min: 'Цена не может быть менее 1 грн.'}
           },
           wrapper: 'span',
           errorPlacement: function (error, element) {

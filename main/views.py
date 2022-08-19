@@ -43,3 +43,15 @@ class ContactTemplateView(TemplateView):
         context = super().get_context_data(**kwargs)
         context['page'] = get_object_or_404(ContactPage, pk=1)
         return context
+
+
+# region robots.txt and sitemap.xml
+class RobotsTxtView(TemplateView):
+    template_name = 'elements/robots.txt'
+    content_type = 'text/plain'
+
+
+class SitemapXmlView(TemplateView):
+    template_name = 'elements/sitemap.xml'
+    content_type = 'application/xml'
+# endregion robots.txt and sitemap.xml
