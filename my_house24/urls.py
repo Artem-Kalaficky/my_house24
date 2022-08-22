@@ -9,7 +9,6 @@ urlpatterns = [
     path('cabinet/', include('personal_cabinet.urls')),
     path('', include('users.urls')),
     path('__debug__/', include('debug_toolbar.urls')),
-    path('old-admin/', admin.site.urls),
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

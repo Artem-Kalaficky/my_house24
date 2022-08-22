@@ -25,7 +25,7 @@ class AdminLoginView(LoginView):
             self.request.session.set_expiry(0)
             self.request.session.modified = True
         url = reverse_lazy('home')
-        if self.request.user.role and not self.request.user.role.has_statistics:
+        if self.request.user.role and self.request.user.role.has_statistics is not True:
             url = f"/crm/system-settings/users/update/{self.request.user.id}/"
         if not self.request.user.is_staff:
             url = reverse_lazy('owner_login')

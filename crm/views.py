@@ -67,7 +67,7 @@ class StaffRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
                 permission = self.request.user.role.has_tariff
             if 'crm/system-settings/roles' in self.request.path:
                 permission = self.request.user.role.has_role
-            if 'crm/system-settings/users' in self.request.path:
+            if 'crm/system-settings/users' in self.request.path and 'crm/system-settings/users/update/' not in self.request.path:
                 permission = self.request.user.role.has_users
             if 'crm/system-settings/requisites' in self.request.path:
                 permission = self.request.user.role.has_requisites
